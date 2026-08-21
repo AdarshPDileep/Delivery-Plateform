@@ -14,7 +14,7 @@ export default function FranchiseDashboard() {
   ];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
+    <div className="p-8 w-full mx-auto space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Franchise Control Center</h1>

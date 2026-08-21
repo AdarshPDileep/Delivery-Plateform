@@ -41,7 +41,7 @@ export default function FranchiseMaster() {
   ];
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto animate-fade-in">
+    <div className="p-8 w-full mx-auto animate-fade-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Franchise Management</h1>

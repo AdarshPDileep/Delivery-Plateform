@@ -20,7 +20,7 @@ import TicketDesk from './pages/TicketDesk';
 import { 
   LayoutDashboard, Map, Store, FileText, Percent, Users, Package, 
   Share2, Contact2, Wallet, BarChart3, Shield, Bell, Settings, 
-  History, LifeBuoy
+  History, LifeBuoy, Truck
 } from 'lucide-react';
 
 const ADMIN_LINKS = [
