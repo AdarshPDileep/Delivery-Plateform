@@ -1,0 +1,16 @@
+export const agents = [
+  { id: 'AG001', name: 'Ravi Kumar', phone: '9100000001', franchiseId: 'FR001', territoryIds: ['TK001'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 8, totalDeliveries: 450, successRate: 94, avgDeliveryTime: '35 min', joinedAt: '2023-07-01', rating: 4.5 },
+  { id: 'AG002', name: 'Suresh Yadav', phone: '9100000002', franchiseId: 'FR001', territoryIds: ['TK002'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 6, totalDeliveries: 380, successRate: 92, avgDeliveryTime: '40 min', joinedAt: '2023-08-15', rating: 4.3 },
+  { id: 'AG003', name: 'Manoj Tiwari', phone: '9100000003', franchiseId: 'FR001', territoryIds: ['TK011'], status: 'Active', vehicleType: 'Van', deliveriesToday: 12, totalDeliveries: 520, successRate: 96, avgDeliveryTime: '30 min', joinedAt: '2023-06-20', rating: 4.7 },
+  { id: 'AG004', name: 'Anil Patil', phone: '9100000004', franchiseId: 'FR002', territoryIds: ['TK003'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 5, totalDeliveries: 290, successRate: 90, avgDeliveryTime: '45 min', joinedAt: '2023-10-01', rating: 4.1 },
+  { id: 'AG005', name: 'Ganesh Kulkarni', phone: '9100000005', franchiseId: 'FR003', territoryIds: ['TK004'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 7, totalDeliveries: 410, successRate: 93, avgDeliveryTime: '38 min', joinedAt: '2023-08-01', rating: 4.4 },
+  { id: 'AG006', name: 'Deepak Verma', phone: '9100000006', franchiseId: 'FR005', territoryIds: ['TK007'], status: 'Inactive', vehicleType: 'Bike', deliveriesToday: 0, totalDeliveries: 210, successRate: 88, avgDeliveryTime: '50 min', joinedAt: '2024-01-15', rating: 3.9 },
+  { id: 'AG007', name: 'Karthik Nair', phone: '9100000007', franchiseId: 'FR003', territoryIds: ['TK005'], status: 'Active', vehicleType: 'Van', deliveriesToday: 10, totalDeliveries: 380, successRate: 95, avgDeliveryTime: '32 min', joinedAt: '2023-09-10', rating: 4.6 },
+  { id: 'AG008', name: 'Senthil Kumar', phone: '9100000008', franchiseId: 'FR004', territoryIds: ['TK006'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 4, totalDeliveries: 190, successRate: 91, avgDeliveryTime: '42 min', joinedAt: '2024-02-01', rating: 4.2 },
+  { id: 'AG009', name: 'Bhaskar Rao', phone: '9100000009', franchiseId: 'FR006', territoryIds: ['TK008'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 6, totalDeliveries: 340, successRate: 93, avgDeliveryTime: '36 min', joinedAt: '2023-09-01', rating: 4.4 },
+  { id: 'AG010', name: 'Jayesh Bhatt', phone: '9100000010', franchiseId: 'FR008', territoryIds: ['TK010'], status: 'Active', vehicleType: 'Van', deliveriesToday: 9, totalDeliveries: 270, successRate: 94, avgDeliveryTime: '33 min', joinedAt: '2024-03-01', rating: 4.5 },
+  { id: 'AG011', name: 'Prasad Nambiar', phone: '9100000011', franchiseId: 'FR001', territoryIds: ['TK001'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 3, totalDeliveries: 150, successRate: 89, avgDeliveryTime: '48 min', joinedAt: '2024-05-01', rating: 4.0 },
+  { id: 'AG012', name: 'Sameer Khan', phone: '9100000012', franchiseId: 'FR002', territoryIds: ['TK012'], status: 'Active', vehicleType: 'Bike', deliveriesToday: 7, totalDeliveries: 310, successRate: 92, avgDeliveryTime: '37 min', joinedAt: '2023-11-15', rating: 4.3 },
+];
+
+export const agents_data = agents;
