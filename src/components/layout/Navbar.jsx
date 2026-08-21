@@ -6,36 +6,36 @@ import {
 } from 'lucide-react';
 
 const dropdownServices = [
-  { id: 'express-parcel', name: 'Express Parcel', icon: Package },
-  { id: 'warehousing', name: 'Warehousing', icon: Factory },
-  { id: 'part-truckload', name: 'Part Truckload', icon: Truck },
-  { id: 'full-truckload', name: 'Full Truckload', icon: Truck },
-  { id: 'international', name: 'International', icon: Globe },
-  { id: 'local-delivery', name: 'Local Delivery', icon: Send },
-  { id: 'transport-one', name: 'TransportOne', icon: Zap },
-  { id: 'data-intelligence', name: 'Data Intelligence', icon: Server },
-  { id: 'commerza-maps', name: 'Commerza Maps', icon: Map, isBeta: true },
+  { id: 'express-parcel', name: 'Express Parcel', icon: Package, path: '/services/express-parcel' },
+  { id: 'warehousing', name: 'Warehousing', icon: Factory, path: '/services/warehousing' },
+  { id: 'part-truckload', name: 'Part Truckload', icon: Truck, path: '/services/part-truckload' },
+  { id: 'full-truckload', name: 'Full Truckload', icon: Truck, path: '/services/full-truckload' },
+  { id: 'international', name: 'International', icon: Globe, path: '/services/international' },
+  { id: 'local-delivery', name: 'Local Delivery', icon: Send, path: '/services/local-delivery' },
+  { id: 'transport-one', name: 'TransportOne', icon: Zap, path: '/services/transport-one' },
+  { id: 'data-intelligence', name: 'Data Intelligence', icon: Server, path: '/services/data-intelligence' },
+  { id: 'commerza-maps', name: 'Commerza Maps', icon: Map, isBeta: true, path: '/services/commerza-maps' },
 ];
 
 const dropdownSolutions = [
-  { id: 'd2c-brands', name: 'D2C Brands', icon: Store },
-  { id: 'personal-courier', name: 'Personal Courier', icon: UserCircle },
-  { id: 'b2b-enterprises', name: 'B2B Enterprises', icon: Building2 },
-  { id: 'rto-predictor', name: 'RTO Predictor', icon: Crosshair },
+  { id: 'd2c-brands', name: 'D2C Brands', icon: Store, path: '/solutions/d2c-brands' },
+  { id: 'personal-courier', name: 'Personal Courier', icon: UserCircle, path: '/solutions/personal-courier' },
+  { id: 'b2b-enterprises', name: 'B2B Enterprises', icon: Building2, path: '/solutions/b2b-enterprises' },
+  { id: 'rto-predictor', name: 'RTO Predictor', icon: Crosshair, path: '/solutions/rto-predictor' },
 ];
 
 const dropdownPartners = [
-  { id: 'franchise-opportunities', name: 'Franchise Opportunities', icon: Users },
-  { id: 'delivery-partner', name: 'Delivery Partner', icon: Bike },
-  { id: 'fleet-owners', name: 'Fleet Owners', icon: Truck },
-  { id: 'school-of-logistics', name: 'Commerza School of Logistics', icon: GraduationCap },
+  { id: 'franchise-opportunities', name: 'Franchise Opportunities', icon: Users, path: '/partners/franchise-opportunities' },
+  { id: 'delivery-partner', name: 'Delivery Partner', icon: Bike, path: '/partners/delivery-partner' },
+  { id: 'fleet-owners', name: 'Fleet Owners', icon: Truck, path: '/partners/fleet-owners' },
+  { id: 'school-of-logistics', name: 'Commerza School of Logistics', icon: GraduationCap, path: '/partners/school-of-logistics' },
 ];
 
 const dropdownCompany = [
-  { id: 'about-us', name: 'About Us', icon: Building2 },
-  { id: 'governance', name: 'Governance', icon: ShieldCheck },
-  { id: 'press-release', name: 'Press Release', icon: Send },
-  { id: 'careers', name: 'Careers', icon: Users },
+  { id: 'about-us', name: 'About Us', icon: Building2, path: '/company/about-us' },
+  { id: 'governance', name: 'Governance', icon: ShieldCheck, path: '/company/governance' },
+  { id: 'press-release', name: 'Press Release', icon: Send, path: '/company/press-release' },
+  { id: 'careers', name: 'Careers', icon: Users, path: '/company/careers' },
 ];
 
 export default function Navbar() {
@@ -52,7 +52,7 @@ export default function Navbar() {
             return (
               <Link 
                 key={item.id} 
-                to={`/${item.id}`} // Mock link for now
+                to={item.path}
                 className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-gray-700 hover:text-[#E31837] group/item"
               >
                 <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover/item:bg-red-50 text-gray-500 group-hover/item:text-[#E31837] transition-colors flex-shrink-0">
