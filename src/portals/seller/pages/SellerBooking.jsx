@@ -1,86 +1,157 @@
 import React, { useState } from 'react';
-import PageHeader from '../../../components/layout/PageHeader';
-import Card from '../../../components/ui/Card';
-import DataTable from '../../../components/ui/DataTable';
-import Button from '../../../components/ui/Button';
-import Drawer from '../../../components/ui/Modal';
-import Input from '../../../components/ui/Input';
-import FormSection from '../../../components/forms/FormSection';
-import Select from '../../../components/ui/Select';
-import { useToast } from '../../../context/ToastContext';
-import { FileUp, Eye, QrCode } from 'lucide-react';
-import { shipments } from '../../../data/shipments';
+import { Package, MapPin, CreditCard, Scale, CheckCircle2 } from 'lucide-react';
 
 export default function SellerBooking() {
-  const [activeDrawer, setActiveDrawer] = useState(false);
-  const { addToast } = useToast();
-
-  const myShipments = shipments.filter(s => s.sellerId === 'SL001' && s.status === 'Booked');
-
-  const columns = [
-    { key: 'awb', label: 'AWB' },
-    { key: 'receiver', label: 'Customer', render: r => `${r.name} (${r.pincode})` },
-    { key: 'weight', label: 'Weight (kg)' },
-    { key: 'paymentMode', label: 'Mode' },
-    { key: 'createdAt', label: 'Date', render: val => new Date(val).toLocaleDateString() },
-  ];
+  const [step, setStep] = useState(1);
+  const [paymentMode, setPaymentMode] = useState('Prepaid');
 
   return (
-    <div>
-      <PageHeader 
-        title="Order Booking & Labels" 
-        description="Book single orders or upload bulk sheets to generate AWBs."
-        actions={
-          <div className="flex gap-2">
-            <Button variant="outline" icon={FileUp} onClick={() => addToast('Bulk upload initialized')}>Bulk CSV Upload</Button>
-            <Button onClick={() => setActiveDrawer(true)}>Single Order Booking</Button>
-          </div>
-        }
-      />
+    <div className="max-w-5xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Create Shipment</h1>
+        <p className="text-gray-500 text-sm mt-1">Enter buyer, pickup, and package details to generate an AWB.</p>
+      </div>
 
-      <Card padding="p-0">
-        <DataTable 
-          title="Recently Booked (Pending Pickup)"
-          columns={columns} 
-          data={myShipments} 
-          searchFields={['awb']}
-          actions={() => (
-            <div className="flex gap-2">
-              <Button variant="ghost" size="sm" icon={QrCode} onClick={() => addToast('Downloading PDF label...')}>Label</Button>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* Main Form Area */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          {/* Buyer Details */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="border-b border-gray-100 bg-gray-50/50 p-4 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#E31837]/10 text-[#E31837] flex items-center justify-center font-bold">1</div>
+              <h2 className="font-bold text-gray-900">Buyer Details</h2>
             </div>
-          )}
-        />
-      </Card>
-
-      <Drawer open={activeDrawer} onClose={() => setActiveDrawer(false)} title="Book New Order" width="max-w-3xl"
-        footer={<><Button variant="outline" onClick={() => setActiveDrawer(false)}>Cancel</Button><Button onClick={() => { addToast('Order Booked! AWB Generated', 'success'); setActiveDrawer(false); }}>Book & Generate AWB</Button></>}
-      >
-        <div className="space-y-6">
-          <FormSection title="Customer Details">
-            <div className="grid grid-cols-2 gap-4">
-              <Input label="Name" placeholder="e.g. Rahul Sharma" />
-              <Input label="Mobile Number" placeholder="10-digit number" />
-              <div className="col-span-2">
-                <Input label="Full Delivery Address" placeholder="House no, street, area..." />
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Full Name</label>
+                <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="Enter buyer name" />
               </div>
-              <Input label="Pincode" placeholder="e.g. 400001" />
-              <Input label="City/State" placeholder="Auto-populated" disabled />
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Mobile Number</label>
+                <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="10-digit mobile" />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Complete Address</label>
+                <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="House/Flat No., Building Name, Street" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Pincode</label>
+                <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="e.g. 110001" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">City & State</label>
+                <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 bg-gray-50 focus:outline-none text-gray-500" placeholder="Auto-filled from pincode" readOnly />
+              </div>
             </div>
-          </FormSection>
+          </div>
 
-          <FormSection title="Package Details">
-            <div className="grid grid-cols-3 gap-4">
-              <Input label="Weight (kg)" type="number" defaultValue={0.5} />
-              <Input label="L x W x H (cm)" placeholder="e.g. 10x10x5" />
-              <Input label="SKU / Order Ref" placeholder="e.g. ORD-10293" />
-              
-              <Select label="Payment Mode" options={['Prepaid', 'COD']} />
-              <Input label="COD Amount (₹)" type="number" placeholder="If COD" />
-              <Input label="Invoice Value (₹)" type="number" placeholder="Required for insurance" />
+          {/* Package Details */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="border-b border-gray-100 bg-gray-50/50 p-4 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#E31837]/10 text-[#E31837] flex items-center justify-center font-bold">2</div>
+              <h2 className="font-bold text-gray-900">Order & Package Details</h2>
             </div>
-          </FormSection>
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Order ID</label>
+                  <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="e.g. ORD-1001" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Product Description</label>
+                  <input type="text" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="What are you shipping?" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Package Weight & Dimensions</label>
+                <div className="flex items-center gap-4">
+                  <div className="relative flex-1">
+                    <input type="number" className="w-full border border-gray-200 rounded-lg pl-4 pr-12 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="Weight" />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">KG</span>
+                  </div>
+                  <span className="text-gray-300">×</span>
+                  <div className="relative flex-1">
+                    <input type="number" className="w-full border border-gray-200 rounded-lg pl-4 pr-12 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="Length" />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">CM</span>
+                  </div>
+                  <span className="text-gray-300">×</span>
+                  <div className="relative flex-1">
+                    <input type="number" className="w-full border border-gray-200 rounded-lg pl-4 pr-12 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="Width" />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">CM</span>
+                  </div>
+                  <span className="text-gray-300">×</span>
+                  <div className="relative flex-1">
+                    <input type="number" className="w-full border border-gray-200 rounded-lg pl-4 pr-12 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all" placeholder="Height" />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">CM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </Drawer>
+
+        {/* Right Sidebar */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <CreditCard className="w-5 h-5 text-gray-400" />
+              Payment Details
+            </h3>
+            
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <button 
+                onClick={() => setPaymentMode('Prepaid')}
+                className={`py-2 rounded-lg font-medium text-sm border-2 transition-all ${
+                  paymentMode === 'Prepaid' 
+                    ? 'border-[#E31837] bg-red-50 text-[#E31837]' 
+                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                }`}
+              >
+                Prepaid
+              </button>
+              <button 
+                onClick={() => setPaymentMode('COD')}
+                className={`py-2 rounded-lg font-medium text-sm border-2 transition-all ${
+                  paymentMode === 'COD' 
+                    ? 'border-[#E31837] bg-red-50 text-[#E31837]' 
+                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                }`}
+              >
+                Cash on Delivery
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">
+                {paymentMode === 'COD' ? 'Amount to Collect' : 'Order Value'}
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">₹</span>
+                <input type="number" className="w-full border border-gray-200 rounded-lg pl-8 pr-4 py-2.5 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837] transition-all text-lg font-bold text-gray-900" placeholder="0.00" />
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100 pt-4">
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span className="text-gray-500">Estimated Shipping Rate</span>
+                <span className="font-bold text-gray-900">₹65.00</span>
+              </div>
+              {paymentMode === 'COD' && (
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>COD Charges</span>
+                  <span>₹40.00</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button className="w-full bg-[#E31837] hover:bg-[#c0122e] text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-red-900/20 transition-all">
+            Generate Shipping Label
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

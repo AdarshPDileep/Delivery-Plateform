@@ -12,6 +12,7 @@ import FranchiseLogin from './portals/franchise/pages/FranchiseLogin';
 // Public Pages (to be updated later)
 import Home from './pages/Home';
 import TrackShipment from './pages/TrackShipment';
+import ServiceDetails from './pages/ServiceDetails';
 
 import SellerPortal from './portals/seller/SellerPortal';
 import SellerLogin from './portals/seller/pages/SellerLogin';
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/track" element={<TrackShipment />} />
             <Route path="/track/:awb" element={<TrackShipment />} />
+            <Route path="/services/:serviceId" element={<ServiceDetails />} />
 
             {/* Super Admin Portal */}
             <Route path="/admin/login" element={<AdminLogin />} />

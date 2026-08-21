@@ -25,8 +25,8 @@ export default function PortalLayout({ children, links, portalKey }) {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans">
-      <Sidebar links={links} portalName={portalConfig.name} color={colors[portalConfig.color]} />
+    <div className="flex h-screen overflow-hidden bg-gray-50 text-slate-900 font-sans">
+      <Sidebar links={links} portalName={portalConfig.name} color="bg-[#111111]" />
       
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Topbar />
