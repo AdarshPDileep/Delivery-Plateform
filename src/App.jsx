@@ -14,6 +14,10 @@ import Home from './pages/Home';
 import TrackShipment from './pages/TrackShipment';
 import ServiceDetails from './pages/ServiceDetails';
 
+// Auth Pages
+import LoginSelection from './pages/auth/LoginSelection';
+import SellerSignup from './pages/auth/SellerSignup';
+
 import SellerPortal from './portals/seller/SellerPortal';
 import SellerLogin from './portals/seller/pages/SellerLogin';
 
@@ -28,6 +32,10 @@ function App() {
             <Route path="/track" element={<TrackShipment />} />
             <Route path="/track/:awb" element={<TrackShipment />} />
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
+
+            {/* Global Auth */}
+            <Route path="/auth/login" element={<LoginSelection />} />
+            <Route path="/seller/signup" element={<SellerSignup />} />
 
             {/* Super Admin Portal */}
             <Route path="/admin/login" element={<AdminLogin />} />

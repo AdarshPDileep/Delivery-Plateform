@@ -1,124 +1,173 @@
 import React from 'react';
-import PageHeader from '../../../components/layout/PageHeader';
-import StatGrid from '../../../components/data/StatGrid';
-import KPICard from '../../../components/ui/KPICard';
-import GeoHierarchyPicker from '../../../components/forms/GeoHierarchyPicker';
-import Card from '../../../components/ui/Card';
-import DataTable from '../../../components/ui/DataTable';
-import { shipments } from '../../../data/shipments';
-import { Package, Truck, CheckCircle, XCircle, Clock, AlertTriangle, Wallet, Activity } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { formatCurrency } from '../../../utils/helpers';
-import { codSummary } from '../../../data/operations';
-
-const deliveryData = [
-  { name: 'Mon', delivered: 120, booked: 150 },
-  { name: 'Tue', delivered: 145, booked: 160 },
-  { name: 'Wed', delivered: 130, booked: 140 },
-  { name: 'Thu', delivered: 160, booked: 180 },
-  { name: 'Fri', delivered: 185, booked: 200 },
-  { name: 'Sat', delivered: 190, booked: 170 },
-  { name: 'Sun', delivered: 90, booked: 80 },
-];
-
-const statusData = [
-  { name: 'In Transit', value: 45, color: '#f59e0b' },
-  { name: 'Out for Delivery', value: 25, color: '#06b6d4' },
-  { name: 'Delivered', value: 65, color: '#10b981' },
-  { name: 'RTO', value: 10, color: '#ef4444' },
-  { name: 'Exceptions', value: 5, color: '#f97316' },
-];
+import { Package, Truck, MapPin, CheckCircle2, AlertTriangle, IndianRupee, Store, TrendingUp, AlertOctagon } from 'lucide-react';
 
 export default function AdminDashboard() {
-  const recentShipments = shipments.slice(0, 5);
-
-  const columns = [
-    { key: 'awb', label: 'AWB' },
-    { key: 'sender', label: 'Sender', render: s => s.name },
-    { key: 'receiver', label: 'Receiver', render: r => r.name },
-    { key: 'status', label: 'Status', type: 'status' },
-    { key: 'updatedAt', label: 'Last Update', render: v => new Date(v).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) },
+  const kpis = [
+    { title: 'Shipments Today', value: '2,458', icon: Package, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { title: 'In Transit', value: '8,450', icon: Truck, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { title: 'Out for Delivery', value: '1,830', icon: MapPin, color: 'text-cyan-600', bg: 'bg-cyan-50' },
+    { title: 'Delivered', value: '6,242', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { title: 'RTO', value: '286', icon: AlertTriangle, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { title: 'COD in Hand', value: '₹8.42L', icon: IndianRupee, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { title: 'SLA Breaches', value: '32', icon: AlertOctagon, color: 'text-red-600', bg: 'bg-red-50' },
+    { title: 'Active Franchises', value: '146', icon: Store, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   ];
 
   return (
-    <div>
-      <PageHeader 
-        title="Command Center" 
-        description="Overview of network performance and real-time operations" 
-      />
+    <div className="p-8 max-w-[1600px] mx-auto space-y-8 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Control Tower</h1>
+          <p className="text-gray-500">Network-wide operations overview for today.</p>
+        </div>
+        <div className="flex gap-3">
+          <select className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors outline-none">
+            <option>Today</option>
+            <option>Last 7 Days</option>
+            <option>This Month</option>
+          </select>
+          <button className="bg-[#111111] text-white px-4 py-2 rounded-lg font-medium hover:bg-black transition-colors">
+            Generate Report
+          </button>
+        </div>
+      </div>
 
-      {/* Global Filter */}
-      <Card className="mb-6">
-        <h4 className="text-sm font-semibold text-slate-700 mb-3">Global Filter</h4>
-        <GeoHierarchyPicker maxLevel="town" />
-      </Card>
+      {/* KPI Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {kpis.map((kpi, index) => {
+          const Icon = kpi.icon;
+          return (
+            <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">{kpi.title}</p>
+                <h3 className="text-3xl font-bold text-gray-900">{kpi.value}</h3>
+              </div>
+              <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${kpi.bg}`}>
+                <Icon className={`w-7 h-7 ${kpi.color}`} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
-      {/* KPIs */}
-      <StatGrid columns={4} className="mb-6">
-        <KPICard title="Total Booked (Today)" value="1,245" icon={Package} trend="up" trendValue="+12%" />
-        <KPICard title="In Transit" value="3,480" icon={Truck} />
-        <KPICard title="Out for Delivery" value="1,120" icon={Clock} />
-        <KPICard title="Delivered (Today)" value="985" icon={CheckCircle} trend="up" trendValue="+5%" />
-        <KPICard title="RTO / Failed" value="45" icon={XCircle} trend="down" trendValue="-2%" color="bg-red-50/50" />
-        <KPICard title="COD in Hand" value={formatCurrency(codSummary.totalCollected)} icon={Wallet} subtitle="Pending Remittance" />
-        <KPICard title="SLA Breaches" value="12" icon={AlertTriangle} trend="up" trendValue="+2" color="bg-orange-50/50" />
-        <KPICard title="Avg Network Score" value="94.2%" icon={Activity} trend="flat" trendValue="0%" />
-      </StatGrid>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        {/* Delivery Trend Chart */}
-        <Card className="lg:col-span-2">
-          <h3 className="text-base font-semibold text-slate-900 mb-4">Volume Trend (7 Days)</h3>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={deliveryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
-                <RechartsTooltip cursor={{ fill: '#f1f5f9' }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                <Bar dataKey="booked" name="Booked" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="delivered" name="Delivered" fill="#1e3a8a" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Shipment Trend (Mock) */}
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-bold text-gray-900">Shipment Trend (Booked vs Delivered)</h2>
+            <button className="text-sm font-medium text-gray-500 hover:text-gray-900">View Details</button>
           </div>
-        </Card>
-
-        {/* Status Distribution */}
-        <Card>
-          <h3 className="text-base font-semibold text-slate-900 mb-4">Active Status Distribution</h3>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={statusData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value">
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-2 justify-center mt-2">
-            {statusData.map(s => (
-              <div key={s.name} className="flex items-center gap-1.5 text-xs text-slate-600">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.color }} />
-                {s.name} ({s.value}%)
+          <div className="h-64 flex items-end justify-between gap-2 px-2 relative">
+            {/* CSS Mock Chart */}
+            <div className="absolute inset-0 border-b border-gray-200 z-0 top-[80%]"></div>
+            <div className="absolute inset-0 border-b border-gray-200 z-0 top-[60%]"></div>
+            <div className="absolute inset-0 border-b border-gray-200 z-0 top-[40%]"></div>
+            <div className="absolute inset-0 border-b border-gray-200 z-0 top-[20%]"></div>
+            
+            {[60, 45, 80, 50, 95, 75, 100].map((h, i) => (
+              <div key={i} className="flex-1 flex items-end justify-center gap-1 z-10 h-full pb-2 group">
+                <div className="w-1/3 bg-blue-100 rounded-t-sm group-hover:bg-blue-200 transition-colors" style={{ height: `${h}%` }}></div>
+                <div className="w-1/3 bg-[#E31837] rounded-t-sm group-hover:bg-[#c0122e] transition-colors" style={{ height: `${h * 0.85}%` }}></div>
               </div>
             ))}
           </div>
-        </Card>
+          <div className="flex justify-between text-xs text-gray-400 mt-2 px-4">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+          <div className="flex items-center justify-center gap-6 mt-4">
+            <div className="flex items-center gap-2 text-sm"><div className="w-3 h-3 bg-blue-100 rounded-full"></div> Booked</div>
+            <div className="flex items-center gap-2 text-sm"><div className="w-3 h-3 bg-[#E31837] rounded-full"></div> Delivered</div>
+          </div>
+        </div>
+
+        {/* Status Distribution */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
+          <h2 className="text-lg font-bold text-gray-900 mb-6">Status Distribution</h2>
+          <div className="flex-1 flex flex-col justify-center space-y-6">
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-700">In Transit</span>
+                <span className="font-bold text-gray-900">45%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="bg-indigo-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-700">Delivered</span>
+                <span className="font-bold text-gray-900">35%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '35%' }}></div>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-700">Out for Delivery</span>
+                <span className="font-bold text-gray-900">12%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="bg-cyan-500 h-2 rounded-full" style={{ width: '12%' }}></div>
+              </div>
+            </div>
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium text-gray-700">Exceptions/RTO</span>
+                <span className="font-bold text-gray-900">8%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-2">
+                <div className="bg-amber-500 h-2 rounded-full" style={{ width: '8%' }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Recent Shipments */}
-      <Card padding="p-0">
-        <DataTable 
-          title="Recent Active Shipments"
-          columns={columns} 
-          data={recentShipments} 
-          searchable={false}
-          paginate={false}
-        />
-      </Card>
+      {/* Franchise Performance Table */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 overflow-hidden">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-bold text-gray-900">Franchise Performance</h2>
+          <button className="text-sm font-medium text-[#E31837] hover:underline">View Full Leaderboard</button>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Franchise</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Shipments</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Delivered</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">RTO</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">COD Pending</th>
+                <th className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">SLA %</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {[
+                { name: 'FR-BLR-001 (Koramangala)', shipments: 840, delivered: 790, rto: 12, cod: '₹1.4L', sla: 98.5 },
+                { name: 'FR-DEL-042 (Saket)', shipments: 620, delivered: 580, rto: 8, cod: '₹84K', sla: 97.2 },
+                { name: 'FR-BOM-112 (Andheri East)', shipments: 910, delivered: 840, rto: 25, cod: '₹2.1L', sla: 96.8 },
+                { name: 'FR-MAA-005 (Adyar)', shipments: 450, delivered: 420, rto: 5, cod: '₹45K', sla: 99.1 },
+              ].map((row, i) => (
+                <tr key={i} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 font-bold text-gray-900">{row.name}</td>
+                  <td className="px-4 py-3 text-gray-600">{row.shipments}</td>
+                  <td className="px-4 py-3 text-gray-600">{row.delivered}</td>
+                  <td className="px-4 py-3 text-red-600 font-medium">{row.rto}</td>
+                  <td className="px-4 py-3 font-medium text-gray-900">{row.cod}</td>
+                  <td className="px-4 py-3 text-right">
+                    <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${row.sla > 98 ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                      {row.sla}%
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

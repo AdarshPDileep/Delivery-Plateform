@@ -22,23 +22,32 @@ const FRANCHISE_LINKS = [
   { label: 'Overview', isDivider: true },
   { label: 'Dashboard', path: '/franchise/dashboard', icon: LayoutDashboard },
   
-  { label: 'Operations', isDivider: true },
-  { label: 'Network & Sub-agents', path: '/franchise/network', icon: Map },
-  { label: 'Walk-in Booking', path: '/franchise/booking', icon: Package },
+  { label: 'Shipments', isDivider: true },
+  { label: 'All Shipments', path: '/franchise/shipments', icon: Package },
+  { label: 'New Booking', path: '/franchise/booking', icon: Package },
+  
+  { label: 'Pickup', isDivider: true },
   { label: 'Pickup Requests', path: '/franchise/pickups', icon: ShoppingBag },
-  { label: 'Manifests (In/Out)', path: '/franchise/manifests', icon: Truck },
   
-  { label: 'Last Mile', isDivider: true },
-  { label: 'Agent Assignments', path: '/franchise/assignments', icon: MapPin },
-  { label: 'Delivery Personnel', path: '/franchise/agents', icon: Users },
+  { label: 'Operations', isDivider: true },
+  { label: 'Manifests & Bags', path: '/franchise/manifests', icon: Truck },
   
-  { label: 'Finance & Earnings', isDivider: true },
+  { label: 'Delivery', isDivider: true },
+  { label: 'Delivery Assignment', path: '/franchise/assignments', icon: MapPin },
+  
+  { label: 'Delivery Personnel', isDivider: true },
+  { label: 'Agents & Performance', path: '/franchise/agents', icon: Users },
+  
+  { label: 'Finance & COD', isDivider: true },
   { label: 'COD Remittance', path: '/franchise/cod', icon: Wallet },
-  { label: 'Earnings & Commission', path: '/franchise/earnings', icon: Percent },
+  { label: 'Commission Statement', path: '/franchise/earnings', icon: Percent },
+  
+  { label: 'Territory', isDivider: true },
+  { label: 'My Territory', path: '/franchise/network', icon: Map },
   
   { label: 'System', isDivider: true },
   { label: 'Reports', path: '/franchise/reports', icon: BarChart3 },
-  { label: 'Help & Support', path: '/franchise/support', icon: LifeBuoy },
+  { label: 'Support', path: '/franchise/support', icon: LifeBuoy },
 ];
 
 export default function FranchisePortal() {

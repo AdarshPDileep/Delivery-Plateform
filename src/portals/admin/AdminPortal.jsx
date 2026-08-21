@@ -27,30 +27,41 @@ const ADMIN_LINKS = [
   { label: 'Overview', isDivider: true },
   { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
   
-  { label: 'Network & Hierarchy', isDivider: true },
-  { label: 'Geo Master', path: '/admin/geo', icon: Map },
-  { label: 'Hubs & Routes', path: '/admin/hubs', icon: Share2 },
+  { label: 'Network Management', isDivider: true },
+  { label: 'Geography', path: '/admin/geo', icon: Map },
+  { label: 'Hubs & Branches', path: '/admin/hubs', icon: Share2 },
   
-  { label: 'Partners & Clients', isDivider: true },
-  { label: 'Franchises', path: '/admin/franchises', icon: Store },
-  { label: 'Sellers', path: '/admin/sellers', icon: Users },
-  { label: 'Delivery Agents', path: '/admin/agents', icon: Contact2 },
+  { label: 'Franchise Management', isDivider: true },
+  { label: 'All Franchises', path: '/admin/franchises', icon: Store },
+  
+  { label: 'Seller Management', isDivider: true },
+  { label: 'All Sellers', path: '/admin/sellers', icon: Users },
+  
+  { label: 'Shipment Management', isDivider: true },
+  { label: 'All Shipments', path: '/admin/shipments', icon: Package },
   
   { label: 'Operations', isDivider: true },
-  { label: 'Shipments', path: '/admin/shipments', icon: Package },
-  { label: 'Support Tickets', path: '/admin/tickets', icon: LifeBuoy },
+  { label: 'Pickups & Manifests', path: '/admin/operations', icon: Truck },
   
-  { label: 'Finance & Billing', isDivider: true },
+  { label: 'Delivery Personnel', isDivider: true },
+  { label: 'All Agents', path: '/admin/agents', icon: Contact2 },
+  
+  { label: 'Pricing', isDivider: true },
   { label: 'Rate Cards', path: '/admin/rate-cards', icon: FileText },
-  { label: 'Commissions', path: '/admin/commissions', icon: Percent },
-  { label: 'COD Settlement', path: '/admin/cod', icon: Wallet },
+  
+  { label: 'Commission', isDivider: true },
+  { label: 'Commission Rules', path: '/admin/commissions', icon: Percent },
+  
+  { label: 'Finance', isDivider: true },
+  { label: 'COD & Settlements', path: '/admin/cod', icon: Wallet },
   
   { label: 'System', isDivider: true },
   { label: 'Reports', path: '/admin/reports', icon: BarChart3 },
-  { label: 'Users & Roles', path: '/admin/users', icon: Shield },
+  { label: 'Support', path: '/admin/tickets', icon: LifeBuoy },
   { label: 'Notifications', path: '/admin/notifications', icon: Bell },
-  { label: 'Masters Config', path: '/admin/masters', icon: Settings },
-  { label: 'Audit Log', path: '/admin/audit', icon: History },
+  { label: 'Users & Roles', path: '/admin/users', icon: Shield },
+  { label: 'Masters', path: '/admin/masters', icon: Settings },
+  { label: 'Audit Logs', path: '/admin/audit', icon: History },
 ];
 
 export default function AdminPortal() {

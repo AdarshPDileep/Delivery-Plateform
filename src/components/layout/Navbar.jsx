@@ -140,11 +140,17 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-6">
-        <button className="hidden md:flex items-center gap-2 text-gray-300 font-medium hover:text-white transition-colors">
+        <button 
+          onClick={() => navigate('/auth/login')}
+          className="hidden md:flex items-center gap-2 text-gray-300 font-medium hover:text-white transition-colors"
+        >
           <User className="w-5 h-5" />
           <span>Login</span>
         </button>
-        <button className="hidden md:block bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-full font-bold transition-colors">
+        <button 
+          onClick={() => navigate('/seller/signup')}
+          className="hidden md:block bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-full font-bold transition-colors"
+        >
           Sign Up
         </button>
         <button className="md:hidden text-white">
