@@ -644,116 +644,117 @@ export default function GeoMaster() {
 
       {/* Forms Overlay */}
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black/30 z-50 flex justify-end">
-           <div className="w-[450px] bg-white h-full shadow-2xl flex flex-col animate-slide-in-right">
-              <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+           <div className="w-[700px] bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] animate-fade-in-up overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 bg-[#E31837] text-white">
+                <div className="flex items-center gap-3">
+                  {formType === 'edit_geo' ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                  <h2 className="text-xl font-bold text-white">
                     {formType === 'add_geo' ? 'Add Geography' : formType === 'edit_geo' ? 'Edit Geography' : 'Add Pincode'}
                   </h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {formType === 'add_geo' ? 'Add a new location to your geographic network.' : 
-                     formType === 'edit_geo' ? 'Update the location details.' : 'Add a new pincode to the selected location.'}
-                  </p>
                 </div>
-                <button onClick={closeForm} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button>
+                <button onClick={closeForm} className="p-1.5 text-white bg-white/20 hover:bg-white/30 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
               </div>
 
-              <div className="p-6 flex-1 overflow-y-auto space-y-5">
+              {/* Form Content */}
+              <div className="p-6 flex-1 overflow-y-auto">
                  {formType !== 'add_pincode' ? (
-                   <>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Geography Type <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent bg-white">
-                         <option>Town</option>
-                         <option>Taluk</option>
-                         <option>District</option>
-                         <option>Zone</option>
-                         <option>State</option>
-                       </select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">State <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent bg-white"><option>Kerala</option></select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Zone <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent bg-white"><option>South Zone</option></select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">District <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent bg-white"><option>Thiruvananthapuram</option></select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Taluk <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent bg-white"><option>Neyyattinkara Taluk</option></select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Town Name <span className="text-red-500">*</span></label>
-                       <input type="text" defaultValue={formType === 'edit_geo' ? 'Neyyattinkara Town' : ''} placeholder="Enter town name" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent" />
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Town Code</label>
-                       <input type="text" defaultValue={formType === 'edit_geo' ? 'NYT-TOWN' : ''} placeholder="Enter town code" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent" />
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Status</label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent bg-white">
-                         <option>Active</option>
-                         <option>Inactive</option>
-                       </select>
-                     </div>
-                   </>
-                 ) : (
-                   <>
-                     <div className="flex gap-4">
-                       <div className="space-y-1.5 flex-1">
+                   <div className="space-y-6">
+                     <div className="grid grid-cols-2 gap-5">
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">Geography Type <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white">
+                           <option>Town</option>
+                           <option>Taluk</option>
+                           <option>District</option>
+                           <option>Zone</option>
+                           <option>State</option>
+                         </select>
+                       </div>
+                       <div className="space-y-1.5">
                          <label className="text-xs font-bold text-gray-700">State <span className="text-red-500">*</span></label>
                          <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Kerala</option></select>
                        </div>
-                       <div className="space-y-1.5 flex-1">
+                       <div className="space-y-1.5">
                          <label className="text-xs font-bold text-gray-700">Zone <span className="text-red-500">*</span></label>
                          <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>South Zone</option></select>
                        </div>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Taluk <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Taluk</option></select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Town <span className="text-red-500">*</span></label>
-                       <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Town</option></select>
-                     </div>
-                     <div className="space-y-1.5">
-                       <label className="text-xs font-bold text-gray-700">Pincode <span className="text-red-500">*</span></label>
-                       <input type="text" placeholder="Enter pincode" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
-                     </div>
-
-                     <div className="pt-4 border-t border-gray-100">
-                        <h4 className="text-sm font-bold text-gray-900 mb-3">Serviceability</h4>
-                        <div className="space-y-3">
-                           <label className="flex items-center gap-3"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-medium text-gray-700">Serviceable</span></label>
-                           <label className="flex items-center gap-3"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-medium text-gray-700">Pickup Available</span></label>
-                           <label className="flex items-center gap-3"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-medium text-gray-700">Delivery Available</span></label>
-                        </div>
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">District <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Thiruvananthapuram</option></select>
+                       </div>
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">Taluk <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Taluk</option></select>
+                       </div>
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">Status <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white">
+                           <option>Active</option>
+                           <option>Inactive</option>
+                         </select>
+                       </div>
                      </div>
                      
-                     <div className="pt-4 border-t border-gray-100">
-                        <h4 className="text-sm font-bold text-gray-900 mb-3">Additional Services</h4>
-                        <div className="space-y-3">
-                           <label className="flex items-center gap-3"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-medium text-gray-700">COD Available</span></label>
-                           <label className="flex items-center gap-3"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-medium text-gray-700">Prepaid Available</span></label>
-                           <label className="flex items-center gap-3"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-medium text-gray-700">Reverse Pickup</span></label>
+                     <div>
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Location Details</h3>
+                        <div className="grid grid-cols-2 gap-5">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-gray-700">Town Name <span className="text-red-500">*</span></label>
+                            <input type="text" defaultValue={formType === 'edit_geo' ? 'Neyyattinkara Town' : ''} placeholder="e.g. Neyyattinkara Town" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-gray-700">Town Code</label>
+                            <input type="text" defaultValue={formType === 'edit_geo' ? 'NYT-TOWN' : ''} placeholder="e.g. NYT-TOWN" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                          </div>
                         </div>
                      </div>
-                   </>
+                   </div>
+                 ) : (
+                   <div className="space-y-6">
+                     <div className="grid grid-cols-2 gap-5">
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">State <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Kerala</option></select>
+                       </div>
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">Zone <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>South Zone</option></select>
+                       </div>
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">Taluk <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Taluk</option></select>
+                       </div>
+                       <div className="space-y-1.5">
+                         <label className="text-xs font-bold text-gray-700">Town <span className="text-red-500">*</span></label>
+                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Town</option></select>
+                       </div>
+                       <div className="space-y-1.5 col-span-2">
+                         <label className="text-xs font-bold text-gray-700">Pincode <span className="text-red-500">*</span></label>
+                         <input type="text" placeholder="Enter pincode" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                       </div>
+                     </div>
+
+                     <div>
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Serviceability Flags</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Serviceable</span></label>
+                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Pickup Available</span></label>
+                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Delivery Available</span></label>
+                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">COD Available</span></label>
+                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Prepaid Available</span></label>
+                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Reverse Pickup</span></label>
+                        </div>
+                     </div>
+                   </div>
                  )}
               </div>
               
-              <div className="p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50/50">
-                 <button onClick={closeForm} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-white transition-colors text-sm">Cancel</button>
-                 <button className="px-5 py-2.5 bg-[#E31837] text-white font-medium rounded-lg hover:bg-red-700 transition-colors shadow-md text-sm">
-                   {formType === 'edit_geo' ? 'Save Changes' : formType === 'add_geo' ? 'Add Geography' : 'Add Pincode'}
+              {/* Footer */}
+              <div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3 bg-white">
+                 <button className="px-5 py-2.5 bg-[#E31837] text-white font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm text-sm">
+                   {formType === 'edit_geo' ? 'Save Changes' : formType === 'add_geo' ? 'Create Geography' : 'Add Pincode'}
                  </button>
               </div>
            </div>
