@@ -45,10 +45,12 @@ export default function Navbar() {
   const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 
   const renderDropdown = (items, isActive) => (
-    isActive && (
-      <div className="absolute top-full left-1/2 -translate-x-1/2 w-72 bg-white rounded-lg shadow-2xl py-2 overflow-hidden border border-gray-100 mt-2">
-        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 transform border-l border-t border-gray-100"></div>
-        <div className="relative z-10 flex flex-col">
+    <div 
+      className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-200 ${isActive ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2 pointer-events-none'}`}
+    >
+      <div className="w-72 bg-white rounded-lg shadow-2xl py-2 border border-gray-100 relative">
+        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 transform border-l border-t border-gray-100 z-0"></div>
+        <div className="relative z-10 flex flex-col bg-white rounded-lg overflow-hidden">
           {items.map((item) => {
             const Icon = item.icon;
             return (
@@ -69,7 +71,7 @@ export default function Navbar() {
           })}
         </div>
       </div>
-    )
+    </div>
   );
 
   return (
