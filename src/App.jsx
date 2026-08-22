@@ -15,6 +15,7 @@ import TrackShipment from './pages/TrackShipment';
 import ServiceDetails from './pages/ServiceDetails';
 import SolutionDetails from './pages/SolutionDetails';
 import PartnerDetails from './pages/PartnerDetails';
+import CompanyDetails from './pages/CompanyDetails';
 
 // Auth Pages
 import LoginSelection from './pages/auth/LoginSelection';
@@ -36,6 +37,7 @@ function App() {
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
             <Route path="/solutions/:solutionId" element={<SolutionDetails />} />
             <Route path="/partners/:partnerId" element={<PartnerDetails />} />
+            <Route path="/company/:companyId" element={<CompanyDetails />} />
 
             {/* Global Auth */}
             <Route path="/auth/login" element={<LoginSelection />} />
