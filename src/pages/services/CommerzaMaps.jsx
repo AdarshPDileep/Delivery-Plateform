@@ -16,22 +16,24 @@ export default function CommerzaMaps() {
   return (
     <div className="w-full animate-fade-in font-sans">
       {/* Hero Section */}
-      <div className="w-full py-24 md:py-32 px-6 bg-gradient-to-br from-pink-600 to-rose-800 text-white relative overflow-hidden">
+      <div className="w-full py-24 md:py-32 px-6 bg-[#0a0f1a] text-white relative overflow-hidden border-b-4 border-[#e31837]">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div className="absolute right-[10%] top-[20%] w-64 h-64 bg-[#e31837] rounded-full blur-[120px] opacity-20"></div>
+
         <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1">
-            <div className="inline-flex items-center justify-center p-3 bg-white/20 rounded-2xl mb-6 backdrop-blur-md shadow-lg border border-white/20">
-              <Map className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center p-3 bg-white/10 rounded-2xl mb-6 backdrop-blur-md shadow-lg border border-white/20">
+              <Map className="w-8 h-8 text-[#e31837]" />
             </div>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 font-display flex items-center gap-4">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 font-display flex items-center gap-4 text-white">
               Commerza Maps
-              <span className="text-xs font-bold text-rose-800 bg-white px-3 py-1 rounded-full uppercase tracking-widest align-middle">Beta</span>
+              <span className="text-xs font-bold text-white bg-[#e31837] px-3 py-1 rounded-full uppercase tracking-widest align-middle">Beta</span>
             </h1>
-            <p className="text-lg md:text-xl text-rose-100 max-w-2xl leading-relaxed mb-10">
+            <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed mb-10">
               Intelligent mapping, routing, and geo-coding built specifically for the complexities of modern logistics networks.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="bg-white text-rose-700 hover:bg-gray-50 px-8 py-4 rounded-full font-bold transition-colors shadow-xl">
+              <button className="bg-white text-black px-8 py-4 rounded font-bold transition-colors shadow-xl hover:bg-gray-100">
                 Get API Access
               </button>
             </div>
@@ -41,14 +43,14 @@ export default function CommerzaMaps() {
             <div className="bg-white rounded-3xl p-2 shadow-2xl w-full max-w-lg relative overflow-hidden">
               <div className="w-full h-72 bg-gray-100 rounded-2xl relative overflow-hidden">
                 {/* Mock Map Background */}
-                <div className="absolute inset-0 bg-rose-50" style={{ backgroundImage: 'radial-gradient(#fecdd3 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                <div className="absolute inset-0 bg-gray-50" style={{ backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                 
                 {/* Route Line */}
-                <div className="absolute top-[40%] left-[20%] w-[60%] h-[20%] border-t-2 border-l-2 border-dashed border-rose-500 rounded-tl-3xl"></div>
+                <div className="absolute top-[40%] left-[20%] w-[60%] h-[20%] border-t-2 border-l-2 border-dashed border-[#e31837] rounded-tl-3xl"></div>
                 
                 {/* Hub Point */}
                 <div className="absolute top-[40%] left-[20%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                  <div className="w-6 h-6 bg-rose-600 rounded-full border-4 border-white shadow-md z-10 flex items-center justify-center">
+                  <div className="w-6 h-6 bg-[#e31837] rounded-full border-4 border-white shadow-md z-10 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                   </div>
                   <span className="bg-white px-2 py-1 rounded text-[10px] font-bold text-gray-800 shadow mt-1">Trivandrum Hub</span>
@@ -74,14 +76,14 @@ export default function CommerzaMaps() {
           {/* Pincode Serviceability */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
             <h3 className="text-2xl font-black font-display text-gray-900 mb-6 flex items-center gap-3">
-              <Crosshair className="w-6 h-6 text-rose-600" />
+              <Crosshair className="w-6 h-6 text-[#e31837]" />
               Pincode Serviceability
             </h3>
             <form onSubmit={handleSearch} className="flex gap-4 mb-8">
               <input 
                 type="text" 
                 placeholder="Enter Pincode (e.g., 695001)" 
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-rose-600 focus:outline-none" 
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#e31837] focus:outline-none" 
                 required 
               />
               <button type="submit" className="bg-gray-900 text-white px-6 font-bold rounded-lg hover:bg-gray-800 transition-colors">
@@ -91,10 +93,10 @@ export default function CommerzaMaps() {
 
             {showResult ? (
               <div className="animate-fade-in border border-gray-100 rounded-xl overflow-hidden">
-                <div className="bg-rose-50 p-4 border-b border-rose-100 flex items-center justify-between">
+                <div className="bg-red-50 p-4 border-b border-red-100 flex items-center justify-between">
                   <div>
-                    <h4 className="font-bold text-rose-900">Geographic Hierarchy</h4>
-                    <p className="text-xs text-rose-700">Verified by Commerza Maps</p>
+                    <h4 className="font-bold text-red-900">Geographic Hierarchy</h4>
+                    <p className="text-xs text-red-700">Verified by Commerza Maps</p>
                   </div>
                   <CheckCircle2 className="w-6 h-6 text-emerald-600" />
                 </div>
@@ -146,26 +148,26 @@ export default function CommerzaMaps() {
           {/* Route Planner */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
             <h3 className="text-2xl font-black font-display text-gray-900 mb-6 flex items-center gap-3">
-              <Navigation className="w-6 h-6 text-rose-600" />
+              <Navigation className="w-6 h-6 text-[#e31837]" />
               Network Route Planner
             </h3>
             
-            <div className="bg-slate-900 rounded-xl p-6 text-white mb-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl"></div>
+            <div className="bg-[#111] rounded-xl p-6 text-white mb-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#e31837]/10 rounded-full blur-2xl"></div>
               
               <div className="flex items-start gap-4 relative z-10">
                 <div className="flex flex-col items-center mt-1">
-                  <div className="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div>
-                  <div className="w-0.5 h-12 bg-slate-700 my-1"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#e31837] shadow-[0_0_10px_rgba(227,24,55,0.5)]"></div>
+                  <div className="w-0.5 h-12 bg-gray-700 my-1"></div>
                   <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div>
                 </div>
                 <div className="flex-1 space-y-5">
                   <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Origin Hub</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Origin Hub</p>
                     <p className="font-bold text-lg font-display">Trivandrum Hub</p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Destination Hub</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Destination Hub</p>
                     <p className="font-bold text-lg font-display">Kochi Hub</p>
                   </div>
                 </div>
@@ -179,14 +181,14 @@ export default function CommerzaMaps() {
               </div>
               <div className="border border-gray-100 p-4 rounded-xl">
                 <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Estimated TAT</p>
-                <p className="text-xl font-black text-rose-600">4 hr 30 min</p>
+                <p className="text-xl font-black text-[#e31837]">4 hr 30 min</p>
               </div>
             </div>
 
             <div>
               <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-3">Linehaul Route Path</p>
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2">
-                <span className="bg-rose-50 text-rose-700 font-bold px-3 py-1.5 rounded-full text-xs whitespace-nowrap">Trivandrum</span>
+                <span className="bg-red-50 text-red-700 font-bold px-3 py-1.5 rounded-full text-xs whitespace-nowrap">Trivandrum</span>
                 <span className="text-gray-300">→</span>
                 <span className="bg-gray-50 text-gray-700 font-bold px-3 py-1.5 rounded-full text-xs whitespace-nowrap">Kollam</span>
                 <span className="text-gray-300">→</span>
@@ -210,15 +212,16 @@ export default function CommerzaMaps() {
             </p>
             <ul className="space-y-4">
               <li className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-rose-600 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-[#e31837] flex-shrink-0" />
                 <span className="text-gray-700 font-medium">Real-time GPS tracking of field executives</span>
+              .
               </li>
               <li className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-rose-600 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-[#e31837] flex-shrink-0" />
                 <span className="text-gray-700 font-medium">Franchise delivery territory drawing & geofencing</span>
               </li>
               <li className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-rose-600 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-[#e31837] flex-shrink-0" />
                 <span className="text-gray-700 font-medium">Dynamic route optimization for multi-stop deliveries</span>
               </li>
             </ul>
@@ -231,7 +234,7 @@ export default function CommerzaMaps() {
               
               {/* Geofence Polygon */}
               <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,50 300,80 350,250 150,350 20,200" fill="rgba(244,63,94,0.1)" stroke="rgba(244,63,94,0.5)" strokeWidth="2" strokeDasharray="5,5" />
+                <polygon points="50,50 300,80 350,250 150,350 20,200" fill="rgba(227,24,55,0.05)" stroke="rgba(227,24,55,0.5)" strokeWidth="2" strokeDasharray="5,5" />
               </svg>
 
               {/* Agent Popup */}
@@ -251,7 +254,7 @@ export default function CommerzaMaps() {
                     <MapPin className="w-3 h-3" /> Kazhakkoottam
                   </div>
                 </div>
-                <div className="w-4 h-4 bg-rose-600 border-2 border-white rounded-full shadow-md z-10"></div>
+                <div className="w-4 h-4 bg-[#e31837] border-2 border-white rounded-full shadow-md z-10"></div>
               </div>
             </div>
           </div>
