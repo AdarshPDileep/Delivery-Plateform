@@ -28,21 +28,21 @@ export default function PickupManifestControl() {
 
   const getStatusPill = (status) => {
     switch(status) {
-      case 'Scheduled': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100">Scheduled</span>;
-      case 'Picked Up': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold text-green-700 bg-green-50 border border-green-100">Picked Up</span>;
-      case 'In Transit': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold text-yellow-700 bg-yellow-50 border border-yellow-100">In Transit</span>;
-      case 'Exception': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold text-[#E31837] bg-red-50 border border-red-100">Exception</span>;
+      case 'Scheduled': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-100">Scheduled</span>;
+      case 'Picked Up': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold text-green-700 bg-green-50 border border-green-100">Picked Up</span>;
+      case 'In Transit': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold text-yellow-700 bg-yellow-50 border border-yellow-100">In Transit</span>;
+      case 'Exception': return <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold text-[#E31837] bg-red-50 border border-red-100">Exception</span>;
       default: return null;
     }
   };
 
   return (
-    <div className="p-8 w-full mx-auto space-y-6 animate-fade-in bg-[#fbfbfb] min-h-screen">
+    <div className="p-8 w-full mx-auto space-y-8 animate-fade-in bg-gray-50 min-h-screen">
       
       {/* Header */}
       <div>
-         <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-none mb-1.5">Pickups & Manifests</h1>
-         <p className="text-gray-500 text-[13px]">Schedule pickups, generate manifests and track pickup status.</p>
+         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Pickups & Manifests</h1>
+         <p className="text-gray-500 text-sm mt-1">Schedule pickups, generate manifests and track pickup status.</p>
       </div>
 
       {/* Top 6 Summary Cards */}
@@ -161,40 +161,40 @@ export default function PickupManifestControl() {
               <thead className="bg-gray-50/50 text-gray-500 border-b border-gray-100">
                 <tr>
                   <th className="pl-6 py-4 w-10"><input type="checkbox" className="rounded text-gray-300 focus:ring-[#E31837]" /></th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider">Pickup ID</th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider">Pickup Date & Time</th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider">Branch / Hub</th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider text-center">Total Shipments</th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider text-center">Weight (KG)</th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider text-center">Status</th>
-                  <th className="px-4 py-4 font-bold text-[9px] uppercase tracking-wider text-center">Manifest</th>
-                  <th className="px-6 py-4 font-bold text-[9px] uppercase tracking-wider text-center">Actions</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">Pickup ID</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">Pickup Date & Time</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">Branch / Hub</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Total Shipments</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Weight (KG)</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Status</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Manifest</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {tableData.map((row, i) => (
                   <tr key={i} className="hover:bg-gray-50/50 transition-colors bg-white group">
-                    <td className="pl-6 py-3 w-10"><input type="checkbox" className="rounded text-gray-300 focus:ring-[#E31837]" /></td>
-                    <td className="px-4 py-3 font-bold text-[11px] text-gray-800">{row.id}</td>
-                    <td className="px-4 py-3">
-                       <p className="font-bold text-[11px] text-gray-900">{row.date}</p>
-                       <p className="text-[10px] font-medium text-gray-500">{row.time}</p>
+                    <td className="pl-6 py-4 w-10"><input type="checkbox" className="rounded text-gray-300 focus:ring-[#E31837]" /></td>
+                    <td className="px-6 py-4 font-bold text-[13px] text-gray-800">{row.id}</td>
+                    <td className="px-6 py-4">
+                       <p className="font-bold text-[13px] text-gray-900 mb-0.5">{row.date}</p>
+                       <p className="text-[11px] font-medium text-gray-500">{row.time}</p>
                     </td>
-                    <td className="px-4 py-3">
-                       <p className="font-bold text-[11px] text-gray-900">{row.hubName}</p>
-                       <p className="text-[10px] font-medium text-gray-500">{row.hubId}</p>
+                    <td className="px-6 py-4">
+                       <p className="font-bold text-[13px] text-gray-900 mb-0.5">{row.hubName}</p>
+                       <p className="text-[11px] font-medium text-gray-500">{row.hubId}</p>
                     </td>
-                    <td className="px-4 py-3 text-center font-bold text-[11px] text-gray-700">{row.shipments}</td>
-                    <td className="px-4 py-3 text-center font-bold text-[11px] text-gray-700">{row.weight}</td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-6 py-4 text-center font-bold text-[13px] text-gray-700">{row.shipments}</td>
+                    <td className="px-6 py-4 text-center font-bold text-[13px] text-gray-700">{row.weight}</td>
+                    <td className="px-6 py-4 text-center">
                        {getStatusPill(row.status)}
                     </td>
-                    <td className="px-4 py-3 text-center">
-                       <span className={`text-[11px] font-bold ${row.manifest !== '-' ? 'text-[#E31837]' : 'text-gray-400'}`}>
+                    <td className="px-6 py-4 text-center">
+                       <span className={`text-[13px] font-bold ${row.manifest !== '-' ? 'text-[#E31837]' : 'text-gray-400'}`}>
                          {row.manifest}
                        </span>
                     </td>
-                    <td className="px-6 py-3">
+                    <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-3">
                         <button className="text-gray-400 hover:text-gray-700"><Eye className="w-4 h-4" /></button>
                         <button className="text-gray-400 hover:text-gray-700"><MoreVertical className="w-4 h-4" /></button>

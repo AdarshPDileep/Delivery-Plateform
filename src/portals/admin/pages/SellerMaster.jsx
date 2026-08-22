@@ -56,7 +56,7 @@ export default function SellerMaster() {
   ];
 
   return (
-    <div className="p-8 w-full mx-auto space-y-6 animate-fade-in bg-[#fbfbfb] min-h-screen">
+    <div className="p-8 w-full mx-auto space-y-8 animate-fade-in bg-gray-50 min-h-screen">
       
       {/* Header */}
       <div className="flex items-center gap-4">
@@ -64,8 +64,8 @@ export default function SellerMaster() {
            <Users className="w-6 h-6" />
          </div>
          <div>
-           <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-none mb-1.5">Seller Management</h1>
-           <p className="text-gray-500 text-sm">Approve accounts, verify KYC documents, and assign rate cards.</p>
+           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Seller Management</h1>
+           <p className="text-gray-500 text-sm mt-1">Approve accounts, verify KYC documents, and assign rate cards.</p>
          </div>
       </div>
 

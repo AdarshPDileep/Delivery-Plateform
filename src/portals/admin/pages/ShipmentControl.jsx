@@ -52,23 +52,23 @@ export default function ShipmentControl() {
 
   const getStatusPill = (status) => {
     switch(status) {
-      case 'In Transit': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-yellow-700 bg-yellow-100"><span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>In Transit</span>;
-      case 'Delivered': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-green-700 bg-green-100"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>Delivered</span>;
-      case 'Booked': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-blue-700 bg-blue-100"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Booked</span>;
-      case 'Out for Delivery': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-cyan-700 bg-cyan-100"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>Out for Delivery</span>;
-      case 'RTO / Exception': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-[#E31837] bg-red-100"><span className="w-1.5 h-1.5 rounded-full bg-[#E31837]"></span>RTO / Exception</span>;
-      case 'Picked Up': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-purple-700 bg-purple-100"><span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Picked Up</span>;
+      case 'In Transit': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-yellow-700 bg-yellow-100"><span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>In Transit</span>;
+      case 'Delivered': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-green-700 bg-green-100"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>Delivered</span>;
+      case 'Booked': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-blue-700 bg-blue-100"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Booked</span>;
+      case 'Out for Delivery': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-cyan-700 bg-cyan-100"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>Out for Delivery</span>;
+      case 'RTO / Exception': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-[#E31837] bg-red-100"><span className="w-1.5 h-1.5 rounded-full bg-[#E31837]"></span>RTO / Exception</span>;
+      case 'Picked Up': return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-purple-700 bg-purple-100"><span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Picked Up</span>;
       default: return null;
     }
   };
 
   return (
-    <div className="p-8 w-full mx-auto space-y-6 animate-fade-in bg-[#f8fafc] min-h-screen">
+    <div className="p-8 w-full mx-auto space-y-8 animate-fade-in bg-gray-50 min-h-screen">
       
       {/* Header */}
       <div>
-         <h1 className="text-[22px] font-bold text-gray-900 tracking-tight leading-none mb-1.5">Consignment & Shipment Control</h1>
-         <p className="text-gray-500 text-[13px]">Global view of all shipments. Manage exceptions, re-routes, and bulk updates.</p>
+         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Consignment & Shipment Control</h1>
+         <p className="text-gray-500 text-sm mt-1">Global view of all shipments. Manage exceptions, re-routes, and bulk updates.</p>
       </div>
 
       {/* Top 6 Summary Cards */}
@@ -134,41 +134,41 @@ export default function ShipmentControl() {
               <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
                 <tr>
                   <th className="pl-6 py-4 w-10"><input type="checkbox" className="rounded text-[#E31837] focus:ring-[#E31837]" /></th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider">AWB Number</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider">Sender</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider">Receiver</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Current Status</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Payment Type</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider text-center">COD Amount</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Franchise</th>
-                  <th className="px-4 py-4 font-bold text-[10px] uppercase tracking-wider">Last Update</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">AWB Number</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">Sender</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">Receiver</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Current Status</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Payment Type</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">COD Amount</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Franchise</th>
+                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">Last Update</th>
                   <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {tableData.map((row, i) => (
                   <tr key={i} className="hover:bg-gray-50/50 transition-colors bg-white group">
-                    <td className="pl-6 py-3 w-10"><input type="checkbox" className="rounded text-[#E31837] focus:ring-[#E31837]" /></td>
-                    <td className="px-4 py-3 font-bold text-[11px] text-gray-800">{row.awb}</td>
-                    <td className="px-4 py-3">
-                       <p className="font-bold text-[11px] text-gray-900">{row.sender.name}</p>
-                       <p className="text-[10px] font-medium text-gray-500">{row.sender.loc}</p>
+                    <td className="pl-6 py-4 w-10"><input type="checkbox" className="rounded text-[#E31837] focus:ring-[#E31837]" /></td>
+                    <td className="px-6 py-4 font-bold text-[13px] text-gray-800">{row.awb}</td>
+                    <td className="px-6 py-4">
+                       <p className="font-bold text-[13px] text-gray-900 mb-0.5">{row.sender.name}</p>
+                       <p className="text-[11px] font-medium text-gray-500">{row.sender.loc}</p>
                     </td>
-                    <td className="px-4 py-3">
-                       <p className="font-bold text-[11px] text-gray-900">{row.receiver.name}</p>
-                       <p className="text-[10px] font-medium text-gray-500">{row.receiver.loc}</p>
+                    <td className="px-6 py-4">
+                       <p className="font-bold text-[13px] text-gray-900 mb-0.5">{row.receiver.name}</p>
+                       <p className="text-[11px] font-medium text-gray-500">{row.receiver.loc}</p>
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-6 py-4 text-center">
                        {getStatusPill(row.status)}
                     </td>
-                    <td className="px-4 py-3 text-center font-medium text-[11px] text-gray-700">{row.pmt}</td>
-                    <td className="px-4 py-3 text-center font-bold text-[11px] text-gray-900">{row.cod}</td>
-                    <td className="px-4 py-3 text-center font-medium text-[11px] text-gray-700">{row.franchise}</td>
-                    <td className="px-4 py-3">
-                       <p className="font-medium text-[11px] text-gray-800">{row.updated}</p>
-                       <p className="text-[10px] font-medium text-gray-500">{row.time}</p>
+                    <td className="px-6 py-4 text-center font-medium text-[13px] text-gray-700">{row.pmt}</td>
+                    <td className="px-6 py-4 text-center font-bold text-[13px] text-gray-900">{row.cod}</td>
+                    <td className="px-6 py-4 text-center font-medium text-[13px] text-gray-700">{row.franchise}</td>
+                    <td className="px-6 py-4">
+                       <p className="font-medium text-[13px] text-gray-800 mb-0.5">{row.updated}</p>
+                       <p className="text-[11px] font-medium text-gray-500">{row.time}</p>
                     </td>
-                    <td className="px-6 py-3">
+                    <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
                         <button onClick={() => setActiveDrawer('view')} className="text-gray-400 hover:text-gray-700"><Eye className="w-4 h-4" /></button>
                         <button onClick={() => setActiveDrawer('edit')} className="text-gray-400 hover:text-[#E31837]"><Edit className="w-4 h-4" /></button>
