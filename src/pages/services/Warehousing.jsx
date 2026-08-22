@@ -9,11 +9,11 @@ export default function Warehousing() {
   return (
     <div className="w-full font-sans bg-white">
       {/* Hero Section */}
-      <section className="relative h-[450px] md:h-[550px] flex items-center">
+      <section className="relative h-[450px] md:h-[550px] flex items-center bg-black">
         {/* Background image of warehouse */}
-        <div className="absolute inset-0 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1586528116311-ad8ed7c663e0?auto=format&fit=crop&q=80')]" />
+        <div className="absolute inset-0 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&q=80')]" />
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-transparent" />
         
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-16">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-2xl leading-tight mb-4">

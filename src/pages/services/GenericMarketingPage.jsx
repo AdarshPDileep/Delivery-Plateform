@@ -7,9 +7,12 @@ export default function GenericMarketingPage({ service }) {
   return (
     <div className="w-full animate-fade-in">
       {/* Hero Section */}
-      <div className={`w-full py-24 md:py-32 px-6 bg-gradient-to-br ${service.heroGradient} text-white relative overflow-hidden`}>
-        {/* Background Patterns */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+      <div className="w-full py-24 md:py-32 px-6 bg-black text-white relative overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1600&q=80')]" />
+        
+        {/* Gradient Fade */}
+        <div className={`absolute inset-0 bg-gradient-to-r ${service.heroGradient} opacity-90`} />
         
         <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1">
