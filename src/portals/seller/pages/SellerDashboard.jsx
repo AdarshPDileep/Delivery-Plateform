@@ -30,7 +30,7 @@ export default function SellerDashboard() {
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-500 text-sm mt-1">Welcome back. Here's an overview of your shipments.</p>
         </div>
-        <button className="bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-red-900/20 flex items-center gap-2">
+        <button className="bg-[#065f46] hover:bg-[#064e3b] text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-emerald-900/20 flex items-center gap-2">
           <Package className="w-4 h-4" />
           Create Shipment
         </button>
@@ -63,7 +63,7 @@ export default function SellerDashboard() {
           title="RTO / Exceptions" 
           value="20" 
           icon={AlertTriangle} 
-          colorClass="bg-red-50 text-red-600"
+          colorClass="bg-emerald-50 text-red-600"
           subtitle="Action Required"
         />
       </div>
@@ -73,7 +73,7 @@ export default function SellerDashboard() {
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-bold text-lg text-gray-900">Shipment Volume Trend</h3>
-            <select className="bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#E31837]">
+            <select className="bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#065f46]">
               <option>Last 7 Days</option>
               <option>Last 30 Days</option>
             </select>
@@ -85,7 +85,7 @@ export default function SellerDashboard() {
                 <div className="w-full bg-gray-100 rounded-t-lg relative h-full flex items-end">
                   <div 
                     style={{ height: `${height}%` }} 
-                    className="w-full bg-[#E31837]/20 group-hover:bg-[#E31837] rounded-t-lg transition-all duration-300 relative"
+                    className="w-full bg-[#065f46]/20 group-hover:bg-[#065f46] rounded-t-lg transition-all duration-300 relative"
                   ></div>
                 </div>
                 <span className="text-xs text-gray-400 font-medium">Day {i+1}</span>
@@ -118,7 +118,7 @@ export default function SellerDashboard() {
             </div>
             <p className="text-gray-500 text-sm mb-4">Prepaid balance for label generation.</p>
             <div className="text-3xl font-extrabold text-gray-900 mb-4">{formatCurrency(18500)}</div>
-            <button className="w-full text-center text-sm font-bold text-[#E31837] hover:bg-red-50 py-2 rounded-lg transition-colors border border-[#E31837]/20">
+            <button className="w-full text-center text-sm font-bold text-[#065f46] hover:bg-emerald-50 py-2 rounded-lg transition-colors border border-[#065f46]/20">
               Recharge Wallet
             </button>
           </div>
@@ -129,7 +129,7 @@ export default function SellerDashboard() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <h3 className="font-bold text-lg text-gray-900">Recent Shipments</h3>
-          <button className="text-sm font-medium text-[#E31837] hover:underline">View All</button>
+          <button className="text-sm font-medium text-[#065f46] hover:underline">View All</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
@@ -162,7 +162,7 @@ export default function SellerDashboard() {
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-[#E31837] text-sm font-medium hover:underline">Track</button>
+                    <button className="text-[#065f46] text-sm font-medium hover:underline">Track</button>
                   </td>
                 </tr>
               ))}

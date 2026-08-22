@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function Sidebar({ links, portalName, color = 'bg-navy-900' }) {
+export default function Sidebar({ links, portalName, color = 'bg-navy-900', activeColor = 'bg-[#E31837]', activeShadow = 'shadow-red-900/20' }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -45,7 +45,7 @@ export default function Sidebar({ links, portalName, color = 'bg-navy-900' }) {
                 title={!isExpanded ? link.label : ""}
                 className={({ isActive }) => 
                   `flex items-center ${isExpanded ? 'gap-3 px-3' : 'justify-center'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    isActive ? 'bg-[#E31837] text-white shadow-lg shadow-red-900/20' : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                    isActive ? `${activeColor} text-white shadow-lg ${activeShadow}` : 'text-gray-400 hover:bg-white/5 hover:text-white'
                   }`
                 }
               >

@@ -24,9 +24,17 @@ export default function PortalLayout({ children, links, portalKey }) {
     teal: 'bg-teal-900'
   };
 
+  const isSeller = portalKey === 'seller';
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 text-slate-900 font-sans">
-      <Sidebar links={links} portalName={portalConfig.name} color="bg-[#111111]" />
+      <Sidebar 
+        links={links} 
+        portalName={portalConfig.name} 
+        color={isSeller ? 'bg-[#022c22]' : 'bg-[#111111]'}
+        activeColor={isSeller ? 'bg-[#065f46]' : 'bg-[#E31837]'}
+        activeShadow={isSeller ? 'shadow-emerald-900/20' : 'shadow-red-900/20'}
+      />
       
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <Topbar />
