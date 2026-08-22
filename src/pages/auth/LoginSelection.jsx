@@ -38,9 +38,9 @@ export default function LoginSelection() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-[#111111] skew-y-3 transform origin-top-left -translate-y-10"></div>
+      <div className="absolute top-0 left-0 w-full h-[400px] bg-[#111111] skew-y-3 transform origin-top-left -translate-y-10"></div>
       
-      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-4xl">
+      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-4xl mt-12">
         <div className="text-center mb-10">
           <h2 className="text-3xl font-extrabold text-white tracking-tight mb-2">
             Welcome to Commerza<span className="text-[#E31837]">Global</span>
