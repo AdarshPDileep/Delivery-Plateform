@@ -9,7 +9,7 @@ import SellerMaster from './pages/SellerMaster';
 import ShipmentControl from './pages/ShipmentControl';
 import PickupManifestControl from './pages/PickupManifestControl';
 import HubMaster from './pages/HubMaster';
-import AgentMaster from './pages/AgentMaster';
+import FranchiseMaster from './pages/FranchiseMaster';
 import CodSettlement from './pages/CodSettlement';
 import ReportsMaster from './pages/ReportsMaster';
 import UserMaster from './pages/UserMaster';
@@ -20,7 +20,7 @@ import TicketDesk from './pages/TicketDesk';
 import { 
   LayoutDashboard, Map, FileText, Percent, Users, Package, 
   Share2, Contact2, Wallet, BarChart3, Shield, Bell, Settings, 
-  History, LifeBuoy, Truck
+  History, LifeBuoy, Truck, Store
 } from 'lucide-react';
 
 const ADMIN_LINKS = [
@@ -40,8 +40,8 @@ const ADMIN_LINKS = [
   { label: 'Operations', isDivider: true },
   { label: 'Pickups & Manifests', path: '/admin/operations', icon: Truck },
   
-  { label: 'Delivery Personnel', isDivider: true },
-  { label: 'All Agents', path: '/admin/agents', icon: Contact2 },
+  { label: 'Franchise Management', isDivider: true },
+  { label: 'All Franchises', path: '/admin/franchises', icon: Store },
   
   { label: 'Pricing', isDivider: true },
   { label: 'Rate Cards', path: '/admin/rate-cards', icon: FileText },
@@ -74,7 +74,7 @@ export default function AdminPortal() {
         <Route path="shipments" element={<ShipmentControl />} />
         <Route path="operations" element={<PickupManifestControl />} />
         <Route path="hubs" element={<HubMaster />} />
-        <Route path="agents" element={<AgentMaster />} />
+        <Route path="franchises" element={<FranchiseMaster />} />
         <Route path="cod" element={<CodSettlement />} />
         <Route path="reports" element={<ReportsMaster />} />
         <Route path="users" element={<UserMaster />} />
