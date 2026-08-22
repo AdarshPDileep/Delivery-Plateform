@@ -289,17 +289,20 @@ export default function ExpressParcel() {
 
       {/* How it Works - Vertical Stepper */}
       <section className="py-24 px-6 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-black font-display text-gray-900 mb-4">How It Works</h2>
             <p className="text-gray-500">The lifecycle of an express parcel shipment.</p>
           </div>
           
-          <div className="relative border-l-4 border-red-100 ml-6 md:ml-1/2 md:translate-x-[calc(50%-2px)] space-y-12">
+          <div className="relative mx-auto before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-1 before:bg-red-100 space-y-12">
             {steps.map((step, idx) => (
-              <div key={idx} className="relative flex items-center">
-                <div className="absolute -left-[14px] md:-left-3 w-6 h-6 rounded-full bg-red-600 border-4 border-white shadow-sm z-10"></div>
-                <div className="ml-10 md:ml-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100 w-full md:w-[400px]">
+              <div key={idx} className={`relative flex items-center justify-between md:justify-normal ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                {/* Center Dot */}
+                <div className="absolute left-5 -translate-x-1/2 md:left-1/2 w-6 h-6 rounded-full bg-red-600 border-4 border-white shadow-sm z-10"></div>
+                
+                {/* Card */}
+                <div className={`w-full ml-12 md:ml-0 md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-xl shadow-sm border border-gray-100 ${idx % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
                   <h4 className="font-bold text-gray-900 text-lg">{step.title}</h4>
                   <p className="text-sm text-gray-500 mt-1">{step.desc}</p>
                 </div>
