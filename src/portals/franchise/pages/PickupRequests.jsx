@@ -62,7 +62,7 @@ export default function PickupRequests() {
               placeholder="Search pickups..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent w-64"
+              className="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1d4ed8] focus:border-transparent w-64"
             />
           </div>
           <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
@@ -112,7 +112,7 @@ export default function PickupRequests() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {pickup.agent === 'Unassigned' ? (
-                      <button className="text-sm font-medium text-[#E31837] hover:underline">Assign Agent</button>
+                      <button className="text-sm font-medium text-[#1d4ed8] hover:underline">Assign Agent</button>
                     ) : (
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">

@@ -25,15 +25,30 @@ export default function PortalLayout({ children, links, portalKey }) {
   };
 
   const isSeller = portalKey === 'seller';
+  const isFranchise = portalKey === 'franchise';
+
+  let sidebarBg = 'bg-[#111111]';
+  let activeBg = 'bg-[#E31837]';
+  let activeShadow = 'shadow-red-900/20';
+
+  if (isSeller) {
+    sidebarBg = 'bg-[#022c22]';
+    activeBg = 'bg-[#065f46]';
+    activeShadow = 'shadow-emerald-900/20';
+  } else if (isFranchise) {
+    sidebarBg = 'bg-[#0f172a]';
+    activeBg = 'bg-[#1d4ed8]';
+    activeShadow = 'shadow-blue-900/20';
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 text-slate-900 font-sans">
       <Sidebar 
         links={links} 
         portalName={portalConfig.name} 
-        color={isSeller ? 'bg-[#022c22]' : 'bg-[#111111]'}
-        activeColor={isSeller ? 'bg-[#065f46]' : 'bg-[#E31837]'}
-        activeShadow={isSeller ? 'shadow-emerald-900/20' : 'shadow-red-900/20'}
+        color={sidebarBg}
+        activeColor={activeBg}
+        activeShadow={activeShadow}
       />
       
       <div className="flex-1 flex flex-col h-screen overflow-hidden">

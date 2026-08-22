@@ -49,7 +49,7 @@ export default function Manifests() {
                 <input 
                   type="text" 
                   placeholder="Scan or enter AWB..." 
-                  className="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent w-64"
+                  className="pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1d4ed8] focus:border-transparent w-64"
                 />
               </div>
             </div>
@@ -95,7 +95,7 @@ export default function Manifests() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900">Linehaul Manifests</h2>
-              <button className="flex items-center gap-2 bg-[#E31837] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#c0122e] transition-colors">
+              <button className="flex items-center gap-2 bg-[#1d4ed8] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#1e40af] transition-colors">
                 <FileText className="w-4 h-4" /> Generate Manifest
               </button>
             </div>

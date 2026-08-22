@@ -8,7 +8,7 @@ export default function FranchiseDashboard() {
     { title: 'Inbound Transit', value: '89', icon: MapPin, color: 'text-cyan-600', bg: 'bg-cyan-50' },
     { title: 'Out for Delivery', value: '112', icon: Truck, color: 'text-amber-600', bg: 'bg-amber-50' },
     { title: 'Delivered Today', value: '284', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { title: 'Failed Deliveries', value: '14', icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
+    { title: 'Failed Deliveries', value: '14', icon: AlertCircle, color: 'text-red-600', bg: 'bg-blue-50' },
     { title: 'COD Pending', value: '₹45,200', icon: IndianRupee, color: 'text-purple-600', bg: 'bg-purple-50' },
     { title: 'Current Earnings', value: '₹8,450', icon: Wallet, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   ];
@@ -24,7 +24,7 @@ export default function FranchiseDashboard() {
           <button className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors">
             Download Report
           </button>
-          <button className="bg-[#E31837] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#c0122e] transition-colors">
+          <button className="bg-[#1d4ed8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#1e40af] transition-colors">
             Scan Inbound Bag
           </button>
         </div>
@@ -53,7 +53,7 @@ export default function FranchiseDashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-gray-900">Pending Pickups</h2>
-            <button className="text-sm font-medium text-[#E31837] hover:underline">View All</button>
+            <button className="text-sm font-medium text-[#1d4ed8] hover:underline">View All</button>
           </div>
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
@@ -79,7 +79,7 @@ export default function FranchiseDashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-bold text-gray-900">Agent Performance</h2>
-            <button className="text-sm font-medium text-[#E31837] hover:underline">Manage Agents</button>
+            <button className="text-sm font-medium text-[#1d4ed8] hover:underline">Manage Agents</button>
           </div>
           <div className="space-y-4">
             {[
