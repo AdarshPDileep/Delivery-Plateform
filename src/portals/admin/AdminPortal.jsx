@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import PortalLayout from '../../components/layout/PortalLayout';
 import AdminDashboard from './pages/AdminDashboard';
 import GeoMaster from './pages/GeoMaster';
-import FranchiseMaster from './pages/FranchiseMaster';
 import RateCardMaster from './pages/RateCardMaster';
 import CommissionsMaster from './pages/CommissionsMaster';
 import SellerMaster from './pages/SellerMaster';
@@ -18,7 +17,7 @@ import SystemMasters from './pages/SystemMasters';
 import AuditLog from './pages/AuditLog';
 import TicketDesk from './pages/TicketDesk';
 import { 
-  LayoutDashboard, Map, Store, FileText, Percent, Users, Package, 
+  LayoutDashboard, Map, FileText, Percent, Users, Package, 
   Share2, Contact2, Wallet, BarChart3, Shield, Bell, Settings, 
   History, LifeBuoy, Truck
 } from 'lucide-react';
@@ -30,9 +29,6 @@ const ADMIN_LINKS = [
   { label: 'Network Management', isDivider: true },
   { label: 'Geography', path: '/admin/geo', icon: Map },
   { label: 'Hubs & Branches', path: '/admin/hubs', icon: Share2 },
-  
-  { label: 'Franchise Management', isDivider: true },
-  { label: 'All Franchises', path: '/admin/franchises', icon: Store },
   
   { label: 'Seller Management', isDivider: true },
   { label: 'All Sellers', path: '/admin/sellers', icon: Users },
@@ -71,7 +67,6 @@ export default function AdminPortal() {
         <Route path="/" element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="geo" element={<GeoMaster />} />
-        <Route path="franchises" element={<FranchiseMaster />} />
         <Route path="rate-cards" element={<RateCardMaster />} />
         <Route path="commissions" element={<CommissionsMaster />} />
         <Route path="sellers" element={<SellerMaster />} />
