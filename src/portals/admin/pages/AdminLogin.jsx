@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useToast } from '../../../context/ToastContext';
+import Modal from '../../../components/ui/Modal';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
-import Card from '../../../components/ui/Card';
-import Modal from '../../../components/ui/Modal';
 import { ShieldCheck } from 'lucide-react';
 
 export default function AdminLogin() {
@@ -38,53 +37,76 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md" padding="p-8">
+    <div className="min-h-screen relative flex items-center justify-center p-4 bg-[#f8f9fa] overflow-hidden font-sans">
+      {/* Network Background Pattern */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/connected.png')] opacity-[0.03]"></div>
+      
+      {/* Background Graphic Lines (CSS fallback for the screenshot's geometric lines) */}
+      <div className="absolute top-0 right-0 w-1/2 h-1/2 border-l border-b border-gray-200/50 transform rotate-12 translate-x-1/4 -translate-y-1/4"></div>
+      <div className="absolute bottom-0 left-0 w-1/2 h-1/2 border-r border-t border-gray-200/50 transform -rotate-12 -translate-x-1/4 translate-y-1/4"></div>
+
+      <div className="bg-white rounded-md shadow-2xl p-10 w-full max-w-sm relative z-10 border border-gray-100">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-navy-900 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <ShieldCheck className="w-6 h-6 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900">Super Admin Portal</h2>
-          <p className="text-sm text-slate-500 mt-1">Sign in to central control tower</p>
+          <ShieldCheck className="w-16 h-16 text-[#c0122e] mx-auto mb-4" strokeWidth={1.5} />
+          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Admin Control Center</h2>
+          <p className="text-gray-500 mt-1">Secure Access</p>
         </div>
 
-        <form onSubmit={handleInitialSubmit} className="space-y-4">
-          <Input 
-            label="Email Address" 
-            type="email" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            placeholder="admin@commerza.com" 
-          />
-          <Input 
-            label="Password" 
-            type="password" 
-            value={password} 
-            onChange={e => setPassword(e.target.value)} 
-            placeholder="••••••••" 
-          />
-          <Button type="submit" className="w-full mt-2">Continue</Button>
+        <form onSubmit={handleInitialSubmit} className="space-y-5">
+          <div className="flex flex-col">
+            <label className="text-xs font-semibold text-gray-500 mb-1">Email Address</label>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={e => setEmail(e.target.value)} 
+              className="px-3 py-2 border-2 border-[#c0122e] rounded focus:outline-none focus:ring-1 focus:ring-[#c0122e] text-gray-900 text-sm font-medium"
+            />
+          </div>
           
-          <div className="text-center text-xs text-slate-400 mt-4">
-            Demo: admin@commerza.com / admin123
+          <div className="flex flex-col">
+            <label className="text-xs font-semibold text-gray-500 mb-1">Password</label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)} 
+              className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-gray-500 text-gray-900 text-sm font-medium"
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            className="w-full bg-[#c0122e] hover:bg-[#a00f26] text-white py-2.5 rounded font-medium transition-colors mt-2 text-sm shadow-sm"
+          >
+            Login
+          </button>
+          
+          <div className="text-center mt-6">
+            <button type="button" className="text-xs font-semibold text-[#c0122e] hover:underline">
+              Forgot Password
+            </button>
           </div>
         </form>
-      </Card>
+      </div>
 
       <Modal open={showOtp} onClose={() => setShowOtp(false)} title="2-Step Verification" size="sm">
         <div className="text-center mb-6">
-          <p className="text-sm text-slate-600">Enter the 6-digit OTP sent to your registered mobile number ending in ****1234.</p>
+          <p className="text-sm text-gray-500">Enter the 6-digit OTP sent to your registered mobile number ending in ****1234.</p>
         </div>
-        <form onSubmit={handleOtpSubmit} className="space-y-6">
-          <Input 
+        <form onSubmit={handleOtpSubmit} className="space-y-5">
+          <input 
             type="text" 
             maxLength={6} 
             value={otp} 
             onChange={e => setOtp(e.target.value.replace(/\D/g, ''))} 
             placeholder="Enter OTP (e.g. 123456)" 
-            className="text-center text-xl tracking-[0.5em] font-mono"
+            className="w-full px-3 py-3 border-2 border-[#c0122e] rounded focus:outline-none focus:ring-1 focus:ring-[#c0122e] text-gray-900 text-center text-xl tracking-[0.5em] font-mono"
           />
-          <Button type="submit" className="w-full">Verify & Sign In</Button>
+          <button 
+            type="submit" 
+            className="w-full bg-[#c0122e] hover:bg-[#a00f26] text-white py-2.5 rounded font-medium transition-colors mt-2 text-sm shadow-sm"
+          >
+            Verify & Sign In
+          </button>
         </form>
       </Modal>
     </div>
