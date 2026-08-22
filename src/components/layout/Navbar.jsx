@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-  Menu, User, Package, Factory, Truck, Globe, Map, ShieldCheck, Zap, Server, Send, 
-  Store, UserCircle, Building2, Crosshair, Users, Bike, GraduationCap 
+import {
+  Menu, User, Package, Factory, Truck, Globe, Map, ShieldCheck, Zap, Server, Send,
+  Store, UserCircle, Building2, Crosshair, Users, Bike, GraduationCap
 } from 'lucide-react';
 import TrackingModal from './TrackingModal';
 
@@ -45,7 +45,7 @@ export default function Navbar() {
   const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 
   const renderDropdown = (items, isActive) => (
-    <div 
+    <div
       className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-200 ${isActive ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2 pointer-events-none'}`}
     >
       <div className="w-72 bg-white rounded-lg shadow-2xl py-2 border border-gray-100 relative">
@@ -54,8 +54,8 @@ export default function Navbar() {
           {items.map((item) => {
             const Icon = item.icon;
             return (
-              <Link 
-                key={item.id} 
+              <Link
+                key={item.id}
                 to={item.path}
                 className="px-5 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-gray-700 hover:text-[#E31837] group/item"
               >
@@ -76,17 +76,17 @@ export default function Navbar() {
 
   return (
     <nav className="bg-[#111111] border-b border-gray-800 px-6 h-20 flex items-center justify-between sticky top-0 z-50">
-      <div className="flex items-center gap-10 h-full">
-        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-          <span className="font-extrabold text-3xl tracking-tight text-[#E31837]">
-            Commerza<span className="text-white">Global</span>
-          </span>
-        </div>
-        
+      <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+        <span className="font-extrabold text-3xl tracking-tight text-[#E31837]">
+          Commerza<span className="text-white">Global</span>
+        </span>
+      </div>
+
+      <div className="flex items-center h-full gap-20">
         <div className="hidden md:flex items-center h-full gap-8">
 
           {/* Services Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center group cursor-pointer"
             onMouseEnter={() => setActiveDropdown('services')}
             onMouseLeave={() => setActiveDropdown(null)}
@@ -99,7 +99,7 @@ export default function Navbar() {
           </div>
 
           {/* Solutions Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center group cursor-pointer"
             onMouseEnter={() => setActiveDropdown('solutions')}
             onMouseLeave={() => setActiveDropdown(null)}
@@ -112,7 +112,7 @@ export default function Navbar() {
           </div>
 
           {/* Partners Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center group cursor-pointer"
             onMouseEnter={() => setActiveDropdown('partners')}
             onMouseLeave={() => setActiveDropdown(null)}
@@ -125,7 +125,7 @@ export default function Navbar() {
           </div>
 
           {/* Company Dropdown */}
-          <div 
+          <div
             className="relative h-full flex items-center group cursor-pointer"
             onMouseEnter={() => setActiveDropdown('company')}
             onMouseLeave={() => setActiveDropdown(null)}
@@ -137,7 +137,7 @@ export default function Navbar() {
             {renderDropdown(dropdownCompany, activeDropdown === 'company')}
           </div>
 
-          <button 
+          <button
             onClick={() => setIsTrackingOpen(true)}
             className="text-gray-300 font-medium hover:text-white transition-colors relative h-full group"
           >
@@ -145,30 +145,30 @@ export default function Navbar() {
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#E31837] rounded-t-sm scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></div>
           </button>
         </div>
+
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => navigate('/auth/login')}
+            className="hidden md:flex items-center gap-2 text-gray-300 font-medium hover:text-white transition-colors"
+          >
+            <User className="w-5 h-5" />
+            <span>Login</span>
+          </button>
+          <button
+            onClick={() => navigate('/seller/signup')}
+            className="hidden md:block bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-full font-bold transition-colors"
+          >
+            Sign Up
+          </button>
+          <button className="md:hidden text-white">
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <button 
-          onClick={() => navigate('/auth/login')}
-          className="hidden md:flex items-center gap-2 text-gray-300 font-medium hover:text-white transition-colors"
-        >
-          <User className="w-5 h-5" />
-          <span>Login</span>
-        </button>
-        <button 
-          onClick={() => navigate('/seller/signup')}
-          className="hidden md:block bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-full font-bold transition-colors"
-        >
-          Sign Up
-        </button>
-        <button className="md:hidden text-white">
-          <Menu className="w-6 h-6" />
-        </button>
-      </div>
-
-      <TrackingModal 
-        isOpen={isTrackingOpen} 
-        onClose={() => setIsTrackingOpen(false)} 
+      <TrackingModal
+        isOpen={isTrackingOpen}
+        onClose={() => setIsTrackingOpen(false)}
       />
     </nav>
   );
