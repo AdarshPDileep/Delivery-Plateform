@@ -36,11 +36,11 @@ export default function PersonalCourier() {
             </div>
           </div>
           <div className="lg:w-1/2 relative w-full">
-            <div className="relative z-10 bg-white p-2 rounded-2xl shadow-2xl border border-gray-100 transform lg:rotate-3">
+            <div className="relative z-10 bg-white p-2 rounded-2xl shadow-2xl border border-gray-100 transform lg:rotate-3 max-w-lg mx-auto lg:max-w-none">
               <img 
                 src="https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&fit=crop&w=800&q=80" 
                 alt="Personal Courier Delivery" 
-                className="w-full h-auto rounded-xl object-cover"
+                className="w-full h-[350px] md:h-[450px] lg:h-[500px] rounded-xl object-cover"
               />
             </div>
             {/* Floating Element */}
