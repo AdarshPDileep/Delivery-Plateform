@@ -30,15 +30,18 @@ export default function PortalLayout({ children, links, portalKey }) {
   let sidebarBg = 'bg-[#111111]';
   let activeBg = 'bg-[#E31837]';
   let activeShadow = 'shadow-red-900/20';
+  let logoColor = 'text-[#E31837]';
 
   if (isSeller) {
     sidebarBg = 'bg-[#022c22]';
     activeBg = 'bg-[#065f46]';
     activeShadow = 'shadow-emerald-900/20';
+    logoColor = 'text-[#10b981]'; // Emerald 500 for good contrast
   } else if (isFranchise) {
     sidebarBg = 'bg-[#0f172a]';
     activeBg = 'bg-[#1d4ed8]';
     activeShadow = 'shadow-blue-900/20';
+    logoColor = 'text-[#3b82f6]'; // Blue 500 for good contrast
   }
 
   return (
@@ -49,6 +52,7 @@ export default function PortalLayout({ children, links, portalKey }) {
         color={sidebarBg}
         activeColor={activeBg}
         activeShadow={activeShadow}
+        logoColor={logoColor}
       />
       
       <div className="flex-1 flex flex-col h-screen overflow-hidden">

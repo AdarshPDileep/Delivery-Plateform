@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function Sidebar({ links, portalName, color = 'bg-navy-900', activeColor = 'bg-[#E31837]', activeShadow = 'shadow-red-900/20' }) {
+export default function Sidebar({ links, portalName, color = 'bg-navy-900', activeColor = 'bg-[#E31837]', activeShadow = 'shadow-red-900/20', logoColor = 'text-[#E31837]' }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -16,11 +16,11 @@ export default function Sidebar({ links, portalName, color = 'bg-navy-900', acti
     >
       <div className={`p-6 flex flex-col ${isExpanded ? 'items-start' : 'items-center'} min-h-[104px] transition-all`}>
         {!isExpanded ? (
-          <span className="text-2xl font-black text-[#E31837]">C</span>
+          <span className={`text-2xl font-black ${logoColor}`}>C</span>
         ) : (
           <>
             <h1 className="text-2xl font-black tracking-tight text-white flex items-center whitespace-nowrap overflow-hidden">
-              Commerza<span className="text-[#E31837]">Global</span>
+              Commerza<span className={logoColor}>Global</span>
             </h1>
             <p className="text-xs font-bold text-gray-500 uppercase mt-2 tracking-widest whitespace-nowrap overflow-hidden">{portalName}</p>
           </>
