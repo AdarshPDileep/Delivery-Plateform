@@ -11,6 +11,7 @@ export default function StatusTimeline({ history = [] }) {
       {history.map((event, idx) => {
         const isLatest = idx === 0;
         
+      
         return (
           <div key={idx} className="relative pl-8">
             {/* Timeline dot */}

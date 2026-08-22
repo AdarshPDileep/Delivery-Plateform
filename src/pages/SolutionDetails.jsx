@@ -5,6 +5,9 @@ import Footer from '../components/layout/Footer';
 
 // Lazy load the specialized pages
 const D2CBrands = lazy(() => import('./solutions/D2CBrands'));
+const PersonalCourier = lazy(() => import('./solutions/PersonalCourier'));
+const B2BEnterprises = lazy(() => import('./solutions/B2BEnterprises'));
+const RTOPredictor = lazy(() => import('./solutions/RTOPredictor'));
 
 export default function SolutionDetails() {
   const { solutionId } = useParams();
@@ -18,6 +21,9 @@ export default function SolutionDetails() {
   const renderContent = () => {
     switch(solutionId) {
       case 'd2c-brands': return <D2CBrands />;
+      case 'personal-courier': return <PersonalCourier />;
+      case 'b2b-enterprises': return <B2BEnterprises />;
+      case 'rto-predictor': return <RTOPredictor />;
       default:
         return (
           <div className="pt-48 pb-32 text-center text-gray-500">

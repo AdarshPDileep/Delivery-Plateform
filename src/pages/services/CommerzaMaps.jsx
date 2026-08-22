@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  Map, Search, Navigation, MapPin, Truck, Crosshair, 
+import {
+  Map, Search, Navigation, MapPin, Truck, Crosshair,
   Layers, ShieldAlert, CheckCircle2, User, Phone, MoreVertical
 } from 'lucide-react';
 
@@ -38,16 +38,16 @@ export default function CommerzaMaps() {
               </button>
             </div>
           </div>
-          
+
           <div className="hidden md:flex flex-1 justify-end">
             <div className="bg-white rounded-3xl p-2 shadow-2xl w-full max-w-lg relative overflow-hidden">
               <div className="w-full h-72 bg-gray-100 rounded-2xl relative overflow-hidden">
                 {/* Mock Map Background */}
                 <div className="absolute inset-0 bg-gray-50" style={{ backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-                
+
                 {/* Route Line */}
                 <div className="absolute top-[40%] left-[20%] w-[60%] h-[20%] border-t-2 border-l-2 border-dashed border-[#e31837] rounded-tl-3xl"></div>
-                
+
                 {/* Hub Point */}
                 <div className="absolute top-[40%] left-[20%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
                   <div className="w-6 h-6 bg-[#e31837] rounded-full border-4 border-white shadow-md z-10 flex items-center justify-center">
@@ -72,7 +72,7 @@ export default function CommerzaMaps() {
       {/* Interactive Geocoding & Route Section */}
       <section className="py-24 px-6 max-w-6xl mx-auto w-full -mt-10 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
+
           {/* Pincode Serviceability */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
             <h3 className="text-2xl font-black font-display text-gray-900 mb-6 flex items-center gap-3">
@@ -80,11 +80,11 @@ export default function CommerzaMaps() {
               Pincode Serviceability
             </h3>
             <form onSubmit={handleSearch} className="flex gap-4 mb-8">
-              <input 
-                type="text" 
-                placeholder="Enter Pincode (e.g., 695001)" 
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#e31837] focus:outline-none" 
-                required 
+              <input
+                type="text"
+                placeholder="Enter Pincode (e.g., 695001)"
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#e31837] focus:outline-none"
+                required
               />
               <button type="submit" className="bg-gray-900 text-white px-6 font-bold rounded-lg hover:bg-gray-800 transition-colors">
                 Search
@@ -151,10 +151,10 @@ export default function CommerzaMaps() {
               <Navigation className="w-6 h-6 text-[#e31837]" />
               Network Route Planner
             </h3>
-            
+
             <div className="bg-[#111] rounded-xl p-6 text-white mb-6 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#e31837]/10 rounded-full blur-2xl"></div>
-              
+
               <div className="flex items-start gap-4 relative z-10">
                 <div className="flex flex-col items-center mt-1">
                   <div className="w-3 h-3 rounded-full bg-[#e31837] shadow-[0_0_10px_rgba(227,24,55,0.5)]"></div>
@@ -214,7 +214,7 @@ export default function CommerzaMaps() {
               <li className="flex items-center gap-3">
                 <CheckCircle2 className="w-5 h-5 text-[#e31837] flex-shrink-0" />
                 <span className="text-gray-700 font-medium">Real-time GPS tracking of field executives</span>
-              .
+                .
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle2 className="w-5 h-5 text-[#e31837] flex-shrink-0" />
@@ -226,12 +226,12 @@ export default function CommerzaMaps() {
               </li>
             </ul>
           </div>
-          
+
           <div className="flex-1 w-full relative">
             <div className="w-full h-[400px] bg-white rounded-3xl shadow-xl border border-gray-100 p-2 overflow-hidden relative">
               {/* Fake Map Grid */}
               <div className="absolute inset-0 bg-gray-50" style={{ backgroundImage: 'linear-gradient(#e5e7eb 1px, transparent 1px), linear-gradient(90deg, #e5e7eb 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-              
+
               {/* Geofence Polygon */}
               <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
                 <polygon points="50,50 300,80 350,250 150,350 20,200" fill="rgba(227,24,55,0.05)" stroke="rgba(227,24,55,0.5)" strokeWidth="2" strokeDasharray="5,5" />
