@@ -14,6 +14,7 @@ import Home from './pages/Home';
 import TrackShipment from './pages/TrackShipment';
 import ServiceDetails from './pages/ServiceDetails';
 import SolutionDetails from './pages/SolutionDetails';
+import PartnerDetails from './pages/PartnerDetails';
 
 // Auth Pages
 import LoginSelection from './pages/auth/LoginSelection';
@@ -34,6 +35,7 @@ function App() {
             <Route path="/track/:awb" element={<TrackShipment />} />
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
             <Route path="/solutions/:solutionId" element={<SolutionDetails />} />
+            <Route path="/partners/:partnerId" element={<PartnerDetails />} />
 
             {/* Global Auth */}
             <Route path="/auth/login" element={<LoginSelection />} />
