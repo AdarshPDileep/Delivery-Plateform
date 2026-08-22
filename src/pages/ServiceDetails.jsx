@@ -12,6 +12,7 @@ const DataIntelligence = lazy(() => import('./services/DataIntelligence'));
 const CommerzaMaps = lazy(() => import('./services/CommerzaMaps'));
 const GenericMarketingPage = lazy(() => import('./services/GenericMarketingPage'));
 const Warehousing = lazy(() => import('./services/Warehousing'));
+const PartTruckload = lazy(() => import('./services/PartTruckload'));
 
 export default function ServiceDetails() {
   const { serviceId } = useParams();
@@ -50,6 +51,7 @@ export default function ServiceDetails() {
       case 'data-intelligence': return <DataIntelligence />;
       case 'commerza-maps': return <CommerzaMaps />;
       case 'warehousing': return <Warehousing />;
+      case 'part-truckload': return <PartTruckload />;
       // Fallback to marketing template for FTL, PTL, International
       default: return <GenericMarketingPage service={service} />;
     }

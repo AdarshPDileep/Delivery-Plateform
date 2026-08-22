@@ -43,7 +43,7 @@ export default function ExpressParcel() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
         <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1">
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 font-display">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 font-display text-white">
               Express Parcel Delivery
             </h1>
             <p className="text-lg md:text-xl text-red-100 max-w-2xl leading-relaxed mb-10">
