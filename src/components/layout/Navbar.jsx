@@ -132,7 +132,10 @@ export default function Navbar() {
             {renderDropdown(dropdownCompany, activeDropdown === 'company')}
           </div>
 
-          <button className="text-gray-300 font-medium hover:text-white transition-colors relative h-full group">
+          <button 
+            onClick={() => navigate('/track')}
+            className="text-gray-300 font-medium hover:text-white transition-colors relative h-full group"
+          >
             Tracking
             <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#E31837] rounded-t-sm scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></div>
           </button>

@@ -16,6 +16,7 @@ import ServiceDetails from './pages/ServiceDetails';
 import SolutionDetails from './pages/SolutionDetails';
 import PartnerDetails from './pages/PartnerDetails';
 import CompanyDetails from './pages/CompanyDetails';
+import Track from './pages/Track';
 
 // Auth Pages
 import LoginSelection from './pages/auth/LoginSelection';
@@ -38,6 +39,7 @@ function App() {
             <Route path="/solutions/:solutionId" element={<SolutionDetails />} />
             <Route path="/partners/:partnerId" element={<PartnerDetails />} />
             <Route path="/company/:companyId" element={<CompanyDetails />} />
+            <Route path="/track" element={<Track />} />
 
             {/* Global Auth */}
             <Route path="/auth/login" element={<LoginSelection />} />
