@@ -1,40 +1,49 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Truck, PackageSearch, Plane, ShieldCheck, Zap, Factory } from 'lucide-react';
 
 const services = [
   {
     icon: Truck,
     title: 'Express Parcel',
-    description: 'Extensive delivery network covering all of India with fastest turnaround times.'
+    description: 'Extensive delivery network covering all of India with fastest turnaround times.',
+    path: '/services/express-parcel'
   },
   {
     icon: Factory,
     title: 'Warehousing',
-    description: 'State-of-the-art facilities with intelligent inventory and order management systems.'
+    description: 'State-of-the-art facilities with intelligent inventory and order management systems.',
+    path: '/services/warehousing'
   },
   {
     icon: PackageSearch,
     title: 'Partial-Truckload (PTL)',
-    description: 'Cost-effective freight solutions for large or heavy shipments with high reliability.'
+    description: 'Cost-effective freight solutions for large or heavy shipments with high reliability.',
+    path: '/services/part-truckload'
   },
   {
     icon: Zap,
     title: 'Supply Chain Services',
-    description: 'End-to-end customized supply chain solutions for large enterprises.'
+    description: 'End-to-end customized supply chain solutions for large enterprises.',
+    path: '/services/transport-one'
   },
   {
     icon: Plane,
     title: 'Cross Border',
-    description: 'Global logistics made easy with our international shipping and customs expertise.'
+    description: 'Global logistics made easy with our international shipping and customs expertise.',
+    path: '/services/international'
   },
   {
     icon: ShieldCheck,
     title: 'Data Intelligence',
-    description: 'Harnessing the power of billions of shipments to optimize your logistics.'
+    description: 'Harnessing the power of billions of shipments to optimize your logistics.',
+    path: '/services/data-intelligence'
   }
 ];
 
 export default function ServicesSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-24 px-6 max-w-7xl mx-auto w-full bg-white">
       <div className="mb-16">
@@ -49,7 +58,8 @@ export default function ServicesSection() {
           const Icon = service.icon;
           return (
             <div 
-              key={index} 
+              key={index}
+              onClick={() => navigate(service.path)}
               className="group p-8 rounded-2xl border border-gray-100 hover:border-transparent bg-gray-50 hover:bg-white hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col items-start"
             >
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#E31837] mb-6 shadow-sm group-hover:bg-[#E31837] group-hover:text-white transition-colors duration-300">
