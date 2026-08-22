@@ -35,8 +35,12 @@ export default function ExpressParcel() {
   return (
     <div className="w-full animate-fade-in font-sans">
       {/* Hero Section */}
-      <div className="w-full py-24 md:py-32 px-6 bg-gradient-to-br from-red-600 to-red-800 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+      <div className="w-full py-24 md:py-32 px-6 relative overflow-hidden text-white">
+        {/* Background Image */}
+        <div className="absolute inset-0 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1624026601441-2a628e35998b?auto=format&fit=crop&q=80')]" />
+        {/* Red Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-red-900/95 via-red-800/90 to-red-600/70" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
         <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1">
             <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 font-display">

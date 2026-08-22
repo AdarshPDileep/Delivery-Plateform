@@ -11,6 +11,7 @@ const TransportOne = lazy(() => import('./services/TransportOne'));
 const DataIntelligence = lazy(() => import('./services/DataIntelligence'));
 const CommerzaMaps = lazy(() => import('./services/CommerzaMaps'));
 const GenericMarketingPage = lazy(() => import('./services/GenericMarketingPage'));
+const Warehousing = lazy(() => import('./services/Warehousing'));
 
 export default function ServiceDetails() {
   const { serviceId } = useParams();
@@ -48,7 +49,8 @@ export default function ServiceDetails() {
       case 'transport-one': return <TransportOne />;
       case 'data-intelligence': return <DataIntelligence />;
       case 'commerza-maps': return <CommerzaMaps />;
-      // Fallback to marketing template for Warehousing, FTL, PTL, International
+      case 'warehousing': return <Warehousing />;
+      // Fallback to marketing template for FTL, PTL, International
       default: return <GenericMarketingPage service={service} />;
     }
   };
