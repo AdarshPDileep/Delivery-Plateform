@@ -13,6 +13,7 @@ import FranchiseLogin from './portals/franchise/pages/FranchiseLogin';
 import Home from './pages/Home';
 import TrackShipment from './pages/TrackShipment';
 import ServiceDetails from './pages/ServiceDetails';
+import SolutionDetails from './pages/SolutionDetails';
 
 // Auth Pages
 import LoginSelection from './pages/auth/LoginSelection';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/track" element={<TrackShipment />} />
             <Route path="/track/:awb" element={<TrackShipment />} />
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
+            <Route path="/solutions/:solutionId" element={<SolutionDetails />} />
 
             {/* Global Auth */}
             <Route path="/auth/login" element={<LoginSelection />} />
