@@ -7,6 +7,7 @@ import RateCardMaster from './pages/RateCardMaster';
 import CommissionsMaster from './pages/CommissionsMaster';
 import SellerMaster from './pages/SellerMaster';
 import ShipmentControl from './pages/ShipmentControl';
+import PickupManifestControl from './pages/PickupManifestControl';
 import HubMaster from './pages/HubMaster';
 import AgentMaster from './pages/AgentMaster';
 import CodSettlement from './pages/CodSettlement';
@@ -71,6 +72,7 @@ export default function AdminPortal() {
         <Route path="commissions" element={<CommissionsMaster />} />
         <Route path="sellers" element={<SellerMaster />} />
         <Route path="shipments" element={<ShipmentControl />} />
+        <Route path="operations" element={<PickupManifestControl />} />
         <Route path="hubs" element={<HubMaster />} />
         <Route path="agents" element={<AgentMaster />} />
         <Route path="cod" element={<CodSettlement />} />
