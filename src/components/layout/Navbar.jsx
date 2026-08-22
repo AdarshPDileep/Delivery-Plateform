@@ -4,6 +4,7 @@ import {
   Menu, User, Package, Factory, Truck, Globe, Map, ShieldCheck, Zap, Server, Send, 
   Store, UserCircle, Building2, Crosshair, Users, Bike, GraduationCap 
 } from 'lucide-react';
+import TrackingModal from './TrackingModal';
 
 const dropdownServices = [
   { id: 'express-parcel', name: 'Express Parcel', icon: Package, path: '/services/express-parcel' },
@@ -41,6 +42,7 @@ const dropdownCompany = [
 export default function Navbar() {
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 
   const renderDropdown = (items, isActive) => (
     isActive && (
@@ -80,6 +82,7 @@ export default function Navbar() {
         </div>
         
         <div className="hidden md:flex items-center h-full gap-8">
+
           {/* Services Dropdown */}
           <div 
             className="relative h-full flex items-center group cursor-pointer"
@@ -133,7 +136,7 @@ export default function Navbar() {
           </div>
 
           <button 
-            onClick={() => navigate('/track')}
+            onClick={() => setIsTrackingOpen(true)}
             className="text-gray-300 font-medium hover:text-white transition-colors relative h-full group"
           >
             Tracking
@@ -160,6 +163,11 @@ export default function Navbar() {
           <Menu className="w-6 h-6" />
         </button>
       </div>
+
+      <TrackingModal 
+        isOpen={isTrackingOpen} 
+        onClose={() => setIsTrackingOpen(false)} 
+      />
     </nav>
   );
 }
