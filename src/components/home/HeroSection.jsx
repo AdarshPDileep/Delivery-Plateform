@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Circle, Truck, Globe } from 'lucide-react';
+import { MapPin, Circle, Truck, Globe, ShieldCheck } from 'lucide-react';
 import heroImage from '../../assets/hero-logistics.jpg';
 import TrackingResultModal from './TrackingResultModal';
 
@@ -10,15 +10,75 @@ export default function HeroSection() {
   const [trackType, setTrackType] = useState('mobile');
   const [shipType, setShipType] = useState('domestic'); // 'domestic' | 'international'
   const [showTrackingResult, setShowTrackingResult] = useState(false);
+
+  // OTP flow states
+  const [otpStep, setOtpStep] = useState('input'); // 'input' | 'otp' | 'verified'
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otpTimer, setOtpTimer] = useState(0);
   
   const navigate = useNavigate();
 
+  // OTP countdown timer
+  useEffect(() => {
+    if (otpTimer > 0) {
+      const interval = setInterval(() => setOtpTimer((t) => t - 1), 1000);
+      return () => clearInterval(interval);
+    }
+  }, [otpTimer]);
+
+  // Reset OTP step when switching track type
+  useEffect(() => {
+    setOtpStep('input');
+    setOtp(['', '', '', '', '', '']);
+    setOtpTimer(0);
+  }, [trackType]);
+
   const handleTrack = (e) => {
     e.preventDefault();
-    if (trackingNumber.trim()) {
+    if (!trackingNumber.trim()) return;
+
+    if (trackType === 'mobile') {
+      if (otpStep === 'input') {
+        // Send OTP
+        setOtpStep('otp');
+        setOtpTimer(30);
+      } else if (otpStep === 'otp') {
+        // Verify OTP
+        setOtpStep('verified');
+        setShowTrackingResult(true);
+      }
+    } else {
+      // AWB, Order Id, LRN — direct tracking
       setShowTrackingResult(true);
     }
   };
+
+  const handleOtpChange = (index, value) => {
+    if (value.length > 1) return;
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      const next = document.getElementById(`otp-${index + 1}`);
+      if (next) next.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      const prev = document.getElementById(`otp-${index - 1}`);
+      if (prev) prev.focus();
+    }
+  };
+
+  const handleResendOtp = () => {
+    setOtp(['', '', '', '', '', '']);
+    setOtpTimer(30);
+  };
+
+  const isOtpFilled = otp.every((d) => d !== '');
 
   return (
     <div className="relative w-full min-h-[650px] lg:h-[750px] flex items-center bg-gray-900 overflow-hidden">
@@ -59,7 +119,7 @@ export default function HeroSection() {
             {/* Top Tabs */}
             <div className="flex items-center gap-6 border-b border-gray-100 mb-6">
               <button 
-                onClick={() => setActiveTab('track')}
+                onClick={() => { setActiveTab('track'); setOtpStep('input'); setOtp(['','','','','','']); }}
                 className={`font-bold text-lg pb-4 border-b-4 transition-colors ${activeTab === 'track' ? 'text-gray-900 border-[#E31837]' : 'text-gray-400 border-transparent hover:text-gray-600'}`}
               >
                 Track order
@@ -93,22 +153,81 @@ export default function HeroSection() {
                 </div>
 
                 <form onSubmit={handleTrack}>
-                  <div className="mb-6">
-                    <input
-                      type="text"
-                      value={trackingNumber}
-                      onChange={(e) => setTrackingNumber(e.target.value)}
-                      placeholder={
-                        trackType === 'mobile' ? 'Enter your mobile number' : 
-                        trackType === 'awb' ? 'Enter AWB number' : 
-                        trackType === 'orderId' ? 'Enter Order Id' : 'Enter LRN'
-                      }
-                      className="w-full h-12 px-4 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition-all placeholder:text-gray-400"
-                    />
-                  </div>
+                  {/* Mobile OTP Flow */}
+                  {trackType === 'mobile' && otpStep === 'otp' ? (
+                    // OTP Verification Step
+                    <div className="mb-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                        <p className="text-sm text-gray-700">
+                          OTP sent to <span className="font-bold">{trackingNumber}</span>
+                        </p>
+                      </div>
+
+                      <p className="text-xs text-gray-500 mb-3">Enter 6-digit verification code</p>
+                      
+                      <div className="flex gap-2 mb-4 justify-between">
+                        {otp.map((digit, i) => (
+                          <input
+                            key={i}
+                            id={`otp-${i}`}
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={1}
+                            value={digit}
+                            onChange={(e) => handleOtpChange(i, e.target.value.replace(/\D/g, ''))}
+                            onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                            className="w-12 h-14 text-center text-xl font-bold rounded-lg border-2 border-gray-200 text-gray-900 focus:outline-none focus:border-[#E31837] focus:ring-1 focus:ring-[#E31837]/30 transition-all"
+                          />
+                        ))}
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs mb-6">
+                        {otpTimer > 0 ? (
+                          <span className="text-gray-400">Resend in <span className="font-semibold text-gray-600">{otpTimer}s</span></span>
+                        ) : (
+                          <button type="button" onClick={handleResendOtp} className="text-[#E31837] font-semibold hover:underline">
+                            Resend OTP
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => { setOtpStep('input'); setOtp(['','','','','','']); }}
+                          className="text-gray-400 hover:text-gray-600"
+                        >
+                          Change number
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // Default Input Step
+                    <div className="mb-6">
+                      <input
+                        type="text"
+                        value={trackingNumber}
+                        onChange={(e) => setTrackingNumber(e.target.value)}
+                        placeholder={
+                          trackType === 'mobile' ? 'Enter your mobile number' : 
+                          trackType === 'awb' ? 'Enter AWB number' : 
+                          trackType === 'orderId' ? 'Enter Order Id' : 'Enter LRN'
+                        }
+                        className="w-full h-12 px-4 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition-all placeholder:text-gray-400"
+                      />
+                    </div>
+                  )}
                   
-                  <button type="submit" className="w-full h-12 bg-[#111111] hover:bg-black text-white font-bold rounded-lg transition-colors">
-                    {trackType === 'mobile' ? 'Get OTP' : 'Track Order'}
+                  <button
+                    type="submit"
+                    disabled={trackType === 'mobile' && otpStep === 'otp' && !isOtpFilled}
+                    className={`w-full h-12 font-bold rounded-lg transition-colors ${
+                      trackType === 'mobile' && otpStep === 'otp' && !isOtpFilled
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-[#111111] hover:bg-black text-white'
+                    }`}
+                  >
+                    {trackType === 'mobile'
+                      ? otpStep === 'input' ? 'Get OTP' : 'Verify & Track'
+                      : 'Track Order'}
                   </button>
                 </form>
 
