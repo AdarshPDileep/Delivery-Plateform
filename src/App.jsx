@@ -20,6 +20,8 @@ import CompanyDetails from './pages/CompanyDetails';
 // Auth Pages
 import LoginSelection from './pages/auth/LoginSelection';
 import SellerSignup from './pages/auth/SellerSignup';
+import FranchiseSignup from './pages/auth/FranchiseSignup';
+import AdminSignup from './pages/auth/AdminSignup';
 
 import SellerPortal from './portals/seller/SellerPortal';
 import SellerLogin from './portals/seller/pages/SellerLogin';
@@ -42,6 +44,8 @@ function App() {
             {/* Global Auth */}
             <Route path="/auth/login" element={<LoginSelection />} />
             <Route path="/seller/signup" element={<SellerSignup />} />
+            <Route path="/franchise/signup" element={<FranchiseSignup />} />
+            <Route path="/admin/signup" element={<AdminSignup />} />
 
             {/* Super Admin Portal */}
             <Route path="/admin/login" element={<AdminLogin />} />

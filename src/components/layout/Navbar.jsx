@@ -45,6 +45,12 @@ const dropdownLogin = [
   { id: 'admin-login', name: 'Administration', icon: ShieldCheck, path: '/admin/login' },
 ];
 
+const dropdownSignup = [
+  { id: 'seller-signup', name: 'Seller / Merchant', icon: Store, path: '/seller/signup' },
+  { id: 'franchise-signup', name: 'Franchise Partner', icon: Users, path: '/franchise/signup' },
+  { id: 'admin-signup', name: 'Administration', icon: ShieldCheck, path: '/admin/signup' },
+];
+
 export default function Navbar() {
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -165,12 +171,18 @@ export default function Navbar() {
             </div>
             {renderDropdown(dropdownLogin, activeDropdown === 'login')}
           </div>
-          <button
-            onClick={() => navigate('/seller/signup')}
-            className="hidden md:block bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-full font-bold transition-colors"
+
+          {/* Sign Up Dropdown */}
+          <div
+            className="relative h-full flex items-center group cursor-pointer hidden md:block"
+            onMouseEnter={() => setActiveDropdown('signup')}
+            onMouseLeave={() => setActiveDropdown(null)}
           >
-            Sign Up
-          </button>
+            <div className="bg-[#E31837] hover:bg-[#c0122e] text-white px-6 py-2.5 rounded-full font-bold transition-colors">
+              Sign Up
+            </div>
+            {renderDropdown(dropdownSignup, activeDropdown === 'signup')}
+          </div>
           <button className="md:hidden text-white">
             <Menu className="w-6 h-6" />
           </button>
