@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Circle, Truck, Globe } from 'lucide-react';
 import heroImage from '../../assets/hero-logistics.jpg';
+import TrackingResultModal from './TrackingResultModal';
 
 export default function HeroSection() {
   const [activeTab, setActiveTab] = useState('track'); // 'track' | 'ship'
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackType, setTrackType] = useState('mobile');
   const [shipType, setShipType] = useState('domestic'); // 'domestic' | 'international'
+  const [showTrackingResult, setShowTrackingResult] = useState(false);
   
   const navigate = useNavigate();
 
   const handleTrack = (e) => {
     e.preventDefault();
     if (trackingNumber.trim()) {
-      navigate(`/track/${trackingNumber.trim()}`);
+      setShowTrackingResult(true);
     }
   };
 
@@ -180,6 +182,12 @@ export default function HeroSection() {
         </div>
 
       </div>
+
+      <TrackingResultModal
+        isOpen={showTrackingResult}
+        onClose={() => setShowTrackingResult(false)}
+        trackingNumber={trackingNumber}
+      />
     </div>
   );
 }
