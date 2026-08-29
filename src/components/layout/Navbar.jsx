@@ -81,9 +81,9 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="bg-[#111111] border-b border-gray-800 px-6 h-20 flex items-center justify-between sticky top-0 z-50">
+    <nav className="bg-[#111111] border-b border-gray-800 px-6 h-14 flex items-center justify-between sticky top-0 z-50">
       <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-        <span className="font-extrabold text-3xl tracking-tight text-[#E31837]">
+        <span className="font-extrabold text-xl tracking-tight text-[#E31837]">
           Commerza<span className="text-white">Global</span>
         </span>
       </div>
