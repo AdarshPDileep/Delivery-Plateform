@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, Circle, Truck, Globe, ShieldCheck } from 'lucide-react';
 import heroImage from '../../assets/hero-logistics.jpg';
 import TrackingResultModal from './TrackingResultModal';
+import ShippingResultModal from './ShippingResultModal';
 
 export default function HeroSection() {
   const [activeTab, setActiveTab] = useState('track'); // 'track' | 'ship'
@@ -10,6 +11,11 @@ export default function HeroSection() {
   const [trackType, setTrackType] = useState('mobile');
   const [shipType, setShipType] = useState('domestic'); // 'domestic' | 'international'
   const [showTrackingResult, setShowTrackingResult] = useState(false);
+
+  // Ship flow states
+  const [pickupCode, setPickupCode] = useState('');
+  const [deliveryCode, setDeliveryCode] = useState('');
+  const [showShippingResult, setShowShippingResult] = useState(false);
 
   // OTP flow states
   const [otpStep, setOtpStep] = useState('input'); // 'input' | 'otp' | 'verified'
@@ -50,6 +56,13 @@ export default function HeroSection() {
     } else {
       // AWB, Order Id, LRN — direct tracking
       setShowTrackingResult(true);
+    }
+  };
+
+  const handleShip = (e) => {
+    e.preventDefault();
+    if (pickupCode.trim() && deliveryCode.trim()) {
+      setShowShippingResult(true);
     }
   };
 
@@ -267,30 +280,38 @@ export default function HeroSection() {
                   </button>
                 </div>
 
-                <div className="flex gap-4 mb-6">
-                  <div className="flex flex-col items-center mt-3 text-gray-300">
-                    <Circle className="w-4 h-4 text-gray-400" />
-                    <div className="flex-1 w-px border-l-2 border-dashed border-gray-300 my-1"></div>
-                    <MapPin className="w-4 h-4 text-gray-400" />
+                <form onSubmit={handleShip}>
+                  <div className="flex gap-4 mb-6">
+                    <div className="flex flex-col items-center mt-3 text-gray-300">
+                      <Circle className="w-4 h-4 text-gray-400" />
+                      <div className="flex-1 w-px border-l-2 border-dashed border-gray-300 my-1"></div>
+                      <MapPin className="w-4 h-4 text-gray-400" />
+                    </div>
+                    
+                    <div className="flex-1 space-y-4">
+                      <input
+                        type="text"
+                        value={pickupCode}
+                        onChange={(e) => setPickupCode(e.target.value)}
+                        placeholder="Enter pickup pin code"
+                        className="w-full h-12 px-4 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition-all placeholder:text-gray-400"
+                        required
+                      />
+                      <input
+                        type="text"
+                        value={deliveryCode}
+                        onChange={(e) => setDeliveryCode(e.target.value)}
+                        placeholder="Enter delivery pin code"
+                        className="w-full h-12 px-4 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition-all placeholder:text-gray-400"
+                        required
+                      />
+                    </div>
                   </div>
-                  
-                  <div className="flex-1 space-y-4">
-                    <input
-                      type="text"
-                      placeholder="Enter pickup pin code"
-                      className="w-full h-12 px-4 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition-all placeholder:text-gray-400"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Enter delivery pin code"
-                      className="w-full h-12 px-4 rounded-lg border border-gray-200 text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition-all placeholder:text-gray-400"
-                    />
-                  </div>
-                </div>
 
-                <button type="button" className="w-full h-12 bg-[#111111] hover:bg-black text-white font-bold rounded-lg transition-colors mb-4">
-                  Get OTP & Ship Now
-                </button>
+                  <button type="submit" className="w-full h-12 bg-[#111111] hover:bg-black text-white font-bold rounded-lg transition-colors mb-4">
+                    Get OTP & Ship Now
+                  </button>
+                </form>
                 
                 <div className="text-center">
                   <a href="#" className="text-[#E31837] text-sm hover:underline font-medium">Sign up to ship as a business here</a>
@@ -306,6 +327,14 @@ export default function HeroSection() {
         isOpen={showTrackingResult}
         onClose={() => setShowTrackingResult(false)}
         trackingNumber={trackingNumber}
+      />
+      
+      <ShippingResultModal
+        isOpen={showShippingResult}
+        onClose={() => setShowShippingResult(false)}
+        pickupCode={pickupCode}
+        deliveryCode={deliveryCode}
+        shipType={shipType}
       />
     </div>
   );
