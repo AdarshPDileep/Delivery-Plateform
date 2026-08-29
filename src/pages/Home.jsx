@@ -2,7 +2,9 @@ import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import HeroSection from '../components/home/HeroSection';
 import ServicesSection from '../components/home/ServicesSection';
+import TrustedPartnersSection from '../components/home/TrustedPartnersSection';
 import StatsSection from '../components/home/StatsSection';
+import CTASection from '../components/home/CTASection';
 import Footer from '../components/layout/Footer';
 
 export default function Home() {
@@ -13,7 +15,9 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <ServicesSection />
+        <TrustedPartnersSection />
         <StatsSection />
+        <CTASection />
       </main>
       
       <Footer />

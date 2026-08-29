@@ -1,43 +1,57 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Truck, PackageSearch, Plane, ShieldCheck, Zap, Factory } from 'lucide-react';
+import { Truck, PackageSearch, Plane, ShieldCheck, Zap, Factory, ArrowRight } from 'lucide-react';
+
+// Service images
+import expressImg from '../../assets/service-express.jpg';
+import warehouseImg from '../../assets/service-warehouse.jpg';
+import truckloadImg from '../../assets/service-truckload.jpg';
+import supplychainImg from '../../assets/service-supplychain.jpg';
+import crossborderImg from '../../assets/service-crossborder.jpg';
+import dataImg from '../../assets/service-data.jpg';
 
 const services = [
   {
     icon: Truck,
     title: 'Express Parcel',
     description: 'Extensive delivery network covering all of India with fastest turnaround times.',
-    path: '/services/express-parcel'
+    path: '/services/express-parcel',
+    image: expressImg
   },
   {
     icon: Factory,
     title: 'Warehousing',
     description: 'State-of-the-art facilities with intelligent inventory and order management systems.',
-    path: '/services/warehousing'
+    path: '/services/warehousing',
+    image: warehouseImg
   },
   {
     icon: PackageSearch,
     title: 'Partial-Truckload (PTL)',
     description: 'Cost-effective freight solutions for large or heavy shipments with high reliability.',
-    path: '/services/part-truckload'
+    path: '/services/part-truckload',
+    image: truckloadImg
   },
   {
     icon: Zap,
     title: 'Supply Chain Services',
     description: 'End-to-end customized supply chain solutions for large enterprises.',
-    path: '/services/transport-one'
+    path: '/services/transport-one',
+    image: supplychainImg
   },
   {
     icon: Plane,
     title: 'Cross Border',
     description: 'Global logistics made easy with our international shipping and customs expertise.',
-    path: '/services/international'
+    path: '/services/international',
+    image: crossborderImg
   },
   {
     icon: ShieldCheck,
     title: 'Data Intelligence',
     description: 'Harnessing the power of billions of shipments to optimize your logistics.',
-    path: '/services/data-intelligence'
+    path: '/services/data-intelligence',
+    image: dataImg
   }
 ];
 
@@ -60,17 +74,30 @@ export default function ServicesSection() {
             <div 
               key={index}
               onClick={() => navigate(service.path)}
-              className="group p-8 rounded-2xl border border-gray-100 hover:border-transparent bg-gray-50 hover:bg-white hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col items-start"
+              className="group rounded-2xl border border-gray-100 hover:border-transparent bg-white hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col overflow-hidden"
             >
-              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#E31837] mb-6 shadow-sm group-hover:bg-[#E31837] group-hover:text-white transition-colors duration-300">
-                <Icon className="w-7 h-7" />
+              {/* Service Image */}
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src={service.image} 
+                  alt={service.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
+                <div className="absolute bottom-4 left-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center text-[#E31837] shadow-lg group-hover:bg-[#E31837] group-hover:text-white transition-all duration-300">
+                  <Icon className="w-6 h-6" />
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">{service.title}</h3>
-              <p className="text-gray-600 leading-relaxed">
-                {service.description}
-              </p>
-              <div className="mt-8 text-[#E31837] font-semibold flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Learn More <span className="text-xl">→</span>
+
+              {/* Service Content */}
+              <div className="p-6 flex flex-col flex-1">
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#E31837] transition-colors duration-300">{service.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm flex-1">
+                  {service.description}
+                </p>
+                <div className="mt-5 text-[#E31837] font-semibold flex items-center gap-2 text-sm opacity-0 group-hover:opacity-100 translate-x-[-8px] group-hover:translate-x-0 transition-all duration-400">
+                  Learn More <ArrowRight className="w-4 h-4" />
+                </div>
               </div>
             </div>
           );

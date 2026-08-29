@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Circle, Truck, Globe } from 'lucide-react';
+import heroImage from '../../assets/hero-logistics.jpg';
 
 export default function HeroSection() {
   const [activeTab, setActiveTab] = useState('track'); // 'track' | 'ship'
@@ -22,7 +23,7 @@ export default function HeroSection() {
       {/* Background Image & Gradient Overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop")' }}
+        style={{ backgroundImage: `url(${heroImage})` }}
       ></div>
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
       
