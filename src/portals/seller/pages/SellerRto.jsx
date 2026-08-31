@@ -5,7 +5,36 @@ import DataTable from '../../../components/ui/DataTable';
 import { shipments } from '../../../data/shipments';
 
 export default function SellerRto() {
-  const rtoShipments = shipments.filter(s => s.sellerId === 'SL001' && (s.status === 'RTO Initiated' || s.status === 'RTO Delivered' || s.status === 'Delivery Failed'));
+  const rtoShipments = [
+    {
+      id: 101,
+      awb: 'CG20240101',
+      receiver: { name: 'Priya Patel', phone: '9123456780', address: 'Koramangala, Bangalore' },
+      status: 'Delivery Failed',
+      exceptionReason: 'Customer Not Available',
+    },
+    {
+      id: 102,
+      awb: 'CG20240102',
+      receiver: { name: 'Amit Kumar', phone: '9988776655', address: 'Connaught Place, Delhi' },
+      status: 'RTO Initiated',
+      exceptionReason: 'Address Incomplete',
+    },
+    {
+      id: 103,
+      awb: 'CG20240103',
+      receiver: { name: 'Vikram Singh', phone: '9012345678', address: 'MG Road, Pune' },
+      status: 'RTO Delivered',
+      exceptionReason: 'Customer Refused / Unavailable',
+    },
+    {
+      id: 104,
+      awb: 'CG20240104',
+      receiver: { name: 'Meera Iyer', phone: '9567890123', address: 'T Nagar, Chennai' },
+      status: 'Delivery Failed',
+      exceptionReason: 'Fake Order / COD Refused',
+    },
+  ];
 
   const columns = [
     { key: 'awb', label: 'AWB' },
