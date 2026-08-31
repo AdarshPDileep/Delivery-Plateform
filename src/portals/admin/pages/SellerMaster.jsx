@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Users, Search, Filter, Download, MoreVertical, FileText, CheckCircle2, Store, MapPin, Clock, CreditCard, ShoppingBag, Leaf, Factory, ShoppingCart, Building, ShieldAlert, ArrowRight } from 'lucide-react';
-import Drawer from '../../../components/ui/Modal';
 
 const Sparkline = ({ color }) => (
   <svg width="60" height="24" viewBox="0 0 60 24" className="overflow-visible">
@@ -44,7 +44,7 @@ const DonutChart = () => {
 
 export default function SellerMaster() {
   const [activeTab, setActiveTab] = useState('all');
-  const [activeDrawer, setActiveDrawer] = useState(null);
+  const navigate = useNavigate();
 
   const sellers = [
     { id: 'SEL-94823', business: 'Acme Electronics', contact: 'John Doe', location: 'Bangalore, KA', kyc: 'Verified', rateCard: 'Standard Tech Rate', status: 'Active', iconBg: 'bg-purple-100', iconColor: 'text-purple-600', Icon: Store },
@@ -216,116 +216,289 @@ export default function SellerMaster() {
 
           {/* Table Container */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
-                <tr>
-                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">BUSINESS DETAILS</th>
-                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">CONTACT & LOCATION</th>
-                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">KYC STATUS</th>
-                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">RATE CARD</th>
-                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">STATUS</th>
-                  <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-right">ACTION</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {sellers.map((seller) => {
-                  const RowIcon = seller.Icon;
-                  return (
-                    <tr key={seller.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-full ${seller.iconBg} flex items-center justify-center ${seller.iconColor} shrink-0`}>
-                            <RowIcon className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-gray-900 text-[13px]">{seller.business}</p>
-                            <p className="text-[11px] text-gray-400 font-medium">{seller.id}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div>
-                          <p className="font-bold text-gray-800 text-[13px] mb-0.5">{seller.contact}</p>
-                          <div className="flex items-center gap-1 text-gray-500 text-[11px] font-medium">
-                            <MapPin className="w-3 h-3 text-gray-400" /> {seller.location}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col items-start gap-1">
-                          {seller.kyc === 'Verified' && (
-                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-green-700 bg-green-50 border border-green-100">
-                               <CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Verified
-                             </span>
-                          )}
-                          {seller.kyc === 'Pending' && (
-                             <>
-                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-orange-700 bg-orange-50 border border-orange-100">
-                                 <Clock className="w-3.5 h-3.5 text-orange-500" /> Pending
-                               </span>
-                               <button className="text-[10px] font-bold text-[#E31837] hover:underline ml-1">Review Docs</button>
-                             </>
-                          )}
-                          {seller.kyc === 'Rejected' && (
-                             <>
-                               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-[#E31837] bg-red-50 border border-red-100">
-                                 <ShieldAlert className="w-3.5 h-3.5 text-[#E31837]" /> Rejected
-                               </span>
-                               <button className="text-[10px] font-bold text-[#E31837] hover:underline ml-1">View Reason</button>
-                             </>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <FileText className="w-4 h-4 text-gray-400 shrink-0" />
-                          <span className="font-bold text-[13px]">{seller.rateCard}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                         <div className="flex items-center gap-2 text-[13px] font-bold">
-                           {seller.status === 'Active' && <><span className="w-2 h-2 rounded-full bg-green-500"></span><span className="text-green-600">Active</span></>}
-                           {seller.status === 'Under Review' && <><span className="w-2 h-2 rounded-full bg-blue-500"></span><span className="text-blue-600">Under Review</span></>}
-                           {seller.status === 'Inactive' && <><span className="w-2 h-2 rounded-full bg-gray-500"></span><span className="text-gray-600">Inactive</span></>}
-                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          <button onClick={() => setActiveDrawer('view')} className="px-3 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+            {activeTab === 'all' && (
+              <>
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
+                    <tr>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">BUSINESS DETAILS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">CONTACT & LOCATION</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">KYC STATUS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">RATE CARD</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">STATUS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {sellers.map((seller) => {
+                      const RowIcon = seller.Icon;
+                      return (
+                        <tr key={seller.id} className="hover:bg-gray-50/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-10 h-10 rounded-full ${seller.iconBg} flex items-center justify-center ${seller.iconColor} shrink-0`}>
+                                <RowIcon className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <p className="font-bold text-gray-900 text-[13px]">{seller.business}</p>
+                                <p className="text-[11px] text-gray-400 font-medium">{seller.id}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div>
+                              <p className="font-bold text-gray-800 text-[13px] mb-0.5">{seller.contact}</p>
+                              <div className="flex items-center gap-1 text-gray-500 text-[11px] font-medium">
+                                <MapPin className="w-3 h-3 text-gray-400" /> {seller.location}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col items-start gap-1">
+                              {seller.kyc === 'Verified' && (
+                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-green-700 bg-green-50 border border-green-100">
+                                   <CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Verified
+                                 </span>
+                              )}
+                              {seller.kyc === 'Pending' && (
+                                 <>
+                                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-orange-700 bg-orange-50 border border-orange-100">
+                                     <Clock className="w-3.5 h-3.5 text-orange-500" /> Pending
+                                   </span>
+                                   <button className="text-[10px] font-bold text-[#E31837] hover:underline ml-1">Review Docs</button>
+                                 </>
+                              )}
+                              {seller.kyc === 'Rejected' && (
+                                 <>
+                                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-[#E31837] bg-red-50 border border-red-100">
+                                     <ShieldAlert className="w-3.5 h-3.5 text-[#E31837]" /> Rejected
+                                   </span>
+                                   <button className="text-[10px] font-bold text-[#E31837] hover:underline ml-1">View Reason</button>
+                                 </>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <FileText className="w-4 h-4 text-gray-400 shrink-0" />
+                              <span className="font-bold text-[13px]">{seller.rateCard}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                             <div className="flex items-center gap-2 text-[13px] font-bold">
+                               {seller.status === 'Active' && <><span className="w-2 h-2 rounded-full bg-green-500"></span><span className="text-green-600">Active</span></>}
+                               {seller.status === 'Under Review' && <><span className="w-2 h-2 rounded-full bg-blue-500"></span><span className="text-blue-600">Under Review</span></>}
+                               {seller.status === 'Inactive' && <><span className="w-2 h-2 rounded-full bg-gray-500"></span><span className="text-gray-600">Inactive</span></>}
+                             </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center justify-end gap-2">
+                              <button onClick={() => navigate(`/admin/sellers/${seller.id}`)} className="px-3 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                                View
+                              </button>
+                              <button onClick={() => navigate(`/admin/sellers/${seller.id}/edit`)} className="px-3 py-1.5 bg-[#E31837] border border-[#E31837] rounded-md text-[11px] font-bold text-white hover:bg-red-700 transition-colors">
+                                Manage
+                              </button>
+                              <button className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                                <MoreVertical className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {/* Pagination */}
+                <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-white">
+                   <p className="text-[11px] text-gray-500 font-medium">Showing 1 to 6 of 1,248 sellers</p>
+                   <div className="flex items-center gap-4">
+                     <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-700 hover:bg-gray-50">
+                       10 per page <MoreVertical className="w-3 h-3 text-transparent" /* spacing hack */ />
+                     </button>
+                     <div className="flex items-center gap-1 text-[13px]">
+                       <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&lt;</button>
+                       <button className="w-7 h-7 flex items-center justify-center rounded bg-[#E31837] text-white font-bold">1</button>
+                       <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">2</button>
+                       <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">3</button>
+                       <span className="w-7 h-7 flex items-center justify-center text-gray-400">...</span>
+                       <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">125</button>
+                       <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&gt;</button>
+                     </div>
+                   </div>
+                </div>
+              </>
+            )}
+
+            {activeTab === 'apps' && (
+              <>
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
+                    <tr>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">APPLICATION ID</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">BUSINESS NAME</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">APPLIED ON</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">CONTACT PERSON</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">STATUS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {[
+                      { id: 'APP-2024-001248', name: 'Acme Electronics', date: '30 Aug 2026', contact: 'John Doe', status: 'Under Review' },
+                      { id: 'APP-2024-001247', name: 'Fashion Hub Retail', date: '28 Aug 2026', contact: 'Priya Sharma', status: 'Pending' },
+                      { id: 'APP-2024-001246', name: 'Organic Foods Co', date: '27 Aug 2026', contact: 'Michael Smith', status: 'Under Review' },
+                      { id: 'APP-2024-001245', name: 'QuickShip Logistics', date: '26 Aug 2026', contact: 'Rohan Mehta', status: 'Rejected' },
+                      { id: 'APP-2024-001244', name: 'Daily Needs Mart', date: '25 Aug 2026', contact: 'Anjali Verma', status: 'Pending' },
+                    ].map((app) => (
+                      <tr key={app.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <span className="font-bold text-[#E31837] text-[13px]">{app.id}</span>
+                        </td>
+                        <td className="px-6 py-4 font-bold text-gray-900 text-[13px]">{app.name}</td>
+                        <td className="px-6 py-4 text-gray-600 font-medium text-[13px]">{app.date}</td>
+                        <td className="px-6 py-4 text-gray-600 font-medium text-[13px]">{app.contact}</td>
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-2 text-[13px] font-bold">
+                             {app.status === 'Pending' && <><span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span><span className="text-orange-600">Pending</span></>}
+                             {app.status === 'Under Review' && <><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span><span className="text-blue-600">Under Review</span></>}
+                             {app.status === 'Rejected' && <><span className="w-1.5 h-1.5 rounded-full bg-red-500"></span><span className="text-[#E31837]">Rejected</span></>}
+                           </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button className="px-4 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors">
                             View
                           </button>
-                          <button onClick={() => setActiveDrawer('manage')} className="px-3 py-1.5 bg-[#E31837] border border-[#E31837] rounded-md text-[11px] font-bold text-white hover:bg-red-700 transition-colors">
-                            Manage
-                          </button>
-                          <button className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
-                            <MoreVertical className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-white">
+                   <p className="text-[11px] text-gray-500 font-medium">Showing 1 to 5 of 34 applications</p>
+                   <div className="flex items-center gap-1 text-[13px]">
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&lt;</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded bg-[#E31837] text-white font-bold">1</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">2</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">3</button>
+                     <span className="w-7 h-7 flex items-center justify-center text-gray-400">...</span>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">7</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&gt;</button>
+                   </div>
+                </div>
+              </>
+            )}
 
-            {/* Pagination */}
-            <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-white">
-               <p className="text-[11px] text-gray-500 font-medium">Showing 1 to 6 of 1,248 sellers</p>
-               <div className="flex items-center gap-4">
-                 <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-700 hover:bg-gray-50">
-                   10 per page <MoreVertical className="w-3 h-3 text-transparent" /* spacing hack */ />
-                 </button>
-                 <div className="flex items-center gap-1 text-[13px]">
-                   <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&lt;</button>
-                   <button className="w-7 h-7 flex items-center justify-center rounded bg-[#E31837] text-white font-bold">1</button>
-                   <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">2</button>
-                   <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">3</button>
-                   <span className="w-7 h-7 flex items-center justify-center text-gray-400">...</span>
-                   <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">125</button>
-                   <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&gt;</button>
-                 </div>
-               </div>
-            </div>
+            {activeTab === 'kyc' && (
+              <>
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
+                    <tr>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">SELLER ID</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">BUSINESS NAME</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">DOCUMENTS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">KYC STATUS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">VERIFIED ON</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {[
+                      { id: 'SEL-94823', name: 'Acme Electronics', docs: '3/3', status: 'Verified', date: '30 Aug 2026' },
+                      { id: 'SEL-94824', name: 'Fashion Hub Retail', docs: '2/3', status: 'Pending', date: '-' },
+                      { id: 'SEL-94825', name: 'Organic Foods Co', docs: '3/3', status: 'Verified', date: '29 Aug 2026' },
+                      { id: 'SEL-94826', name: 'QuickShip Logistics', docs: '1/3', status: 'Rejected', date: '28 Aug 2026' },
+                      { id: 'SEL-94827', name: 'Daily Needs Mart', docs: '2/3', status: 'Pending', date: '-' },
+                    ].map((row) => (
+                      <tr key={row.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4 font-medium text-gray-500 text-[13px]">{row.id}</td>
+                        <td className="px-6 py-4 font-bold text-gray-900 text-[13px]">{row.name}</td>
+                        <td className="px-6 py-4 font-bold text-gray-600 text-[13px]">{row.docs}</td>
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-1.5 text-[11px] font-bold">
+                             {row.status === 'Verified' && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-green-700 bg-green-50 border border-green-100"><CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Verified</span>}
+                             {row.status === 'Pending' && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-orange-700 bg-orange-50 border border-orange-100"><Clock className="w-3.5 h-3.5 text-orange-500" /> Pending</span>}
+                             {row.status === 'Rejected' && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[#E31837] bg-red-50 border border-red-100"><ShieldAlert className="w-3.5 h-3.5 text-[#E31837]" /> Rejected</span>}
+                           </div>
+                        </td>
+                        <td className="px-6 py-4 text-gray-600 font-medium text-[13px]">{row.date}</td>
+                        <td className="px-6 py-4 text-right">
+                          <button className="px-4 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                            {row.status === 'Pending' ? 'Review' : 'View'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-white">
+                   <p className="text-[11px] text-gray-500 font-medium">Showing 1 to 5 of 27 sellers</p>
+                   <div className="flex items-center gap-1 text-[13px]">
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&lt;</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded bg-[#E31837] text-white font-bold">1</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">2</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">3</button>
+                     <span className="w-7 h-7 flex items-center justify-center text-gray-400">...</span>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">4</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&gt;</button>
+                   </div>
+                </div>
+              </>
+            )}
+
+            {activeTab === 'rates' && (
+              <>
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-gray-50 text-gray-500 border-b border-gray-100">
+                    <tr>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">RATE CARD NAME</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">DESCRIPTION</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">ASSIGNED SELLERS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider">STATUS</th>
+                      <th className="px-6 py-4 font-bold text-[10px] uppercase tracking-wider text-right">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {[
+                      { name: 'Standard Tech Rate', desc: 'Standard rates for tech & electronics', sellers: 248, status: 'Active' },
+                      { name: 'Default rate', desc: 'Default rate card for all categories', sellers: 156, status: 'Active' },
+                      { name: 'FMCG Special', desc: 'Special rates for FMCG products', sellers: 89, status: 'Active' },
+                      { name: 'Logistics Partner Rate', desc: 'Rates for logistics partners', sellers: 45, status: 'Inactive' },
+                      { name: 'Retail Standard', desc: 'Standard retail rate card', sellers: 67, status: 'Active' },
+                    ].map((row, i) => (
+                      <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4 font-bold text-gray-900 text-[13px]">{row.name}</td>
+                        <td className="px-6 py-4 font-medium text-gray-600 text-[13px]">{row.desc}</td>
+                        <td className="px-6 py-4 font-bold text-gray-900 text-[13px]">{row.sellers}</td>
+                        <td className="px-6 py-4">
+                           <div className="flex items-center gap-2 text-[13px] font-bold">
+                             {row.status === 'Active' && <><span className="w-2 h-2 rounded-full bg-green-500"></span><span className="text-green-600">Active</span></>}
+                             {row.status === 'Inactive' && <><span className="w-2 h-2 rounded-full bg-gray-500"></span><span className="text-gray-600">Inactive</span></>}
+                           </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button className="px-4 py-1.5 border border-gray-200 rounded-md text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-white">
+                   <p className="text-[11px] text-gray-500 font-medium">Showing 1 to 5 of 12 rate cards</p>
+                   <div className="flex items-center gap-1 text-[13px]">
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&lt;</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded bg-[#E31837] text-white font-bold">1</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">2</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">3</button>
+                     <span className="w-7 h-7 flex items-center justify-center text-gray-400">...</span>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-600 font-bold hover:bg-gray-50">3</button>
+                     <button className="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&gt;</button>
+                   </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -449,29 +622,6 @@ export default function SellerMaster() {
 
         </div>
       </div>
-      
-      {/* Seller Action Drawer */}
-      <Drawer open={!!activeDrawer} onClose={() => setActiveDrawer(null)} title={activeDrawer === 'view' ? 'View Seller Details' : 'Manage Seller Account'} width="max-w-2xl"
-        footer={
-          activeDrawer === 'view' ? (
-            <button className="px-4 py-2 bg-[#111111] text-white font-medium rounded-lg hover:bg-black transition-colors" onClick={() => setActiveDrawer(null)}>Close</button>
-          ) : (
-            <><button className="px-4 py-2 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setActiveDrawer(null)}>Cancel</button><button className="px-4 py-2 bg-[#111111] text-white font-medium rounded-lg hover:bg-black transition-colors" onClick={() => setActiveDrawer(null)}>Save Changes</button></>
-          )
-        }
-      >
-        <div className="space-y-6">
-          <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-             <p className="text-sm text-gray-500 font-medium mb-1">Mode</p>
-             <p className="text-lg font-bold text-gray-900">{activeDrawer === 'view' ? 'Read-Only Mode' : 'Edit Mode'}</p>
-          </div>
-          <div className="space-y-4">
-             <div className="h-10 bg-gray-100 rounded animate-pulse"></div>
-             <div className="h-10 bg-gray-100 rounded animate-pulse"></div>
-             <div className="h-24 bg-gray-100 rounded animate-pulse"></div>
-          </div>
-        </div>
-      </Drawer>
     </div>
   );
 }

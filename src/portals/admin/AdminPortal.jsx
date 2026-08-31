@@ -6,6 +6,8 @@ import GeoMaster from './pages/GeoMaster';
 import RateCardMaster from './pages/RateCardMaster';
 import CommissionsMaster from './pages/CommissionsMaster';
 import SellerMaster from './pages/SellerMaster';
+import ManageSeller from './pages/ManageSeller';
+import EditSeller from './pages/EditSeller';
 import ShipmentControl from './pages/ShipmentControl';
 import PickupManifestControl from './pages/PickupManifestControl';
 import HubMaster from './pages/HubMaster';
@@ -71,6 +73,8 @@ export default function AdminPortal() {
         <Route path="rate-cards" element={<RateCardMaster />} />
         <Route path="commissions" element={<CommissionsMaster />} />
         <Route path="sellers" element={<SellerMaster />} />
+        <Route path="sellers/:id" element={<ManageSeller />} />
+        <Route path="sellers/:id/edit" element={<EditSeller />} />
         <Route path="shipments" element={<ShipmentControl />} />
         <Route path="operations" element={<PickupManifestControl />} />
         <Route path="hubs" element={<HubMaster />} />
