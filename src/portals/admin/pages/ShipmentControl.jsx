@@ -311,14 +311,92 @@ export default function ShipmentControl() {
         }
       >
         <div className="space-y-6">
-          <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-             <p className="text-sm text-gray-500 font-medium mb-1">Action</p>
-             <p className="text-lg font-bold text-gray-900 capitalize">{activeDrawer} Mode</p>
+          <div className="p-4 bg-gray-50 rounded-lg border border-gray-100 flex items-center justify-between">
+             <div>
+               <p className="text-sm text-gray-500 font-medium mb-1">AWB Number</p>
+               <p className="text-lg font-bold text-[#E31837]">CG20240001</p>
+             </div>
+             <div className="text-right">
+               <p className="text-sm text-gray-500 font-medium mb-1">Status</p>
+               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold text-yellow-700 bg-yellow-100"><span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>In Transit</span>
+             </div>
           </div>
+          
           <div className="space-y-4">
-             <div className="h-10 bg-gray-100 rounded animate-pulse"></div>
-             <div className="h-10 bg-gray-100 rounded animate-pulse"></div>
-             <div className="h-24 bg-gray-100 rounded animate-pulse"></div>
+             <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">Sender Name</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">Rahul Sharma</p>
+                   ) : (
+                     <input type="text" defaultValue="Rahul Sharma" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                   )}
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">Sender Location</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">Andheri West, Mumbai</p>
+                   ) : (
+                     <input type="text" defaultValue="Andheri West, Mumbai" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                   )}
+                </div>
+             </div>
+             
+             <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">Receiver Name</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">Priya Patel</p>
+                   ) : (
+                     <input type="text" defaultValue="Priya Patel" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                   )}
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">Receiver Location</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">Koramangala, Bangalore</p>
+                   ) : (
+                     <input type="text" defaultValue="Koramangala, Bangalore" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                   )}
+                </div>
+             </div>
+             
+             <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">Payment Mode</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">Prepaid</p>
+                   ) : (
+                     <select className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white">
+                        <option>Prepaid</option>
+                        <option>COD</option>
+                     </select>
+                   )}
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">COD Amount</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">—</p>
+                   ) : (
+                     <input type="text" defaultValue="—" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                   )}
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-xs font-bold text-gray-700">Franchise ID</label>
+                   {activeDrawer === 'view' ? (
+                     <p className="text-sm font-medium text-gray-900 p-2 bg-gray-50 border border-transparent rounded-lg">FR001</p>
+                   ) : (
+                     <input type="text" defaultValue="FR001" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
+                   )}
+                </div>
+             </div>
+             
+             {activeDrawer === 'exception' && (
+                <div className="space-y-1.5 mt-4 border-t border-gray-100 pt-4">
+                   <label className="text-xs font-bold text-[#E31837]">Exception Reason *</label>
+                   <textarea placeholder="Please detail the reason for the exception..." className="w-full px-3 py-2 border border-red-200 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#E31837] min-h-[80px] resize-none bg-red-50"></textarea>
+                </div>
+             )}
           </div>
         </div>
       </Drawer>
