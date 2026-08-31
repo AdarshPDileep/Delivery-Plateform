@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import PortalLayout from '../../components/layout/PortalLayout';
 import FranchiseDashboard from './pages/FranchiseDashboard';
+import FranchiseShipments from './pages/FranchiseShipments';
 import ConsignmentEntry from './pages/ConsignmentEntry';
 import FranchiseNetwork from './pages/FranchiseNetwork';
 import PickupRequests from './pages/PickupRequests';
@@ -56,6 +57,7 @@ export default function FranchisePortal() {
       <Routes>
         <Route path="/" element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<FranchiseDashboard />} />
+        <Route path="shipments" element={<FranchiseShipments />} />
         <Route path="network" element={<FranchiseNetwork />} />
         <Route path="booking" element={<ConsignmentEntry />} />
         <Route path="pickups" element={<PickupRequests />} />
