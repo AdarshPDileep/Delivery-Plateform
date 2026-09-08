@@ -1,5 +1,5 @@
-// Mock API layer — all data persisted in localStorage
-// Replace with real axios calls when backend is ready
+// Mock API layer - most data persisted in localStorage.
+// Auth endpoints use the Spring Boot backend.
 
 const STORAGE_KEY = 'cg_shipments';
 
@@ -83,22 +83,55 @@ function generateAWB() {
   return `CG${ts}${rand}`;
 }
 
-// ===== Auth (mock) =====
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
+// ===== Auth =====
 export async function loginAdmin(email, password) {
-  await delay(500);
-  if (email === 'admin@commerza.com' && password === 'admin123') {
-    return {
-      data: {
-        token: 'mock-jwt-token-' + Date.now(),
-        admin: { id: 1, email },
-      },
-    };
+  const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const message = data.message || data.error || 'Invalid admin credentials';
+    const err = new Error(message);
+    err.response = { status: response.status, data };
+    throw err;
   }
-  const err = new Error('Invalid email or password.');
-  err.response = { status: 401, data: { error: 'Invalid email or password.' } };
-  throw err;
+
+  return { data };
 }
 
+export async function logoutAdmin(token) {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/admin/logout`, {
+    method: 'POST',
+    headers,
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const message = data.message || data.error || 'Admin logout failed';
+    const err = new Error(message);
+    err.response = { status: response.status, data };
+    throw err;
+  }
+
+  return { data };
+}
 // ===== Shipments =====
 export async function createShipment(data) {
   await delay(400);
@@ -162,3 +195,5 @@ export async function updateShipmentStatus(awb, status) {
   saveShipments(shipments);
   return { data: { message: 'Status updated successfully.', awb, status } };
 }
+
+
