@@ -36,99 +36,75 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6f8] text-slate-950 grid lg:grid-cols-[1fr_440px] font-sans">
-      <section className="hidden lg:flex relative overflow-hidden bg-[#111111] text-white p-12 flex-col justify-between">
-        <div className="absolute inset-0 opacity-20 bg-[linear-gradient(135deg,transparent_0_30%,#E31837_30%_31%,transparent_31%_100%)] bg-[length:56px_56px]" />
-        <div className="relative flex items-center gap-3">
-          <div className="w-10 h-10 rounded bg-[#E31837] flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-black flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10">
+        
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600 mb-4">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <span className="text-lg font-semibold">Commerza Global Admin</span>
+          <h1 className="text-2xl font-bold text-black mb-2">Welcome Back!</h1>
+          <p className="text-sm text-slate-500">Please enter your details.</p>
         </div>
 
-        <div className="relative max-w-xl">
-          <p className="text-sm text-slate-300 mb-4">Control center</p>
-          <h1 className="text-5xl font-bold leading-tight tracking-normal">
-            Operations access for shipment, seller, and franchise control.
-          </h1>
-        </div>
-
-        <div className="relative grid grid-cols-3 gap-3 text-sm">
-          <div className="border border-white/15 bg-white/5 rounded p-4">
-            <p className="text-2xl font-semibold">24/7</p>
-            <p className="text-slate-300 mt-1">Network oversight</p>
-          </div>
-          <div className="border border-white/15 bg-white/5 rounded p-4">
-            <p className="text-2xl font-semibold">COD</p>
-            <p className="text-slate-300 mt-1">Finance control</p>
-          </div>
-          <div className="border border-white/15 bg-white/5 rounded p-4">
-            <p className="text-2xl font-semibold">ACL</p>
-            <p className="text-slate-300 mt-1">Admin access</p>
-          </div>
-        </div>
-      </section>
-
-      <main className="flex items-center justify-center px-5 py-10">
-        <div className="w-full max-w-sm">
-          <div className="mb-8">
-            <div className="w-12 h-12 rounded bg-[#E31837] text-white flex items-center justify-center mb-5">
-              <LockKeyhole className="w-6 h-6" />
-            </div>
-            <h2 className="text-3xl font-bold tracking-normal text-slate-950">Admin sign in</h2>
-            <p className="text-sm text-slate-500 mt-2">Use your Commerza Global admin credentials.</p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-1.5">
+            <label htmlFor="admin-email" className="block text-sm font-semibold text-black">
+              Email
+            </label>
+            <input
+              id="admin-email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              autoComplete="username"
+              placeholder="Enter your email"
+              className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 text-black text-sm bg-white transition-colors"
+            />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="flex flex-col">
-              <label htmlFor="admin-email" className="text-sm font-medium text-slate-700 mb-1.5">Email address</label>
+          <div className="space-y-1.5">
+            <label htmlFor="admin-password" className="block text-sm font-semibold text-black">
+              Password
+            </label>
+            <div className="relative">
               <input
-                id="admin-email"
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                autoComplete="username"
-                className="px-3 py-2.5 border border-slate-300 rounded focus:outline-none focus:ring-4 focus:ring-[#E31837]/15 focus:border-[#E31837] text-slate-950 text-sm bg-white"
+                id="admin-password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                autoComplete="current-password"
+                placeholder="Enter password"
+                className="w-full px-4 py-3 pr-11 border border-slate-200 rounded-lg focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600 text-black text-sm bg-white transition-colors"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(value => !value)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-black rounded-md transition-colors"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="admin-password" className="text-sm font-medium text-slate-700 mb-1.5">Password</label>
-              <div className="relative">
-                <input
-                  id="admin-password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  className="w-full px-3 py-2.5 pr-11 border border-slate-300 rounded focus:outline-none focus:ring-4 focus:ring-[#E31837]/15 focus:border-[#E31837] text-slate-950 text-sm bg-white"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(value => !value)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-slate-500 hover:text-slate-900 rounded"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              disabled={isSubmitting}
-              className="w-full bg-[#E31837] hover:bg-[#bf102b] focus:ring-[#E31837]"
-            >
-              Sign in
-            </Button>
-          </form>
-
-          <div className="mt-6 text-xs text-slate-500 border border-slate-200 rounded p-3 bg-white">
-            Backend endpoint: <span className="font-medium text-slate-700">/api/admin/login</span>
           </div>
-        </div>
-      </main>
+
+          <div className="flex justify-end">
+            <button type="button" className="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors">
+              Forgot password?
+            </button>
+          </div>
+
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+            className="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow-md transition-all focus:ring-4 focus:ring-red-600/20"
+          >
+            Login
+          </Button>
+        </form>
+
+      </div>
     </div>
   );
 }
