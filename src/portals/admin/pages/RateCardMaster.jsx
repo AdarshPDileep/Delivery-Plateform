@@ -5,7 +5,7 @@ import Tabs from '../../../components/ui/Tabs';
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import Button from '../../../components/ui/Button';
-import { Drawer } from '../../../components/ui/Modal';
+import Modal from '../../../components/ui/Modal';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import FormSection from '../../../components/forms/FormSection';
@@ -318,11 +318,11 @@ export default function RateCardMaster() {
 
       <Tabs tabs={tabs} defaultTab="rate-cards" />
 
-      <Drawer
+      <Modal
         open={drawer?.kind === 'rate-card'}
         onClose={() => setDrawer(null)}
         title={drawer?.mode === 'edit' ? 'Edit Rate Card' : 'Create Rate Card'}
-        width="max-w-5xl"
+        size="xl"
         footer={(
           <>
             <Button variant="outline" onClick={() => setDrawer(null)}>Cancel</Button>
@@ -372,13 +372,13 @@ export default function RateCardMaster() {
             </div>
           </FormSection>
         </div>
-      </Drawer>
+      </Modal>
 
-      <Drawer
+      <Modal
         open={drawer?.kind === 'surcharge'}
         onClose={() => setDrawer(null)}
         title={drawer?.mode === 'edit' ? 'Edit Surcharge' : 'Create Surcharge'}
-        width="max-w-xl"
+        size="md"
         footer={(
           <>
             <Button variant="outline" onClick={() => setDrawer(null)}>Cancel</Button>
@@ -397,7 +397,7 @@ export default function RateCardMaster() {
             Enabled
           </label>
         </div>
-      </Drawer>
+      </Modal>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Tabs from '../../../components/ui/Tabs';
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import Button from '../../../components/ui/Button';
-import { Drawer } from '../../../components/ui/Modal';
+import Modal from '../../../components/ui/Modal';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import FormSection from '../../../components/forms/FormSection';
@@ -317,11 +317,11 @@ export default function CommissionsMaster() {
 
       <Tabs tabs={tabs} defaultTab="rules" />
 
-      <Drawer
+      <Modal
         open={drawer === 'rule'}
         onClose={() => setDrawer(null)}
         title={selectedRule ? 'Edit Commission Rule' : 'Create Commission Rule'}
-        width="max-w-2xl"
+        size="lg"
         footer={(
           <>
             <Button variant="outline" onClick={() => setDrawer(null)}>Cancel</Button>
@@ -353,13 +353,13 @@ export default function CommissionsMaster() {
             </div>
           </FormSection>
         </div>
-      </Drawer>
+      </Modal>
 
-      <Drawer
+      <Modal
         open={drawer === 'config'}
         onClose={() => setDrawer(null)}
         title="Payout Cycle Configuration"
-        width="max-w-xl"
+        size="md"
         footer={(
           <>
             <Button variant="outline" onClick={() => setDrawer(null)}>Cancel</Button>
@@ -378,7 +378,7 @@ export default function CommissionsMaster() {
             Active
           </label>
         </div>
-      </Drawer>
+      </Modal>
     </div>
   );
 }
