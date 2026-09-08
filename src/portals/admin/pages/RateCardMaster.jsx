@@ -287,7 +287,7 @@ export default function RateCardMaster() {
       key: 'rate-cards',
       label: 'Rate Cards',
       content: (
-        <Card padding="p-0">
+        <Card>
           <DataTable columns={rcColumns} data={rateCards} actions={rateCardActions} title={loading ? 'Loading rate cards...' : 'Configured Rate Cards'} emptyMessage="No rate cards configured" />
         </Card>
       ),
@@ -296,7 +296,7 @@ export default function RateCardMaster() {
       key: 'surcharges',
       label: 'Surcharges & Fees',
       content: (
-        <Card padding="p-0">
+        <Card>
           <DataTable columns={scColumns} data={surcharges} actions={surchargeActions} title="Global Surcharges" emptyMessage="No surcharges configured" />
         </Card>
       ),
@@ -304,7 +304,7 @@ export default function RateCardMaster() {
   ];
 
   return (
-    <div>
+    <div className="p-8 w-full mx-auto space-y-8 animate-fade-in bg-gray-50 min-h-screen">
       <PageHeader
         title="Rate Card & Service Charge Setup"
         description="Configure weight slabs, pricing scopes, and global shipping surcharges."
