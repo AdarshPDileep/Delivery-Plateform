@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useToast } from '../../../context/ToastContext';
 import Button from '../../../components/ui/Button';
+import bgImage from '../../../assets/hero-logistics.jpg';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('admin@commerzaglobal.local');
@@ -36,8 +37,14 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-900 to-black flex items-center justify-center p-4 font-sans">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 font-sans relative bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      {/* Dark/Red Overlay */}
+      <div className="absolute inset-0 bg-black/50 bg-gradient-to-br from-red-900/60 to-black/80"></div>
+
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 md:p-10 relative z-10">
         
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600 mb-4">
