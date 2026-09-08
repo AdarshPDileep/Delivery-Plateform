@@ -443,3 +443,32 @@ export async function updateNetworkRouteStatus(id, active) {
 export async function deleteNetworkRoute(id) {
   return apiRequest(`/api/admin/network/routes/${id}`, { method: 'DELETE' });
 }
+export async function getFranchises({ page = 0, size = 10, search = '', status = '', type = '' } = {}) {
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('size', size);
+  if (search) params.set('search', search);
+  if (status) params.set('status', status);
+  if (type) params.set('type', type);
+  return apiRequest(`/api/admin/franchises?${params.toString()}`);
+}
+
+export async function getFranchise(id) {
+  return apiRequest(`/api/admin/franchises/${id}`);
+}
+
+export async function createFranchise(payload) {
+  return apiRequest('/api/admin/franchises', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateFranchise(id, payload) {
+  return apiRequest(`/api/admin/franchises/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateFranchiseStatus(id, status) {
+  return apiRequest(`/api/admin/franchises/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+}
+
+export async function deleteFranchise(id) {
+  return apiRequest(`/api/admin/franchises/${id}`, { method: 'DELETE' });
+}
