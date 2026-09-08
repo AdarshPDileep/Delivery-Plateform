@@ -472,3 +472,53 @@ export async function updateFranchiseStatus(id, status) {
 export async function deleteFranchise(id) {
   return apiRequest(`/api/admin/franchises/${id}`, { method: 'DELETE' });
 }
+
+export async function getRateCards({ page = 0, size = 20, search = '', type = '', active = '' } = {}) {
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('size', size);
+  if (search) params.set('search', search);
+  if (type) params.set('type', type);
+  if (active !== '') params.set('active', active);
+  return apiRequest(`/api/admin/rate-cards?${params.toString()}`);
+}
+
+export async function getRateCard(id) {
+  return apiRequest(`/api/admin/rate-cards/${id}`);
+}
+
+export async function createRateCard(payload) {
+  return apiRequest('/api/admin/rate-cards', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateRateCard(id, payload) {
+  return apiRequest(`/api/admin/rate-cards/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateRateCardStatus(id, active) {
+  return apiRequest(`/api/admin/rate-cards/${id}/status`, { method: 'PATCH', body: JSON.stringify({ active }) });
+}
+
+export async function deleteRateCard(id) {
+  return apiRequest(`/api/admin/rate-cards/${id}`, { method: 'DELETE' });
+}
+
+export async function getSurcharges() {
+  return apiRequest('/api/admin/surcharges');
+}
+
+export async function createSurcharge(payload) {
+  return apiRequest('/api/admin/surcharges', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateSurcharge(id, payload) {
+  return apiRequest(`/api/admin/surcharges/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateSurchargeStatus(id, enabled) {
+  return apiRequest(`/api/admin/surcharges/${id}/status`, { method: 'PATCH', body: JSON.stringify({ enabled }) });
+}
+
+export async function deleteSurcharge(id) {
+  return apiRequest(`/api/admin/surcharges/${id}`, { method: 'DELETE' });
+}
