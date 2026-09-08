@@ -12,8 +12,9 @@ import {
   Globe,
   Map as MapIcon,
   MapPin,
-  MoreVertical,
+  Eye,
   Navigation,
+  Trash2,
   Plus,
   RefreshCcw,
   Search,
@@ -26,6 +27,18 @@ import {
   createGeoTaluk,
   createGeoTown,
   createGeoZone,
+  deleteGeoDistrict,
+  deleteGeoPincode,
+  deleteGeoState,
+  deleteGeoTaluk,
+  deleteGeoTown,
+  deleteGeoZone,
+  getGeoDistrict,
+  getGeoPincodeById,
+  getGeoState,
+  getGeoTaluk,
+  getGeoTown,
+  getGeoZone,
   getDistrictsByZone,
   getGeographyStats,
   getPincodesByTown,
@@ -120,6 +133,8 @@ export default function GeoMaster() {
   const [formMode, setFormMode] = useState('create');
   const [formType, setFormType] = useState('state');
   const [editingItem, setEditingItem] = useState(null);
+  const [viewItem, setViewItem] = useState(null);
+  const [deleteItem, setDeleteItem] = useState(null);
   const [form, setForm] = useState({});
 
   const activePath = [selectedState, selectedZone, selectedDistrict, selectedTaluk, selectedTown].filter(Boolean);
@@ -424,6 +439,30 @@ export default function GeoMaster() {
     }
   }
 
+
+  async function openView(item) {
+    const getMap = { state: getGeoState, zone: getGeoZone, district: getGeoDistrict, taluk: getGeoTaluk, town: getGeoTown, pincode: getGeoPincodeById };
+    try {
+      const response = await getMap[item.type](item.id);
+      setViewItem(normalizeItem(unwrap(response), item.type));
+    } catch (err) {
+      addToast(errorMessage(err), 'error');
+    }
+  }
+
+  async function confirmDelete() {
+    if (!deleteItem) return;
+    const deleteMap = { state: deleteGeoState, zone: deleteGeoZone, district: deleteGeoDistrict, taluk: deleteGeoTaluk, town: deleteGeoTown, pincode: deleteGeoPincode };
+    try {
+      await deleteMap[deleteItem.type](deleteItem.id);
+      addToast(`${deleteItem.name} deleted successfully`);
+      setDeleteItem(null);
+      await refreshAffectedSection(deleteItem.type);
+    } catch (err) {
+      addToast(errorMessage(err), 'error');
+    }
+  }
+
   function selectPathNode(item) {
     if (item.type === 'state') return handleStateSelect(item);
     if (item.type === 'zone') return handleZoneSelect(item);
@@ -492,11 +531,13 @@ export default function GeoMaster() {
 
       {error && <ErrorPanel message={error} />}
       {loading ? <LoadingPanel message="Loading geography..." /> : activeTab === 'tree' ? (
-        <TreeView activePath={activePath} children={treeChildren()} selectedNode={selectedNode} loading={sectionLoading} onPathClick={selectPathNode} onChildClick={selectChild} onEdit={openEdit} onAdd={openCreate} />
+        <TreeView activePath={activePath} children={treeChildren()} selectedNode={selectedNode} loading={sectionLoading} onPathClick={selectPathNode} onChildClick={selectChild} onView={openView} onEdit={openEdit} onDelete={setDeleteItem} onAdd={openCreate} />
       ) : (
-        <TableView activeTab={activeTab} rows={tableRows} loading={sectionLoading} parent={parentForTab(activeTab)} pincodePage={pincodePage} pincodeTotalPages={pincodeTotalPages} pincodeTotal={pincodeTotal} onEdit={openEdit} onPage={(page) => selectedTown && loadPincodes(selectedTown.id, page)} />
+        <TableView activeTab={activeTab} rows={tableRows} loading={sectionLoading} parent={parentForTab(activeTab)} pincodePage={pincodePage} pincodeTotalPages={pincodeTotalPages} pincodeTotal={pincodeTotal} onView={openView} onEdit={openEdit} onDelete={setDeleteItem} onPage={(page) => selectedTown && loadPincodes(selectedTown.id, page)} />
       )}
       {formOpen && <GeoForm formMode={formMode} formType={formType} form={form} setForm={setForm} parentOptions={parentOptions} onSubmit={onSubmit} onClose={() => setFormOpen(false)} />}
+      {viewItem && <ViewModal item={viewItem} onClose={() => setViewItem(null)} />}
+      {deleteItem && <DeleteModal item={deleteItem} onConfirm={confirmDelete} onClose={() => setDeleteItem(null)} />}
     </div>
   );
 }
@@ -515,9 +556,9 @@ function LoadingPanel({ message }) {
   return <div className="bg-white rounded-xl border border-gray-200 p-12 text-center text-gray-500 font-medium">{message}</div>;
 }
 
-function TreeView({ activePath, children, selectedNode, loading, onPathClick, onChildClick, onEdit, onAdd }) {
+function TreeView({ activePath, children, selectedNode, loading, onPathClick, onChildClick, onView, onEdit, onDelete, onAdd }) {
   const node = selectedNode || { type: 'root', name: 'India' };
-  return <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[620px]"><div className="grid grid-cols-1 md:grid-cols-12 gap-6 min-h-[540px]"><div className="md:col-span-3 border-r border-gray-100 md:pr-6"><h3 className="text-sm font-bold text-gray-900 mb-1">Hierarchy Explorer</h3><p className="text-xs text-gray-500 mb-6">Navigate through the geographic hierarchy</p><div className="space-y-3">{activePath.map((item) => <NodeCard key={`${item.type}-${item.id}`} item={item} active={item.id === selectedNode?.id && item.type === selectedNode?.type} onClick={() => onPathClick(item)} />)}{activePath.length === 0 && <p className="text-sm text-gray-500 py-10 text-center">No geography added yet.</p>}</div></div><div className="md:col-span-4 border-r border-gray-100 md:px-6"><div className="flex items-center justify-between mb-6"><div><h3 className="text-sm font-bold text-gray-900">Child {node.type === 'town' ? 'Pincodes' : 'Regions'} <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full ml-2">{children.length}</span></h3><p className="text-xs text-gray-500 mt-1">Under {node.name}</p></div><button onClick={() => onAdd()} className="p-2 border border-gray-200 rounded text-gray-500 hover:bg-gray-50"><Plus className="w-4 h-4" /></button></div>{loading ? <p className="text-center py-12 text-sm text-gray-500">Loading geography data...</p> : <div className="space-y-3 pb-6">{children.map((child) => <div key={`${child.type}-${child.id}`} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-300 hover:shadow-sm cursor-pointer transition-all" onClick={() => onChildClick(child)}><div className="flex items-center gap-3 min-w-0"><span className="font-semibold text-sm text-gray-800 truncate">{child.name}</span><span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">{child.type}</span></div><div className="flex items-center gap-2">{renderStatusBadge(statusText(child))}<button className="text-gray-400 hover:text-gray-600 p-1" onClick={(event) => { event.stopPropagation(); onEdit(child); }}><MoreVertical className="w-4 h-4" /></button></div></div>)}{children.length === 0 && <div className="text-center py-12"><p className="text-sm text-gray-500">No records found under this selection.</p></div>}</div>}</div><NodeDetails node={node} children={children} onEdit={onEdit} /></div></div>;
+  return <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[620px]"><div className="grid grid-cols-1 md:grid-cols-12 gap-6 min-h-[540px]"><div className="md:col-span-3 border-r border-gray-100 md:pr-6"><h3 className="text-sm font-bold text-gray-900 mb-1">Hierarchy Explorer</h3><p className="text-xs text-gray-500 mb-6">Navigate through the geographic hierarchy</p><div className="space-y-3">{activePath.map((item) => <NodeCard key={`${item.type}-${item.id}`} item={item} active={item.id === selectedNode?.id && item.type === selectedNode?.type} onClick={() => onPathClick(item)} />)}{activePath.length === 0 && <p className="text-sm text-gray-500 py-10 text-center">No geography added yet.</p>}</div></div><div className="md:col-span-4 border-r border-gray-100 md:px-6"><div className="flex items-center justify-between mb-6"><div><h3 className="text-sm font-bold text-gray-900">Child {node.type === 'town' ? 'Pincodes' : 'Regions'} <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full ml-2">{children.length}</span></h3><p className="text-xs text-gray-500 mt-1">Under {node.name}</p></div><button onClick={() => onAdd()} className="p-2 border border-gray-200 rounded text-gray-500 hover:bg-gray-50"><Plus className="w-4 h-4" /></button></div>{loading ? <p className="text-center py-12 text-sm text-gray-500">Loading geography data...</p> : <div className="space-y-3 pb-6">{children.map((child) => <div key={`${child.type}-${child.id}`} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-300 hover:shadow-sm cursor-pointer transition-all" onClick={() => onChildClick(child)}><div className="flex items-center gap-3 min-w-0"><span className="font-semibold text-sm text-gray-800 truncate">{child.name}</span><span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">{child.type}</span></div><div className="flex items-center gap-2">{renderStatusBadge(statusText(child))}<button className="text-gray-400 hover:text-gray-600 p-1" onClick={(event) => { event.stopPropagation(); onView(child); }} title="View"><Eye className="w-4 h-4" /></button><button className="text-gray-400 hover:text-[#E31837] p-1" onClick={(event) => { event.stopPropagation(); onEdit(child); }} title="Edit"><Edit className="w-4 h-4" /></button><button className="text-gray-400 hover:text-red-600 p-1" onClick={(event) => { event.stopPropagation(); onDelete(child); }} title="Delete"><Trash2 className="w-4 h-4" /></button></div></div>)}{children.length === 0 && <div className="text-center py-12"><p className="text-sm text-gray-500">No records found under this selection.</p></div>}</div>}</div><NodeDetails node={node} children={children} onEdit={onEdit} /></div></div>;
 }
 
 function NodeDetails({ node, children, onEdit }) {
@@ -530,11 +571,11 @@ function NodeCard({ item, active, onClick }) {
   return <div className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer ${active ? 'border-red-200 bg-red-50 shadow-sm' : 'border-gray-100 bg-white hover:bg-gray-50'}`} onClick={onClick}><div className="flex items-center gap-3"><div className="p-2 rounded-md bg-white border border-gray-100"><Icon className={`w-4 h-4 ${COLORS[item.type]}`} /></div><span className="font-semibold text-sm text-gray-800">{item.name}</span></div><span className="text-[10px] uppercase font-bold text-gray-400 bg-white px-2 py-0.5 rounded border border-gray-100">{item.type}</span></div>;
 }
 
-function TableView({ activeTab, rows, loading, parent, pincodePage, pincodeTotalPages, pincodeTotal, onEdit, onPage }) {
+function TableView({ activeTab, rows, loading, parent, pincodePage, pincodeTotalPages, pincodeTotal, onView, onEdit, onDelete, onPage }) {
   const label = activeTab.slice(0, -1);
   const colSpan = activeTab === 'pincodes' ? 9 : 4;
   if (!parent && activeTab !== 'states') return <div className="bg-white rounded-xl border border-gray-200 p-12 text-center text-gray-500 text-sm">Select a parent in the hierarchy tree to view {activeTab}.</div>;
-  return <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[500px]"><div className="flex items-center justify-between mb-6"><div><h3 className="text-lg font-bold text-gray-900 capitalize">{activeTab}</h3>{parent && <p className="text-xs text-gray-500 mt-1">Filtered under {parent.name}</p>}</div><button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><Filter className="w-4 h-4" /> Filter</button></div>{loading ? <div className="text-center py-16 text-sm text-gray-500">{activeTab === 'pincodes' ? 'Loading pincodes...' : 'Loading geography data...'}</div> : <div className="overflow-x-auto"><table className="w-full text-sm text-left"><thead><tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50"><th className="py-3 px-4 capitalize">{label}</th><th className="py-3 px-4">Code</th>{activeTab === 'pincodes' && <><th className="py-3 px-4 text-center">Pickup</th><th className="py-3 px-4 text-center">Delivery</th><th className="py-3 px-4 text-center">COD</th><th className="py-3 px-4 text-center">Prepaid</th><th className="py-3 px-4 text-center">Reverse</th></>}<th className="py-3 px-4 text-center">Status</th><th className="py-3 px-4 text-center">Actions</th></tr></thead><tbody>{rows.map((row) => <tr key={`${row.type}-${row.id}`} className="border-b border-gray-50 hover:bg-gray-50"><td className="py-4 px-4 font-semibold text-gray-900">{row.name}</td><td className="py-4 px-4 text-gray-600">{row.code || '-'}</td>{activeTab === 'pincodes' && <><td className="py-4 px-4 text-center">{renderBooleanIcon(row.pickupAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.deliveryAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.codAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.prepaidAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.reversePickupAvailable)}</td></>}<td className="py-4 px-4 text-center">{renderStatusBadge(statusText(row))}</td><td className="py-4 px-4 text-center"><button className="text-gray-400 hover:text-[#E31837]" onClick={() => onEdit(row)}><MoreVertical className="w-4 h-4 mx-auto" /></button></td></tr>)}{rows.length === 0 && <tr><td className="py-12 text-center text-gray-500" colSpan={colSpan}>{activeTab === 'pincodes' ? 'No pincodes found under this town.' : 'No records found under this selection.'}</td></tr>}</tbody></table>{activeTab === 'pincodes' && <PaginationRow page={pincodePage} totalPages={pincodeTotalPages} total={pincodeTotal} onPage={onPage} />}</div>}</div>;
+  return <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[500px]"><div className="flex items-center justify-between mb-6"><div><h3 className="text-lg font-bold text-gray-900 capitalize">{activeTab}</h3>{parent && <p className="text-xs text-gray-500 mt-1">Filtered under {parent.name}</p>}</div><button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><Filter className="w-4 h-4" /> Filter</button></div>{loading ? <div className="text-center py-16 text-sm text-gray-500">{activeTab === 'pincodes' ? 'Loading pincodes...' : 'Loading geography data...'}</div> : <div className="overflow-x-auto"><table className="w-full text-sm text-left"><thead><tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50"><th className="py-3 px-4 capitalize">{label}</th><th className="py-3 px-4">Code</th>{activeTab === 'pincodes' && <><th className="py-3 px-4 text-center">Pickup</th><th className="py-3 px-4 text-center">Delivery</th><th className="py-3 px-4 text-center">COD</th><th className="py-3 px-4 text-center">Prepaid</th><th className="py-3 px-4 text-center">Reverse</th></>}<th className="py-3 px-4 text-center">Status</th><th className="py-3 px-4 text-center">Actions</th></tr></thead><tbody>{rows.map((row) => <tr key={`${row.type}-${row.id}`} className="border-b border-gray-50 hover:bg-gray-50"><td className="py-4 px-4 font-semibold text-gray-900">{row.name}</td><td className="py-4 px-4 text-gray-600">{row.code || '-'}</td>{activeTab === 'pincodes' && <><td className="py-4 px-4 text-center">{renderBooleanIcon(row.pickupAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.deliveryAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.codAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.prepaidAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.reversePickupAvailable)}</td></>}<td className="py-4 px-4 text-center">{renderStatusBadge(statusText(row))}</td><td className="py-4 px-4 text-center"><div className="flex items-center justify-center gap-2"><button className="p-1.5 border border-gray-200 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-50" onClick={() => onView(row)} title="View"><Eye className="w-4 h-4" /></button><button className="p-1.5 border border-gray-200 rounded-md text-gray-400 hover:text-[#E31837] hover:bg-red-50" onClick={() => onEdit(row)} title="Edit"><Edit className="w-4 h-4" /></button><button className="p-1.5 border border-gray-200 rounded-md text-gray-400 hover:text-red-600 hover:bg-red-50" onClick={() => onDelete(row)} title="Delete"><Trash2 className="w-4 h-4" /></button></div></td></tr>)}{rows.length === 0 && <tr><td className="py-12 text-center text-gray-500" colSpan={colSpan}>{activeTab === 'pincodes' ? 'No pincodes found under this town.' : 'No records found under this selection.'}</td></tr>}</tbody></table>{activeTab === 'pincodes' && <PaginationRow page={pincodePage} totalPages={pincodeTotalPages} total={pincodeTotal} onPage={onPage} />}</div>}</div>;
 }
 
 function GeoForm({ formMode, formType, form, setForm, parentOptions, onSubmit, onClose }) {
@@ -542,6 +583,29 @@ function GeoForm({ formMode, formType, form, setForm, parentOptions, onSubmit, o
   return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form onSubmit={onSubmit} className="w-[700px] bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"><div className="flex items-center justify-between p-6 bg-[#E31837] text-white"><div className="flex items-center gap-3"><Plus className="w-5 h-5" /><h2 className="text-xl font-bold text-white capitalize">{formMode} {formType}</h2></div><button type="button" onClick={onClose} className="p-1.5 text-white bg-white/20 hover:bg-white/30 rounded-lg"><X className="w-5 h-5" /></button></div><div className="p-6 flex-1 overflow-y-auto space-y-5">{!isPincodeForm && <GeoFields formType={formType} form={form} setForm={setForm} parentOptions={parentOptions} />}{isPincodeForm && <PincodeFields form={form} setForm={setForm} towns={parentOptions.towns} />}</div><div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3 bg-white"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">Cancel</button><button className="px-5 py-2.5 bg-[#E31837] text-white font-bold rounded-lg hover:bg-red-700 text-sm">Save</button></div></form></div>;
 }
 
+function ViewModal({ item, onClose }) {
+  const details = [
+    ['Type', item.type],
+    [item.type === 'pincode' ? 'Pincode' : 'Name', item.name],
+    ['Code', item.code || '-'],
+    ['Status', statusText(item)],
+  ];
+  const flags = [
+    ['Serviceable', item.serviceable],
+    ['Pickup Available', item.pickupAvailable],
+    ['Delivery Available', item.deliveryAvailable],
+    ['COD Available', item.codAvailable],
+    ['Prepaid Available', item.prepaidAvailable],
+    ['Reverse Pickup Available', item.reversePickupAvailable],
+    ['Active', item.active],
+  ];
+
+  return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="w-[560px] bg-white rounded-xl shadow-2xl overflow-hidden"><div className="flex items-center justify-between p-5 border-b border-gray-100"><div className="flex items-center gap-3"><div className="p-2 bg-red-50 rounded-lg text-[#E31837]"><Eye className="w-5 h-5" /></div><h2 className="text-lg font-bold text-gray-900 capitalize">View {item.type}</h2></div><button type="button" onClick={onClose} className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button></div><div className="p-5 space-y-5"><div className="grid grid-cols-2 gap-4">{details.map(([label, value]) => <div key={label} className="border border-gray-100 rounded-lg p-3 bg-gray-50/50"><p className="text-xs font-bold text-gray-500 mb-1">{label}</p><p className="text-sm font-semibold text-gray-900 capitalize">{value}</p></div>)}</div>{item.type === 'pincode' && <div><h3 className="text-xs font-bold text-gray-500 uppercase mb-3">Serviceability Flags</h3><div className="grid grid-cols-2 gap-3">{flags.map(([label, value]) => <div key={label} className="flex items-center justify-between border border-gray-100 rounded-lg p-3"><span className="text-sm font-semibold text-gray-700">{label}</span>{renderBooleanIcon(value)}</div>)}</div></div>}</div><div className="p-5 border-t border-gray-100 flex justify-end"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">Close</button></div></div></div>;
+}
+
+function DeleteModal({ item, onConfirm, onClose }) {
+  return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="w-[460px] bg-white rounded-xl shadow-2xl overflow-hidden"><div className="p-5 border-b border-gray-100"><div className="flex items-center gap-3"><div className="p-2 bg-red-50 rounded-lg text-red-600"><Trash2 className="w-5 h-5" /></div><div><h2 className="text-lg font-bold text-gray-900 capitalize">Delete {item.type}</h2><p className="text-sm text-gray-500 mt-1">Please confirm before deleting this geography record.</p></div></div></div><div className="p-5"><p className="text-sm text-gray-700">Delete <span className="font-bold text-gray-900">{item.name}</span>? This will mark it inactive in the master data.</p></div><div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">Cancel</button><button type="button" onClick={onConfirm} className="px-5 py-2.5 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 text-sm">Delete</button></div></div></div>;
+}
 function GeoFields({ formType, form, setForm, parentOptions }) {
   return <div className="grid grid-cols-2 gap-5">{formType === 'zone' && <SelectField label="State" value={form.stateId} onChange={(value) => setForm((prev) => ({ ...prev, stateId: value }))} options={parentOptions.states} />}{formType === 'district' && <SelectField label="Zone" value={form.zoneId} onChange={(value) => setForm((prev) => ({ ...prev, zoneId: value }))} options={parentOptions.zones} />}{formType === 'taluk' && <SelectField label="District" value={form.districtId} onChange={(value) => setForm((prev) => ({ ...prev, districtId: value }))} options={parentOptions.districts} />}{formType === 'town' && <SelectField label="Taluk" value={form.talukId} onChange={(value) => setForm((prev) => ({ ...prev, talukId: value }))} options={parentOptions.taluks} />}<TextField label={`${formType} Name`} value={form.name} onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} required />{['state', 'zone', 'district'].includes(formType) && <TextField label="Code" value={form.code} onChange={(value) => setForm((prev) => ({ ...prev, code: value }))} />}<CheckField label="Active" checked={form.active} onChange={(value) => setForm((prev) => ({ ...prev, active: value }))} /></div>;
 }
@@ -588,3 +652,7 @@ function renderStatusBadge(status) {
 function renderBooleanIcon(value) {
   return value ? <Check className="w-4 h-4 text-green-500 mx-auto" /> : <X className="w-4 h-4 text-red-500 mx-auto" />;
 }
+
+
+
+

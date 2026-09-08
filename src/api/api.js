@@ -320,3 +320,51 @@ export const getDistrictsByZone = getGeoDistricts;
 export const getTaluksByDistrict = getGeoTaluks;
 export const getTownsByTaluk = getGeoTowns;
 export const getPincodesByTown = getGeoPincodes;
+
+export async function getGeoState(id) {
+  return apiRequest(`/api/admin/geography/states/${id}`);
+}
+
+export async function deleteGeoState(id) {
+  return apiRequest(`/api/admin/geography/states/${id}`, { method: 'DELETE' });
+}
+
+export async function getGeoZone(id) {
+  return apiRequest(`/api/admin/geography/zones/${id}`);
+}
+
+export async function deleteGeoZone(id) {
+  return apiRequest(`/api/admin/geography/zones/${id}`, { method: 'DELETE' });
+}
+
+export async function getGeoDistrict(id) {
+  return apiRequest(`/api/admin/geography/districts/${id}`);
+}
+
+export async function deleteGeoDistrict(id) {
+  return apiRequest(`/api/admin/geography/districts/${id}`, { method: 'DELETE' });
+}
+
+export async function getGeoTaluk(id) {
+  return apiRequest(`/api/admin/geography/taluks/${id}`);
+}
+
+export async function deleteGeoTaluk(id) {
+  return apiRequest(`/api/admin/geography/taluks/${id}`, { method: 'DELETE' });
+}
+
+export async function getGeoTown(id) {
+  return apiRequest(`/api/admin/geography/towns/${id}`);
+}
+
+export async function deleteGeoTown(id) {
+  return apiRequest(`/api/admin/geography/towns/${id}`, { method: 'DELETE' });
+}
+
+export async function getGeoPincodeById(id) {
+  return apiRequest(`/api/admin/geography/pincodes/id/${id}`);
+}
+
+export async function deleteGeoPincode(id) {
+  return apiRequest(`/api/admin/geography/pincodes/${id}`, { method: 'DELETE' });
+}
