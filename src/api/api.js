@@ -522,3 +522,42 @@ export async function updateSurchargeStatus(id, enabled) {
 export async function deleteSurcharge(id) {
   return apiRequest(`/api/admin/surcharges/${id}`, { method: 'DELETE' });
 }
+
+export async function getCommissionRules({ page = 0, size = 20, search = '', status = '', level = '', type = '' } = {}) {
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('size', size);
+  if (search) params.set('search', search);
+  if (status) params.set('status', status);
+  if (level) params.set('level', level);
+  if (type) params.set('type', type);
+  return apiRequest(`/api/admin/commissions/rules?${params.toString()}`);
+}
+
+export async function getCommissionRule(id) {
+  return apiRequest(`/api/admin/commissions/rules/${id}`);
+}
+
+export async function createCommissionRule(payload) {
+  return apiRequest('/api/admin/commissions/rules', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateCommissionRule(id, payload) {
+  return apiRequest(`/api/admin/commissions/rules/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateCommissionRuleStatus(id, active) {
+  return apiRequest(`/api/admin/commissions/rules/${id}/status`, { method: 'PATCH', body: JSON.stringify({ active }) });
+}
+
+export async function deleteCommissionRule(id) {
+  return apiRequest(`/api/admin/commissions/rules/${id}`, { method: 'DELETE' });
+}
+
+export async function getCommissionPayoutConfig() {
+  return apiRequest('/api/admin/commissions/payout-config');
+}
+
+export async function updateCommissionPayoutConfig(payload) {
+  return apiRequest('/api/admin/commissions/payout-config', { method: 'PUT', body: JSON.stringify(payload) });
+}
