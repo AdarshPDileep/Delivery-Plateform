@@ -197,3 +197,119 @@ export async function updateShipmentStatus(awb, status) {
 }
 
 
+
+function getAdminToken() {
+  return localStorage.getItem('cg_admin_token') || JSON.parse(localStorage.getItem('cg_user') || '{}')?.token || '';
+}
+
+async function apiRequest(path, options = {}) {
+  const token = getAdminToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers,
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok || data.success === false) {
+    const message = data.message || data.error || 'Request failed';
+    const err = new Error(message);
+    err.response = { status: response.status, data };
+    throw err;
+  }
+
+  return data;
+}
+
+export async function getGeographyStats() {
+  return apiRequest('/api/admin/geography/stats');
+}
+
+export async function getGeoStates() {
+  return apiRequest('/api/admin/geography/states');
+}
+
+export async function createGeoState(payload) {
+  return apiRequest('/api/admin/geography/states', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoState(id, payload) {
+  return apiRequest(`/api/admin/geography/states/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function getGeoZones(stateId) {
+  return apiRequest(`/api/admin/geography/states/${stateId}/zones`);
+}
+
+export async function createGeoZone(payload) {
+  return apiRequest('/api/admin/geography/zones', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoZone(id, payload) {
+  return apiRequest(`/api/admin/geography/zones/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function getGeoDistricts(zoneId) {
+  return apiRequest(`/api/admin/geography/zones/${zoneId}/districts`);
+}
+
+export async function createGeoDistrict(payload) {
+  return apiRequest('/api/admin/geography/districts', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoDistrict(id, payload) {
+  return apiRequest(`/api/admin/geography/districts/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function getGeoTaluks(districtId) {
+  return apiRequest(`/api/admin/geography/districts/${districtId}/taluks`);
+}
+
+export async function createGeoTaluk(payload) {
+  return apiRequest('/api/admin/geography/taluks', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoTaluk(id, payload) {
+  return apiRequest(`/api/admin/geography/taluks/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function getGeoTowns(talukId) {
+  return apiRequest(`/api/admin/geography/taluks/${talukId}/towns`);
+}
+
+export async function createGeoTown(payload) {
+  return apiRequest('/api/admin/geography/towns', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoTown(id, payload) {
+  return apiRequest(`/api/admin/geography/towns/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function getGeoPincodes(townId, page = 0, size = 20) {
+  return apiRequest(`/api/admin/geography/towns/${townId}/pincodes?page=${page}&size=${size}`);
+}
+
+export async function createGeoPincode(payload) {
+  return apiRequest('/api/admin/geography/pincodes', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoPincode(id, payload) {
+  return apiRequest(`/api/admin/geography/pincodes/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateGeoPincodeServiceability(id, payload) {
+  return apiRequest(`/api/admin/geography/pincodes/${id}/serviceability`, { method: 'PATCH', body: JSON.stringify(payload) });
+}
+
+export async function searchGeography(query) {
+  return apiRequest(`/api/admin/geography/search?q=${encodeURIComponent(query)}`);
+}

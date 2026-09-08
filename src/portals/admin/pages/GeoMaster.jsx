@@ -1,766 +1,334 @@
-import React, { useState } from 'react';
-import { 
-  Plus, Search, Globe, Map as MapIcon, Folder, Navigation, 
-  MapPin, CheckCircle2, MoreVertical, Edit, Maximize2, Filter, 
-  X, Check, Download, Upload, ChevronLeft, ChevronRight, DownloadCloud
-} from 'lucide-react';
-
-// --- MOCK DATA (Hierarchy Tree) ---
-const TREE_MOCK_DATA = [
-  {
-    id: 'kerala', type: 'state', name: 'Kerala', children: [
-      {
-        id: 'south-zone', type: 'zone', name: 'South Zone', children: [
-          {
-            id: 'tvm', type: 'district', name: 'Thiruvananthapuram', children: [
-              {
-                id: 'neyyattinkara-taluk', type: 'taluk', name: 'Neyyattinkara Taluk', children: [
-                  {
-                    id: 'neyyattinkara-town', type: 'town', name: 'Neyyattinkara Town', children: [
-                      { id: '695121', type: 'pincode', name: '695121', serviceable: true },
-                      { id: '695122', type: 'pincode', name: '695122', serviceable: true },
-                      { id: '695123', type: 'pincode', name: '695123', serviceable: true },
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-];
-
-// --- MOCK DATA (Tables) ---
-const STATES_DATA = [
-  { state: 'Kerala', code: 'KL', zones: 3, districts: 14, towns: 325, pincodes: 1102, serviceable: 985, status: 'Active' },
-  { state: 'Tamil Nadu', code: 'TN', zones: 4, districts: 38, towns: 612, pincodes: 2105, serviceable: 1756, status: 'Active' },
-  { state: 'Karnataka', code: 'KA', zones: 5, districts: 31, towns: 578, pincodes: 1986, serviceable: 1542, status: 'Active' },
-  { state: 'Maharashtra', code: 'MH', zones: 6, districts: 36, towns: 814, pincodes: 2654, serviceable: 2043, status: 'Active' },
-  { state: 'Gujarat', code: 'GJ', zones: 3, districts: 26, towns: 407, pincodes: 1287, serviceable: 1001, status: 'Inactive' },
-];
-
-const ZONES_DATA = [
-  { zone: 'South Zone', code: 'KL-SOUTH', state: 'Kerala', districts: 4, taluks: 27, towns: 184, pincodes: 320, status: 'Active' },
-  { zone: 'Central Zone', code: 'KL-CENTRAL', state: 'Kerala', districts: 5, taluks: 31, towns: 96, pincodes: 412, status: 'Active' },
-  { zone: 'North Zone', code: 'KL-NORTH', state: 'Kerala', districts: 5, taluks: 30, towns: 45, pincodes: 370, status: 'Inactive' },
-];
-
-const DISTRICTS_DATA = [
-  { district: 'Thiruvananthapuram', code: 'TVM', state: 'Kerala', zone: 'South Zone', taluks: 3, towns: 57, pincodes: 216, serviceable: 185, status: 'Active' },
-  { district: 'Kollam', code: 'KLM', state: 'Kerala', zone: 'South Zone', taluks: 3, towns: 41, pincodes: 164, serviceable: 125, status: 'Active' },
-  { district: 'Pathanamthitta', code: 'PTA', state: 'Kerala', zone: 'South Zone', taluks: 2, towns: 31, pincodes: 112, serviceable: 86, status: 'Active' },
-  { district: 'Alappuzha', code: 'ALP', state: 'Kerala', zone: 'Central Zone', taluks: 3, towns: 26, pincodes: 106, serviceable: 78, status: 'Active' },
-  { district: 'Kottayam', code: 'KTM', state: 'Kerala', zone: 'Central Zone', taluks: 3, towns: 34, pincodes: 125, serviceable: 97, status: 'Active' },
-];
-
-const TALUKS_DATA = [
-  { taluk: 'Neyyattinkara', district: 'Thiruvananthapuram', zone: 'South Zone', towns: 15, pincodes: 56, serviceable: 46, status: 'Active' },
-  { taluk: 'Nedumangad', district: 'Thiruvananthapuram', zone: 'South Zone', towns: 14, pincodes: 54, serviceable: 48, status: 'Active' },
-  { taluk: 'Kattakkada', district: 'Thiruvananthapuram', zone: 'South Zone', towns: 12, pincodes: 42, serviceable: 32, status: 'Active' },
-  { taluk: 'Varkala', district: 'Kollam', zone: 'South Zone', towns: 13, pincodes: 38, serviceable: 30, status: 'Active' },
-  { taluk: 'Chadayamangalam', district: 'Kollam', zone: 'South Zone', towns: 9, pincodes: 31, serviceable: 24, status: 'Active' },
-];
-
-const TOWNS_DATA = [
-  { town: 'Neyyattinkara', taluk: 'Neyyattinkara', district: 'Thiruvananthapuram', zone: 'South Zone', pincodes: 8, serviceable: 7, status: 'Active' },
-  { town: 'Nedumangad', taluk: 'Nedumangad', district: 'Thiruvananthapuram', zone: 'South Zone', pincodes: 6, serviceable: 5, status: 'Active' },
-  { town: 'Varkala', taluk: 'Varkala', district: 'Kollam', zone: 'South Zone', pincodes: 5, serviceable: 4, status: 'Active' },
-  { town: 'Kayamkulam', taluk: 'Kayamkulam', district: 'Alappuzha', zone: 'Central Zone', pincodes: 7, serviceable: 6, status: 'Active' },
-  { town: 'Kanjirappally', taluk: 'Kanjirappally', district: 'Kottayam', zone: 'Central Zone', pincodes: 6, serviceable: 5, status: 'Active' },
-];
-
-const PINCODES_DATA = [
-  { pincode: '695121', town: 'Neyyattinkara', district: 'Thiruvananthapuram', pickup: true, delivery: true, cod: true, reverse: true, status: 'Serviceable' },
-  { pincode: '695122', town: 'Neyyattinkara', district: 'Thiruvananthapuram', pickup: true, delivery: true, cod: true, reverse: false, status: 'Serviceable' },
-  { pincode: '695123', town: 'Neyyattinkara', district: 'Thiruvananthapuram', pickup: false, delivery: false, cod: false, reverse: false, status: 'Not Serviceable' },
-  { pincode: '695124', town: 'Neyyattinkara', district: 'Thiruvananthapuram', pickup: true, delivery: true, cod: true, reverse: true, status: 'Serviceable' },
-  { pincode: '695125', town: 'Neyyattinkara', district: 'Thiruvananthapuram', pickup: true, delivery: true, cod: true, reverse: true, status: 'Serviceable' },
-];
-
+import React, { useEffect, useMemo, useState } from 'react';
+import { Plus, Search, Globe, Map as MapIcon, Folder, Navigation, MapPin, CheckCircle2, MoreVertical, Edit, Filter, X, Check, ChevronLeft, ChevronRight, RefreshCcw, AlertCircle } from 'lucide-react';
+import { createGeoDistrict, createGeoPincode, createGeoState, createGeoTaluk, createGeoTown, createGeoZone, getGeoDistricts, getGeoPincodes, getGeoStates, getGeoTaluks, getGeoTowns, getGeoZones, getGeographyStats, searchGeography, updateGeoDistrict, updateGeoPincode, updateGeoState, updateGeoTaluk, updateGeoTown, updateGeoZone } from '../../../api/api';
+import { useToast } from '../../../context/ToastContext';
 
 const ICONS = { state: Globe, zone: MapIcon, district: Folder, taluk: Navigation, town: MapPin, pincode: MapPin };
 const COLORS = { state: 'text-indigo-500', zone: 'text-blue-500', district: 'text-emerald-500', taluk: 'text-amber-500', town: 'text-[#E31837]', pincode: 'text-gray-500' };
+const NEXT_TYPE = { state: 'zone', zone: 'district', district: 'taluk', taluk: 'town', town: 'pincode' };
+const PARENT_TYPE = { zone: 'state', district: 'zone', taluk: 'district', town: 'taluk', pincode: 'town' };
+const TABS = ['tree', 'states', 'zones', 'districts', 'taluks', 'towns', 'pincodes'];
+const INITIAL_STATS = { states: 0, zones: 0, districts: 0, taluks: 0, towns: 0, totalPincodes: 0, serviceablePincodes: 0 };
+const EMPTY_PAGE = { content: [], page: 0, size: 20, totalElements: 0, totalPages: 0 };
 
-const TAB_ITEMS = [
-  { id: 'tree', label: 'Hierarchy Tree' },
-  { id: 'states', label: 'States' },
-  { id: 'zones', label: 'Zones' },
-  { id: 'districts', label: 'Districts' },
-  { id: 'taluks', label: 'Taluks' },
-  { id: 'towns', label: 'Towns' },
-  { id: 'pincodes', label: 'Pincodes' },
-];
+function normalizeItem(item, type) {
+  return {
+    id: item.id,
+    type,
+    name: item.name || item.pincode,
+    code: item.code || '',
+    active: item.active !== false,
+    serviceable: item.serviceable,
+    pickupAvailable: item.pickupAvailable,
+    deliveryAvailable: item.deliveryAvailable,
+    codAvailable: item.codAvailable,
+    prepaidAvailable: item.prepaidAvailable,
+    reversePickupAvailable: item.reversePickupAvailable,
+  };
+}
+
+function errorMessage(error) {
+  return error?.message || 'Request failed';
+}
 
 export default function GeoMaster() {
+  const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState('tree');
-  const [activePath, setActivePath] = useState([
-    TREE_MOCK_DATA[0], TREE_MOCK_DATA[0].children[0], TREE_MOCK_DATA[0].children[0].children[0]
-  ]);
+  const [stats, setStats] = useState(INITIAL_STATS);
+  const [states, setStates] = useState([]);
+  const [activePath, setActivePath] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [tableRows, setTableRows] = useState([]);
+  const [pincodePage, setPincodePage] = useState(EMPTY_PAGE);
+  const [loading, setLoading] = useState(true);
+  const [tableLoading, setTableLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [formOpen, setFormOpen] = useState(false);
+  const [formMode, setFormMode] = useState('create');
+  const [formType, setFormType] = useState('state');
+  const [editingItem, setEditingItem] = useState(null);
+  const [form, setForm] = useState({});
+  const [parentOptions, setParentOptions] = useState({ states: [], zones: [], districts: [], taluks: [], towns: [] });
 
-  // Form states
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formType, setFormType] = useState('add_geo'); // 'add_geo', 'edit_geo', 'add_pincode'
+  const selectedNode = activePath[activePath.length - 1] || null;
+  const visibleRows = activeTab === 'pincodes' ? pincodePage.content.map((item) => normalizeItem(item, 'pincode')) : tableRows;
+  const cards = useMemo(() => [
+    ['States', stats.states, Globe], ['Zones', stats.zones, MapIcon], ['Districts', stats.districts, Folder], ['Towns', stats.towns, MapPin], ['Serviceable Pincodes', stats.serviceablePincodes, CheckCircle2],
+  ], [stats]);
 
-  const selectedNode = activePath[activePath.length - 1] || { children: TREE_MOCK_DATA, type: 'root', name: 'India' };
-  
-  const handlePathClick = (index) => setActivePath(activePath.slice(0, index + 1));
-  const handleChildClick = (child) => {
+  useEffect(() => { loadInitial(); }, []);
+  useEffect(() => { if (activeTab !== 'tree') loadTable(activeTab); }, [activeTab, activePath]);
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const value = query.trim();
+      if (!value) return setSearchResults([]);
+      try {
+        const response = await searchGeography(value);
+        setSearchResults(response.data || []);
+      } catch (err) {
+        addToast(errorMessage(err), 'error');
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [query, addToast]);
+
+  async function loadInitial() {
+    setLoading(true);
+    setError('');
+    try {
+      const [statsResponse, statesResponse] = await Promise.all([getGeographyStats(), getGeoStates()]);
+      const stateItems = (statesResponse.data || []).map((item) => normalizeItem(item, 'state'));
+      setStats(statsResponse.data || INITIAL_STATS);
+      setStates(stateItems);
+      setParentOptions((prev) => ({ ...prev, states: stateItems }));
+      const nextPath = activePath.length ? activePath : stateItems.slice(0, 1);
+      setActivePath(nextPath);
+      if (nextPath.length) await loadChildren(nextPath[nextPath.length - 1]);
+      else setChildren([]);
+    } catch (err) {
+      setError(errorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function refreshAll() {
+    await loadInitial();
+    if (activeTab !== 'tree') await loadTable(activeTab);
+  }
+
+  async function fetchChildren(node, page = 0) {
+    if (!node) return states;
+    if (node.type === 'state') return (await getGeoZones(node.id)).data.map((item) => normalizeItem(item, 'zone'));
+    if (node.type === 'zone') return (await getGeoDistricts(node.id)).data.map((item) => normalizeItem(item, 'district'));
+    if (node.type === 'district') return (await getGeoTaluks(node.id)).data.map((item) => normalizeItem(item, 'taluk'));
+    if (node.type === 'taluk') return (await getGeoTowns(node.id)).data.map((item) => normalizeItem(item, 'town'));
+    if (node.type === 'town') {
+      const response = await getGeoPincodes(node.id, page, 20);
+      setPincodePage(response.data || EMPTY_PAGE);
+      return (response.data?.content || []).map((item) => normalizeItem(item, 'pincode'));
+    }
+    return [];
+  }
+
+  async function loadChildren(node) {
+    try {
+      setChildren(await fetchChildren(node));
+    } catch (err) {
+      setChildren([]);
+      addToast(errorMessage(err), 'error');
+    }
+  }
+
+  async function loadTable(tab, page = 0) {
+    setTableLoading(true);
+    try {
+      if (tab === 'states') {
+        const response = await getGeoStates();
+        setTableRows((response.data || []).map((item) => normalizeItem(item, 'state')));
+        return;
+      }
+      const parent = parentForTab(tab);
+      if (!parent) {
+        setTableRows([]);
+        if (tab === 'pincodes') setPincodePage(EMPTY_PAGE);
+        return;
+      }
+      if (tab === 'pincodes') {
+        const response = await getGeoPincodes(parent.id, page, 20);
+        setPincodePage(response.data || EMPTY_PAGE);
+        return;
+      }
+      setTableRows(await fetchChildren(parent));
+    } catch (err) {
+      setTableRows([]);
+      addToast(errorMessage(err), 'error');
+    } finally {
+      setTableLoading(false);
+    }
+  }
+
+  function parentForTab(tab) {
+    const type = tab.slice(0, -1);
+    const parentType = PARENT_TYPE[type];
+    if (!parentType) return null;
+    return [...activePath].reverse().find((node) => node.type === parentType) || null;
+  }
+
+  async function onPathClick(index) {
+    const nextPath = activePath.slice(0, index + 1);
+    setActivePath(nextPath);
+    await loadChildren(nextPath[nextPath.length - 1]);
+  }
+
+  async function onChildClick(child) {
     if (child.type === 'pincode') return;
-    setActivePath([...activePath, child]);
-  };
+    const nextPath = [...activePath, child];
+    setActivePath(nextPath);
+    await loadChildren(child);
+  }
 
-  const openForm = (type) => {
-    setFormType(type);
-    setIsFormOpen(true);
-  };
+  function parentForType(type) {
+    const parentType = PARENT_TYPE[type];
+    return parentType ? [...activePath].reverse().find((node) => node.type === parentType) : null;
+  }
 
-  const closeForm = () => setIsFormOpen(false);
+  function defaultForm(type, item = null) {
+    const parent = parentForType(type);
+    return {
+      name: item?.type === 'pincode' ? '' : item?.name || '',
+      code: item?.code || '',
+      pincode: item?.type === 'pincode' ? item.name : '',
+      active: item?.active ?? true,
+      serviceable: item?.serviceable ?? true,
+      pickupAvailable: item?.pickupAvailable ?? true,
+      deliveryAvailable: item?.deliveryAvailable ?? true,
+      codAvailable: item?.codAvailable ?? true,
+      prepaidAvailable: item?.prepaidAvailable ?? true,
+      reversePickupAvailable: item?.reversePickupAvailable ?? true,
+      stateId: type === 'zone' ? parent?.id || '' : '',
+      zoneId: type === 'district' ? parent?.id || '' : '',
+      districtId: type === 'taluk' ? parent?.id || '' : '',
+      talukId: type === 'town' ? parent?.id || '' : '',
+      townId: type === 'pincode' ? parent?.id || '' : '',
+    };
+  }
 
-  const getAddButtonText = () => {
-    switch(activeTab) {
-      case 'states': return 'Add State';
-      case 'zones': return 'Add Zone';
-      case 'districts': return 'Add District';
-      case 'taluks': return 'Add Taluk';
-      case 'towns': return 'Add Town';
-      case 'pincodes': return 'Add Pincode';
-      default: return 'Add Geography';
+  function openCreate(type = null) {
+    const nextType = type || (selectedNode ? NEXT_TYPE[selectedNode.type] : 'state') || 'state';
+    const nextForm = defaultForm(nextType);
+    setFormType(nextType);
+    setFormMode('create');
+    setEditingItem(null);
+    setForm(nextForm);
+    setFormOpen(true);
+    hydrateParentOptions(nextType, nextForm);
+  }
+
+  function openEdit(item) {
+    const nextForm = defaultForm(item.type, item);
+    setFormType(item.type);
+    setFormMode('edit');
+    setEditingItem(item);
+    setForm(nextForm);
+    setFormOpen(true);
+    hydrateParentOptions(item.type, nextForm);
+  }
+
+  async function hydrateParentOptions(type, currentForm) {
+    try {
+      const baseStates = parentOptions.states.length ? parentOptions.states : (await getGeoStates()).data.map((item) => normalizeItem(item, 'state'));
+      const next = { states: baseStates, zones: [], districts: [], taluks: [], towns: [] };
+      const stateId = currentForm.stateId || baseStates[0]?.id;
+      if (['zone', 'district', 'taluk', 'town', 'pincode'].includes(type) && stateId) next.zones = (await getGeoZones(stateId)).data.map((item) => normalizeItem(item, 'zone'));
+      const zoneId = currentForm.zoneId || next.zones[0]?.id;
+      if (['district', 'taluk', 'town', 'pincode'].includes(type) && zoneId) next.districts = (await getGeoDistricts(zoneId)).data.map((item) => normalizeItem(item, 'district'));
+      const districtId = currentForm.districtId || next.districts[0]?.id;
+      if (['taluk', 'town', 'pincode'].includes(type) && districtId) next.taluks = (await getGeoTaluks(districtId)).data.map((item) => normalizeItem(item, 'taluk'));
+      const talukId = currentForm.talukId || next.taluks[0]?.id;
+      if (type === 'pincode' && talukId) next.towns = (await getGeoTowns(talukId)).data.map((item) => normalizeItem(item, 'town'));
+      setParentOptions(next);
+      setForm((prev) => ({ ...prev, stateId: prev.stateId || stateId || '', zoneId: prev.zoneId || zoneId || '', districtId: prev.districtId || districtId || '', talukId: prev.talukId || talukId || '', townId: prev.townId || next.towns[0]?.id || '' }));
+    } catch (err) {
+      addToast(errorMessage(err), 'error');
     }
-  };
+  }
 
-  const renderStatusBadge = (status) => {
-    const isActive = status === 'Active' || status === 'Serviceable';
-    return (
-      <span className={`px-2.5 py-1 text-xs font-bold rounded ${isActive ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
-        {status}
-      </span>
-    );
-  };
+  function payload() {
+    if (formType === 'state') return { name: form.name, code: form.code, active: form.active };
+    if (formType === 'zone') return { name: form.name, code: form.code, stateId: Number(form.stateId), active: form.active };
+    if (formType === 'district') return { name: form.name, code: form.code, zoneId: Number(form.zoneId), active: form.active };
+    if (formType === 'taluk') return { name: form.name, districtId: Number(form.districtId), active: form.active };
+    if (formType === 'town') return { name: form.name, talukId: Number(form.talukId), active: form.active };
+    return { pincode: form.pincode, townId: Number(form.townId), serviceable: form.serviceable, pickupAvailable: form.pickupAvailable, deliveryAvailable: form.deliveryAvailable, codAvailable: form.codAvailable, prepaidAvailable: form.prepaidAvailable, reversePickupAvailable: form.reversePickupAvailable, active: form.active };
+  }
 
-  const renderBooleanIcon = (val) => {
-    return val ? <Check className="w-4 h-4 text-green-500 mx-auto" /> : <X className="w-4 h-4 text-red-500 mx-auto" />;
-  };
-
-  const PaginationRow = ({ total, itemName }) => (
-    <div className="flex items-center justify-between py-4 mt-2">
-      <span className="text-sm text-gray-500 font-medium">Showing 1 to 5 of {total} {itemName}</span>
-      <div className="flex items-center gap-2">
-        <button className="p-2 border border-gray-200 rounded text-gray-400 hover:bg-gray-50"><ChevronLeft className="w-4 h-4" /></button>
-        <button className="w-8 h-8 rounded border border-red-200 bg-red-50 text-[#E31837] text-sm font-medium">1</button>
-        <button className="w-8 h-8 rounded border border-transparent text-gray-600 hover:bg-gray-50 text-sm font-medium">2</button>
-        <button className="w-8 h-8 rounded border border-transparent text-gray-600 hover:bg-gray-50 text-sm font-medium">3</button>
-        <span className="text-gray-400">...</span>
-        <button className="w-8 h-8 rounded border border-transparent text-gray-600 hover:bg-gray-50 text-sm font-medium">6</button>
-        <button className="p-2 border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronRight className="w-4 h-4" /></button>
-        <div className="ml-4 border border-gray-200 rounded px-3 py-1.5 text-sm text-gray-600 flex items-center gap-2 bg-white">
-          10 / page <ChevronRight className="w-3 h-3 rotate-90 text-gray-400" />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderTable = () => {
-    switch (activeTab) {
-      case 'states':
-        return (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col min-h-[500px]">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">States (28)</h3>
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50">
-                    <th className="py-3 px-4 rounded-tl-lg">State</th>
-                    <th className="py-3 px-4">Code</th>
-                    <th className="py-3 px-4">Zones</th>
-                    <th className="py-3 px-4">Districts</th>
-                    <th className="py-3 px-4">Towns</th>
-                    <th className="py-3 px-4">Pincodes</th>
-                    <th className="py-3 px-4">Serviceable Pincodes</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-center rounded-tr-lg">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {STATES_DATA.map((row, i) => (
-                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 font-semibold text-gray-900">{row.state}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.code}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.zones}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.districts}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.towns}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.pincodes.toLocaleString()}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.serviceable.toLocaleString()}</td>
-                      <td className="py-4 px-4 text-center">{renderStatusBadge(row.status)}</td>
-                      <td className="py-4 px-4 text-center">
-                        <button className="text-gray-400 hover:text-[#E31837]" onClick={() => openForm('edit_geo')}><MoreVertical className="w-4 h-4 mx-auto" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <PaginationRow total={28} itemName="states" />
-          </div>
-        );
-      case 'zones':
-        return (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col min-h-[500px]">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Zones (3)</h3>
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50">
-                    <th className="py-3 px-4">Zone Name</th>
-                    <th className="py-3 px-4">Code</th>
-                    <th className="py-3 px-4">State</th>
-                    <th className="py-3 px-4">Districts</th>
-                    <th className="py-3 px-4">Taluks</th>
-                    <th className="py-3 px-4">Towns</th>
-                    <th className="py-3 px-4">Pincodes</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ZONES_DATA.map((row, i) => (
-                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 font-semibold text-gray-900">{row.zone}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.code}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.state}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.districts}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.taluks}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.towns}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.pincodes}</td>
-                      <td className="py-4 px-4 text-center">{renderStatusBadge(row.status)}</td>
-                      <td className="py-4 px-4 text-center">
-                        <button className="text-gray-400 hover:text-[#E31837]" onClick={() => openForm('edit_geo')}><MoreVertical className="w-4 h-4 mx-auto" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <PaginationRow total={3} itemName="zones" />
-          </div>
-        );
-      case 'districts':
-        return (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col min-h-[500px]">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Districts (14)</h3>
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50">
-                    <th className="py-3 px-4">District</th>
-                    <th className="py-3 px-4">Code</th>
-                    <th className="py-3 px-4">State</th>
-                    <th className="py-3 px-4">Zone</th>
-                    <th className="py-3 px-4">Taluks</th>
-                    <th className="py-3 px-4">Towns</th>
-                    <th className="py-3 px-4">Pincodes</th>
-                    <th className="py-3 px-4">Serviceable</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {DISTRICTS_DATA.map((row, i) => (
-                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 font-semibold text-gray-900">{row.district}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.code}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.state}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.zone}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.taluks}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.towns}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.pincodes}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.serviceable}</td>
-                      <td className="py-4 px-4 text-center">{renderStatusBadge(row.status)}</td>
-                      <td className="py-4 px-4 text-center">
-                        <button className="text-gray-400 hover:text-[#E31837]" onClick={() => openForm('edit_geo')}><MoreVertical className="w-4 h-4 mx-auto" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <PaginationRow total={14} itemName="districts" />
-          </div>
-        );
-      case 'taluks':
-        return (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col min-h-[500px]">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Taluks (78)</h3>
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50">
-                    <th className="py-3 px-4">Taluk</th>
-                    <th className="py-3 px-4">District</th>
-                    <th className="py-3 px-4">Zone</th>
-                    <th className="py-3 px-4">Towns</th>
-                    <th className="py-3 px-4">Pincodes</th>
-                    <th className="py-3 px-4">Serviceable</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {TALUKS_DATA.map((row, i) => (
-                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 font-semibold text-gray-900">{row.taluk}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.district}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.zone}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.towns}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.pincodes}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.serviceable}</td>
-                      <td className="py-4 px-4 text-center">{renderStatusBadge(row.status)}</td>
-                      <td className="py-4 px-4 text-center">
-                        <button className="text-gray-400 hover:text-[#E31837]" onClick={() => openForm('edit_geo')}><MoreVertical className="w-4 h-4 mx-auto" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <PaginationRow total={78} itemName="taluks" />
-          </div>
-        );
-      case 'towns':
-        return (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col min-h-[500px]">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Towns (325)</h3>
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50">
-                    <th className="py-3 px-4">Town</th>
-                    <th className="py-3 px-4">Taluk</th>
-                    <th className="py-3 px-4">District</th>
-                    <th className="py-3 px-4">Zone</th>
-                    <th className="py-3 px-4">Pincodes</th>
-                    <th className="py-3 px-4">Serviceable Pincodes</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {TOWNS_DATA.map((row, i) => (
-                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 font-semibold text-gray-900">{row.town}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.taluk}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.district}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.zone}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.pincodes}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.serviceable}</td>
-                      <td className="py-4 px-4 text-center">{renderStatusBadge(row.status)}</td>
-                      <td className="py-4 px-4 text-center">
-                        <button className="text-gray-400 hover:text-[#E31837]" onClick={() => openForm('edit_geo')}><MoreVertical className="w-4 h-4 mx-auto" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <PaginationRow total={325} itemName="towns" />
-          </div>
-        );
-      case 'pincodes':
-        return (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col min-h-[500px]">
-            <div className="flex justify-between items-center mb-6">
-               <h3 className="text-lg font-bold text-gray-900">Pincodes (1,102)</h3>
-               <div className="flex gap-2">
-                 <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50"><Upload className="w-4 h-4"/> Import</button>
-                 <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50"><DownloadCloud className="w-4 h-4"/> Export</button>
-               </div>
-            </div>
-            
-            <div className="flex gap-3 mb-6 flex-wrap">
-               <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-white"><option>State</option></select>
-               <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-white"><option>Zone</option></select>
-               <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-white"><option>District</option></select>
-               <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-white"><option>Taluk</option></select>
-               <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-white"><option>Town</option></select>
-               <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-white"><option>Serviceability</option></select>
-            </div>
-
-            <div className="overflow-x-auto flex-1">
-              <table className="w-full text-sm text-left">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50">
-                    <th className="py-3 px-4">Pincode</th>
-                    <th className="py-3 px-4">Town</th>
-                    <th className="py-3 px-4">District</th>
-                    <th className="py-3 px-4 text-center">Pickup</th>
-                    <th className="py-3 px-4 text-center">Delivery</th>
-                    <th className="py-3 px-4 text-center">COD</th>
-                    <th className="py-3 px-4 text-center">Reverse Pickup</th>
-                    <th className="py-3 px-4 text-center">Status</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {PINCODES_DATA.map((row, i) => (
-                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-4 font-semibold text-gray-900">{row.pincode}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.town}</td>
-                      <td className="py-4 px-4 text-gray-600">{row.district}</td>
-                      <td className="py-4 px-4 text-center">{renderBooleanIcon(row.pickup)}</td>
-                      <td className="py-4 px-4 text-center">{renderBooleanIcon(row.delivery)}</td>
-                      <td className="py-4 px-4 text-center">{renderBooleanIcon(row.cod)}</td>
-                      <td className="py-4 px-4 text-center">{renderBooleanIcon(row.reverse)}</td>
-                      <td className="py-4 px-4 text-center">{renderStatusBadge(row.status)}</td>
-                      <td className="py-4 px-4 text-center">
-                        <button className="text-gray-400 hover:text-[#E31837]" onClick={() => openForm('add_pincode')}><MoreVertical className="w-4 h-4 mx-auto" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <PaginationRow total={1102} itemName="pincodes" />
-          </div>
-        );
-      default:
-        return null;
+  async function onSubmit(event) {
+    event.preventDefault();
+    const createMap = { state: createGeoState, zone: createGeoZone, district: createGeoDistrict, taluk: createGeoTaluk, town: createGeoTown, pincode: createGeoPincode };
+    const updateMap = { state: updateGeoState, zone: updateGeoZone, district: updateGeoDistrict, taluk: updateGeoTaluk, town: updateGeoTown, pincode: updateGeoPincode };
+    try {
+      if (formMode === 'edit') await updateMap[formType](editingItem.id, payload());
+      else await createMap[formType](payload());
+      addToast(formMode === 'edit' ? 'Geography updated successfully' : 'Geography created successfully');
+      setFormOpen(false);
+      await refreshAll();
+    } catch (err) {
+      addToast(errorMessage(err), 'error');
     }
-  };
+  }
 
   return (
-    <div className="p-8 w-full mx-auto animate-fade-in bg-gray-50 min-h-screen font-sans">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Geography Management</h1>
-          <p className="text-gray-500 text-sm">Configure the 5-level geographic network hierarchy.</p>
-        </div>
-        <div className="flex gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder={`Search ${activeTab === 'tree' ? 'pincode or area' : activeTab}...`} 
-              className="pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E31837] focus:border-transparent w-72 shadow-sm"
-            />
-          </div>
-          <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
-             <Filter className="w-4 h-4" /> Filters
-          </button>
-          <button 
-            className="flex items-center gap-2 bg-[#E31837] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-md"
-            onClick={() => openForm(activeTab === 'pincodes' ? 'add_pincode' : 'add_geo')}
-          >
-            <Plus className="w-4 h-4" /> {getAddButtonText()}
-          </button>
-        </div>
+    <div className="p-8 w-full mx-auto space-y-8 animate-fade-in bg-gray-50 min-h-screen">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div><h1 className="text-2xl font-bold text-gray-900 tracking-tight">Geography Management</h1><p className="text-gray-500 text-sm mt-1">Manage serviceable states, zones, districts, taluks, towns, and pincodes.</p></div>
+        <div className="flex items-center gap-3"><button onClick={refreshAll} className="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50"><RefreshCcw className="w-4 h-4" /> Refresh</button><button onClick={() => openCreate(activeTab === 'tree' ? null : activeTab.slice(0, -1))} className="flex items-center gap-2 bg-[#E31837] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm text-sm"><Plus className="w-4 h-4" /> Add {activeTab === 'tree' ? 'Geography' : activeTab.slice(0, -1)}</button></div>
       </div>
 
-      {/* Summary Cards - Always visible */}
-      <div className="grid grid-cols-5 gap-4 mb-8">
-          {[
-            { label: 'States', value: '28', icon: Globe, color: 'text-[#E31837]', bg: 'bg-red-50' },
-            { label: 'Zones', value: '72', icon: MapIcon, color: 'text-blue-500', bg: 'bg-blue-50' },
-            { label: 'Districts', value: '687', icon: Folder, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-            { label: 'Towns', value: '3,842', icon: MapPin, color: 'text-purple-500', bg: 'bg-purple-50' },
-            { label: 'Serviceable Pincodes', value: '1,25,673', icon: CheckCircle2, color: 'text-amber-500', bg: 'bg-amber-50' },
-          ].map((stat, i) => (
-            <div key={i} className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4">
-              <div className={`p-3 rounded-lg ${stat.bg} ${stat.color}`}>
-                <stat.icon className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-                <h3 className="text-xl font-bold text-gray-900">{stat.value}</h3>
-                <p className="text-xs text-gray-400 mt-1">Total {stat.label.toLowerCase()}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-5">{cards.map(([label, value, Icon]) => <div key={label} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex items-center gap-4"><div className="w-11 h-11 rounded-lg bg-red-50 flex items-center justify-center text-[#E31837]"><Icon className="w-5 h-5" /></div><div><p className="text-xs font-bold text-gray-500 mb-1">{label}</p><h3 className="text-2xl font-bold text-gray-900 leading-none">{Number(value || 0).toLocaleString()}</h3></div></div>)}</div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200 mb-6">
-        {TAB_ITEMS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === tab.id 
-                ? 'border-[#E31837] text-[#E31837]' 
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="flex flex-col lg:flex-row gap-4 lg:items-center justify-between">
+        <div className="flex gap-2 overflow-x-auto pb-1">{TABS.map((tab) => <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-2 rounded-lg text-sm font-bold border whitespace-nowrap ${activeTab === tab ? 'bg-[#E31837] text-white border-[#E31837]' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}>{tab === 'tree' ? 'Hierarchy Tree' : tab[0].toUpperCase() + tab.slice(1)}</button>)}</div>
+        <div className="relative w-full lg:w-80"><Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search pincode or area..." className="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E31837]" />{searchResults.length > 0 && <div className="absolute right-0 left-0 top-12 bg-white border border-gray-200 rounded-lg shadow-xl z-30 max-h-80 overflow-y-auto">{searchResults.map((item) => <div key={`${item.type}-${item.id}`} className="p-3 border-b border-gray-50 last:border-b-0"><div className="flex items-center justify-between gap-3"><p className="font-bold text-sm text-gray-900">{item.name}</p><span className="text-[10px] font-bold text-[#E31837] bg-red-50 px-2 py-0.5 rounded">{item.type}</span></div><p className="text-xs text-gray-500 mt-1">{item.path}</p></div>)}</div>}</div>
       </div>
 
-      {/* Main Content Area */}
-      {activeTab === 'tree' ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[700px]">
-          {/* ... (Previous Tree Implementation) ... */}
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-gray-900">Geographic Network</h2>
-            <button className="flex items-center gap-2 text-sm font-medium text-[#E31837] hover:underline">
-              Expand All <Maximize2 className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 min-h-0">
-            {/* Column 1: Hierarchy Explorer */}
-            <div className="md:col-span-3 border-r border-gray-100 md:pr-6 flex flex-col h-full overflow-y-auto">
-              <h3 className="text-sm font-bold text-gray-900 mb-1">Hierarchy Explorer</h3>
-              <p className="text-xs text-gray-500 mb-6">Navigate through the geographic hierarchy</p>
-              
-              <div className="space-y-4 relative">
-                <div className="absolute left-6 top-6 bottom-6 w-px bg-gray-200 z-0 hidden lg:block"></div>
-                {activePath.map((node, index) => {
-                  const NodeIcon = ICONS[node.type];
-                  const isActive = index === activePath.length - 1;
-                  return (
-                    <div 
-                      key={node.id} 
-                      className={`relative z-10 flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all ${isActive ? 'border-red-200 bg-red-50 shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}
-                      onClick={() => handlePathClick(index)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-md bg-white border ${isActive ? 'border-red-100' : 'border-gray-100'}`}>
-                           <NodeIcon className={`w-4 h-4 ${COLORS[node.type]}`} />
-                        </div>
-                        <span className={`font-semibold text-sm ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>{node.name}</span>
-                      </div>
-                      <span className="text-[10px] uppercase font-bold text-gray-400 bg-white px-2 py-0.5 rounded border border-gray-100">{node.type}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Column 2: Child Nodes */}
-            <div className="md:col-span-4 border-r border-gray-100 md:px-6 flex flex-col h-full overflow-y-auto">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-sm font-bold text-gray-900">Child {selectedNode.type === 'town' ? 'Pincodes' : 'Regions'} <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full ml-2">{selectedNode.children?.length || 0}</span></h3>
-                  <p className="text-xs text-gray-500 mt-1">Under {selectedNode.name}</p>
-                </div>
-                <div className="flex gap-2">
-                  <button className="p-1.5 border border-gray-200 rounded text-gray-400 hover:bg-gray-50"><Search className="w-4 h-4" /></button>
-                  <button className="p-1.5 border border-gray-200 rounded text-gray-400 hover:bg-gray-50"><Filter className="w-4 h-4" /></button>
-                </div>
-              </div>
-
-              <div className="space-y-3 pb-6">
-                {selectedNode.children && selectedNode.children.map((child, index) => (
-                  <div 
-                    key={child.id} 
-                    className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-300 hover:shadow-sm cursor-pointer transition-all"
-                    onClick={() => handleChildClick(child)}
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs font-medium text-gray-400 w-4">{index + 1}</span>
-                      <span className="font-semibold text-sm text-gray-800">{child.name}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {child.serviceable !== false ? (
-                        <div className="flex items-center gap-1 bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium"><CheckCircle2 className="w-3 h-3" /> Serviceable</div>
-                      ) : (
-                        <div className="flex items-center gap-1 bg-red-50 text-red-600 px-2 py-1 rounded text-xs font-medium"><CheckCircle2 className="w-3 h-3" /> Unserviceable</div>
-                      )}
-                      <button className="text-gray-400 hover:text-gray-600 p-1" onClick={(e) => { e.stopPropagation(); openForm('edit_geo'); }}><MoreVertical className="w-4 h-4" /></button>
-                    </div>
-                  </div>
-                ))}
-                {(!selectedNode.children || selectedNode.children.length === 0) && (
-                  <div className="text-center py-12"><p className="text-sm text-gray-500">No child items found.</p></div>
-                )}
-              </div>
-            </div>
-
-            {/* Column 3: Node Details */}
-            <div className="md:col-span-5 md:pl-6 flex flex-col h-full overflow-y-auto">
-              <div className="flex items-start justify-between mb-8">
-                <div className="flex items-center gap-3">
-                   <div className={`p-2.5 rounded-lg bg-red-50`}>{React.createElement(ICONS[selectedNode.type] || Globe, { className: `w-6 h-6 text-[#E31837]` })}</div>
-                   <div>
-                     <div className="flex items-center gap-2">
-                       <h2 className="text-lg font-bold text-gray-900">{selectedNode.name}</h2>
-                       <span className="text-[10px] uppercase font-bold text-[#E31837] bg-red-50 border border-red-100 px-2 py-0.5 rounded">{selectedNode.type}</span>
-                     </div>
-                     <p className="text-xs text-gray-500 mt-1">Overview & Status</p>
-                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => openForm('edit_geo')} className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
-                    <Edit className="w-3.5 h-3.5" /> Edit
-                  </button>
-                  <button onClick={() => openForm(selectedNode.type === 'town' ? 'add_pincode' : 'add_geo')} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E31837] text-white rounded text-sm font-medium hover:bg-red-600 transition-colors shadow-sm">
-                    {selectedNode.type === 'town' ? 'Add Pincode' : 'Add Child'}
-                  </button>
-                  <button className="p-1.5 border border-gray-200 rounded text-gray-400 hover:bg-gray-50"><MoreVertical className="w-4 h-4" /></button>
-                </div>
-              </div>
-
-              {/* Hierarchy Table */}
-              <div className="mb-8 border-b border-gray-100 pb-8">
-                 <table className="w-full text-sm">
-                   <tbody>
-                     {activePath.map((node) => (
-                       <tr key={node.id} className="border-b border-gray-50 last:border-0">
-                         <td className="py-2.5 text-gray-500 capitalize w-32">{node.type}</td>
-                         <td className="py-2.5 font-medium text-gray-900">{node.name}</td>
-                       </tr>
-                     ))}
-                   </tbody>
-                 </table>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="border border-gray-100 rounded-lg p-4 flex items-center gap-4 bg-gray-50/50">
-                  <div className="bg-purple-100 p-2.5 rounded-lg text-purple-600"><MapPin className="w-5 h-5" /></div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Total {selectedNode.type === 'town' ? 'Pincodes' : 'Children'}</p>
-                    <p className="text-xl font-bold text-gray-900 mt-0.5">{selectedNode.children?.length || 0}</p>
-                    <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Under this {selectedNode.type}</p>
-                  </div>
-                </div>
-                <div className="border border-green-100 rounded-lg p-4 flex items-center gap-4 bg-green-50/30">
-                  <div className="bg-green-100 p-2.5 rounded-lg text-green-600"><CheckCircle2 className="w-5 h-5" /></div>
-                  <div>
-                    <p className="text-xs text-gray-500 font-medium">Serviceable {selectedNode.type === 'town' ? 'Pincodes' : 'Children'}</p>
-                    <p className="text-xl font-bold text-gray-900 mt-0.5">{selectedNode.children?.filter(c => c.serviceable !== false).length || 0}</p>
-                    <p className="text-[10px] text-green-600 mt-1 uppercase tracking-wider font-bold">
-                       {selectedNode.children?.length ? Math.round((selectedNode.children.filter(c => c.serviceable !== false).length / selectedNode.children.length) * 100) : 0}% Serviceable
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        renderTable()
-      )}
-
-      {/* Forms Overlay */}
-      {isFormOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-           <div className="w-[700px] bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] animate-fade-in-up overflow-hidden">
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 bg-[#E31837] text-white">
-                <div className="flex items-center gap-3">
-                  {formType === 'edit_geo' ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-                  <h2 className="text-xl font-bold text-white">
-                    {formType === 'add_geo' ? 'Add Geography' : formType === 'edit_geo' ? 'Edit Geography' : 'Add Pincode'}
-                  </h2>
-                </div>
-                <button onClick={closeForm} className="p-1.5 text-white bg-white/20 hover:bg-white/30 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
-              </div>
-
-              {/* Form Content */}
-              <div className="p-6 flex-1 overflow-y-auto">
-                 {formType !== 'add_pincode' ? (
-                   <div className="space-y-6">
-                     <div className="grid grid-cols-2 gap-5">
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Geography Type <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white">
-                           <option>Town</option>
-                           <option>Taluk</option>
-                           <option>District</option>
-                           <option>Zone</option>
-                           <option>State</option>
-                         </select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">State <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Kerala</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Zone <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>South Zone</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">District <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Thiruvananthapuram</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Taluk <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Taluk</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Status <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white">
-                           <option>Active</option>
-                           <option>Inactive</option>
-                         </select>
-                       </div>
-                     </div>
-                     
-                     <div>
-                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Location Details</h3>
-                        <div className="grid grid-cols-2 gap-5">
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-gray-700">Town Name <span className="text-red-500">*</span></label>
-                            <input type="text" defaultValue={formType === 'edit_geo' ? 'Neyyattinkara Town' : ''} placeholder="e.g. Neyyattinkara Town" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
-                          </div>
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-gray-700">Town Code</label>
-                            <input type="text" defaultValue={formType === 'edit_geo' ? 'NYT-TOWN' : ''} placeholder="e.g. NYT-TOWN" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
-                          </div>
-                        </div>
-                     </div>
-                   </div>
-                 ) : (
-                   <div className="space-y-6">
-                     <div className="grid grid-cols-2 gap-5">
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">State <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Kerala</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Zone <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>South Zone</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Taluk <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Taluk</option></select>
-                       </div>
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-bold text-gray-700">Town <span className="text-red-500">*</span></label>
-                         <select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option>Neyyattinkara Town</option></select>
-                       </div>
-                       <div className="space-y-1.5 col-span-2">
-                         <label className="text-xs font-bold text-gray-700">Pincode <span className="text-red-500">*</span></label>
-                         <input type="text" placeholder="Enter pincode" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" />
-                       </div>
-                     </div>
-
-                     <div>
-                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Serviceability Flags</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Serviceable</span></label>
-                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Pickup Available</span></label>
-                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Delivery Available</span></label>
-                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">COD Available</span></label>
-                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Prepaid Available</span></label>
-                           <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">Reverse Pickup</span></label>
-                        </div>
-                     </div>
-                   </div>
-                 )}
-              </div>
-              
-              {/* Footer */}
-              <div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3 bg-white">
-                 <button className="px-5 py-2.5 bg-[#E31837] text-white font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm text-sm">
-                   {formType === 'edit_geo' ? 'Save Changes' : formType === 'add_geo' ? 'Create Geography' : 'Add Pincode'}
-                 </button>
-              </div>
-           </div>
-        </div>
-      )}
-
+      {error && <div className="flex items-center gap-3 bg-red-50 border border-red-100 text-red-700 rounded-lg p-4 text-sm font-medium"><AlertCircle className="w-5 h-5" /> {error}</div>}
+      {loading ? <div className="bg-white rounded-xl border border-gray-200 p-12 text-center text-gray-500 font-medium">Loading geography...</div> : activeTab === 'tree' ? <TreeView activePath={activePath} children={children} selectedNode={selectedNode} states={states} onPathClick={onPathClick} onChildClick={onChildClick} onEdit={openEdit} onAdd={openCreate} /> : <TableView activeTab={activeTab} rows={visibleRows} loading={tableLoading} pincodePage={pincodePage} parent={parentForTab(activeTab)} onEdit={openEdit} onPage={(page) => loadTable('pincodes', page)} />}
+      {formOpen && <GeoForm formMode={formMode} formType={formType} form={form} setForm={setForm} parentOptions={parentOptions} onSubmit={onSubmit} onClose={() => setFormOpen(false)} />}
     </div>
   );
+}
+
+function TreeView({ activePath, children, selectedNode, states, onPathClick, onChildClick, onEdit, onAdd }) {
+  const node = selectedNode || { type: 'root', name: 'India' };
+  const childRows = selectedNode ? children : states;
+  return <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[620px]"><div className="grid grid-cols-1 md:grid-cols-12 gap-6 min-h-[540px]"><div className="md:col-span-3 border-r border-gray-100 md:pr-6"><h3 className="text-sm font-bold text-gray-900 mb-1">Hierarchy Explorer</h3><p className="text-xs text-gray-500 mb-6">Navigate through the geographic hierarchy</p><div className="space-y-3">{activePath.map((item, index) => <NodeCard key={`${item.type}-${item.id}`} item={item} active={index === activePath.length - 1} onClick={() => onPathClick(index)} />)}{activePath.length === 0 && <p className="text-sm text-gray-500 py-10 text-center">No geography added yet.</p>}</div></div><div className="md:col-span-4 border-r border-gray-100 md:px-6"><div className="flex items-center justify-between mb-6"><div><h3 className="text-sm font-bold text-gray-900">Child {node.type === 'town' ? 'Pincodes' : 'Regions'} <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full ml-2">{childRows.length}</span></h3><p className="text-xs text-gray-500 mt-1">Under {node.name}</p></div><button onClick={() => onAdd()} className="p-2 border border-gray-200 rounded text-gray-500 hover:bg-gray-50"><Plus className="w-4 h-4" /></button></div><div className="space-y-3 pb-6">{childRows.map((child) => <div key={`${child.type}-${child.id}`} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-300 hover:shadow-sm cursor-pointer transition-all" onClick={() => onChildClick(child)}><div className="flex items-center gap-3 min-w-0"><span className="font-semibold text-sm text-gray-800 truncate">{child.name}</span><span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">{child.type}</span></div><div className="flex items-center gap-2">{renderStatusBadge(statusText(child))}<button className="text-gray-400 hover:text-gray-600 p-1" onClick={(event) => { event.stopPropagation(); onEdit(child); }}><MoreVertical className="w-4 h-4" /></button></div></div>)}{childRows.length === 0 && <div className="text-center py-12"><p className="text-sm text-gray-500">No child items found.</p></div>}</div></div><div className="md:col-span-5 md:pl-6"><div className="flex items-start justify-between mb-8"><div className="flex items-center gap-3"><div className="p-2.5 rounded-lg bg-red-50">{React.createElement(ICONS[node.type] || Globe, { className: 'w-6 h-6 text-[#E31837]' })}</div><div><h2 className="text-lg font-bold text-gray-900">{node.name}</h2><p className="text-xs text-gray-500 mt-1">Overview & Status</p></div></div>{selectedNode && <button onClick={() => onEdit(selectedNode)} className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50"><Edit className="w-3.5 h-3.5" /> Edit</button>}</div><table className="w-full text-sm mb-8 border-b border-gray-100 pb-8"><tbody>{activePath.map((item) => <tr key={`${item.type}-${item.id}`} className="border-b border-gray-50 last:border-0"><td className="py-2.5 text-gray-500 capitalize w-32">{item.type}</td><td className="py-2.5 font-medium text-gray-900">{item.name}</td></tr>)}</tbody></table><div className="grid grid-cols-2 gap-4"><div className="border border-gray-100 rounded-lg p-4 flex items-center gap-4 bg-gray-50/50"><MapPin className="w-5 h-5 text-[#E31837]" /><div><p className="text-xs text-gray-500 font-medium">Total Children</p><p className="text-xl font-bold text-gray-900">{childRows.length}</p></div></div><div className="border border-green-100 rounded-lg p-4 flex items-center gap-4 bg-green-50/30"><CheckCircle2 className="w-5 h-5 text-green-600" /><div><p className="text-xs text-gray-500 font-medium">Active / Serviceable</p><p className="text-xl font-bold text-gray-900">{childRows.filter((item) => item.type === 'pincode' ? item.serviceable : item.active).length}</p></div></div></div></div></div></div>;
+}
+
+function NodeCard({ item, active, onClick }) {
+  const Icon = ICONS[item.type] || Globe;
+  return <div className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer ${active ? 'border-red-200 bg-red-50 shadow-sm' : 'border-gray-100 bg-white hover:bg-gray-50'}`} onClick={onClick}><div className="flex items-center gap-3"><div className="p-2 rounded-md bg-white border border-gray-100"><Icon className={`w-4 h-4 ${COLORS[item.type]}`} /></div><span className="font-semibold text-sm text-gray-800">{item.name}</span></div><span className="text-[10px] uppercase font-bold text-gray-400 bg-white px-2 py-0.5 rounded border border-gray-100">{item.type}</span></div>;
+}
+
+function TableView({ activeTab, rows, loading, pincodePage, parent, onEdit, onPage }) {
+  const label = activeTab.slice(0, -1);
+  const colSpan = activeTab === 'pincodes' ? 9 : 4;
+  return <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 min-h-[500px]"><div className="flex items-center justify-between mb-6"><div><h3 className="text-lg font-bold text-gray-900 capitalize">{activeTab}</h3>{parent && <p className="text-xs text-gray-500 mt-1">Filtered under {parent.name}</p>}</div><button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"><Filter className="w-4 h-4" /> Filter</button></div>{!parent && activeTab !== 'states' ? <div className="text-center py-16 text-sm text-gray-500">Select a parent in the hierarchy tree to view {activeTab}.</div> : loading ? <div className="text-center py-16 text-sm text-gray-500">Loading {activeTab}...</div> : <div className="overflow-x-auto"><table className="w-full text-sm text-left"><thead><tr className="border-b-2 border-gray-100 text-gray-900 font-bold bg-gray-50/50"><th className="py-3 px-4 capitalize">{label}</th><th className="py-3 px-4">Code</th>{activeTab === 'pincodes' && <><th className="py-3 px-4 text-center">Pickup</th><th className="py-3 px-4 text-center">Delivery</th><th className="py-3 px-4 text-center">COD</th><th className="py-3 px-4 text-center">Prepaid</th><th className="py-3 px-4 text-center">Reverse</th></>}<th className="py-3 px-4 text-center">Status</th><th className="py-3 px-4 text-center">Actions</th></tr></thead><tbody>{rows.map((row) => <tr key={`${row.type}-${row.id}`} className="border-b border-gray-50 hover:bg-gray-50"><td className="py-4 px-4 font-semibold text-gray-900">{row.name}</td><td className="py-4 px-4 text-gray-600">{row.code || '-'}</td>{activeTab === 'pincodes' && <><td className="py-4 px-4 text-center">{renderBooleanIcon(row.pickupAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.deliveryAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.codAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.prepaidAvailable)}</td><td className="py-4 px-4 text-center">{renderBooleanIcon(row.reversePickupAvailable)}</td></>}<td className="py-4 px-4 text-center">{renderStatusBadge(statusText(row))}</td><td className="py-4 px-4 text-center"><button className="text-gray-400 hover:text-[#E31837]" onClick={() => onEdit(row)}><MoreVertical className="w-4 h-4 mx-auto" /></button></td></tr>)}{rows.length === 0 && <tr><td className="py-12 text-center text-gray-500" colSpan={colSpan}>No records found.</td></tr>}</tbody></table>{activeTab === 'pincodes' && <PaginationRow page={pincodePage.page} totalPages={pincodePage.totalPages} total={pincodePage.totalElements} onPage={onPage} />}</div>}</div>;
+}
+
+function GeoForm({ formMode, formType, form, setForm, parentOptions, onSubmit, onClose }) {
+  const isPincode = formType === 'pincode';
+  return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><form onSubmit={onSubmit} className="w-[700px] bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"><div className="flex items-center justify-between p-6 bg-[#E31837] text-white"><div className="flex items-center gap-3"><Plus className="w-5 h-5" /><h2 className="text-xl font-bold text-white capitalize">{formMode} {formType}</h2></div><button type="button" onClick={onClose} className="p-1.5 text-white bg-white/20 hover:bg-white/30 rounded-lg"><X className="w-5 h-5" /></button></div><div className="p-6 flex-1 overflow-y-auto space-y-5">{!isPincode && <div className="grid grid-cols-2 gap-5">{formType === 'zone' && <SelectField label="State" value={form.stateId} onChange={(value) => setForm((prev) => ({ ...prev, stateId: value }))} options={parentOptions.states} />}{formType === 'district' && <SelectField label="Zone" value={form.zoneId} onChange={(value) => setForm((prev) => ({ ...prev, zoneId: value }))} options={parentOptions.zones} />}{formType === 'taluk' && <SelectField label="District" value={form.districtId} onChange={(value) => setForm((prev) => ({ ...prev, districtId: value }))} options={parentOptions.districts} />}{formType === 'town' && <SelectField label="Taluk" value={form.talukId} onChange={(value) => setForm((prev) => ({ ...prev, talukId: value }))} options={parentOptions.taluks} />}<TextField label={`${formType} Name`} value={form.name} onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} required />{['state', 'zone', 'district'].includes(formType) && <TextField label="Code" value={form.code} onChange={(value) => setForm((prev) => ({ ...prev, code: value }))} />}<CheckField label="Active" checked={form.active} onChange={(value) => setForm((prev) => ({ ...prev, active: value }))} /></div>}{isPincode && <div className="space-y-6"><div className="grid grid-cols-2 gap-5"><SelectField label="Town" value={form.townId} onChange={(value) => setForm((prev) => ({ ...prev, townId: value }))} options={parentOptions.towns} /><TextField label="Pincode" value={form.pincode} onChange={(value) => setForm((prev) => ({ ...prev, pincode: value }))} required /></div><div><h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Serviceability Flags</h3><div className="grid grid-cols-2 gap-4">{[['serviceable', 'Serviceable'], ['pickupAvailable', 'Pickup Available'], ['deliveryAvailable', 'Delivery Available'], ['codAvailable', 'COD Available'], ['prepaidAvailable', 'Prepaid Available'], ['reversePickupAvailable', 'Reverse Pickup'], ['active', 'Active']].map(([key, label]) => <CheckField key={key} label={label} checked={form[key]} onChange={(value) => setForm((prev) => ({ ...prev, [key]: value }))} />)}</div></div></div>}</div><div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3 bg-white"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">Cancel</button><button className="px-5 py-2.5 bg-[#E31837] text-white font-bold rounded-lg hover:bg-red-700 text-sm">Save</button></div></form></div>;
+}
+
+function TextField({ label, value, onChange, required = false }) {
+  return <div className="space-y-1.5"><label className="text-xs font-bold text-gray-700 capitalize">{label}{required && <span className="text-red-500"> *</span>}</label><input value={value || ''} onChange={(event) => onChange(event.target.value)} required={required} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837]" /></div>;
+}
+
+function SelectField({ label, value, onChange, options }) {
+  return <div className="space-y-1.5"><label className="text-xs font-bold text-gray-700">{label} <span className="text-red-500">*</span></label><select value={value || ''} onChange={(event) => onChange(event.target.value)} required className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E31837] bg-white"><option value="">Select {label}</option>{options.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></div>;
+}
+
+function CheckField({ label, checked, onChange }) {
+  return <label className="flex items-center gap-3 bg-gray-50/50 p-3 rounded-lg border border-gray-100"><input type="checkbox" checked={!!checked} onChange={(event) => onChange(event.target.checked)} className="w-4 h-4 rounded text-[#E31837] focus:ring-[#E31837] border-gray-300" /><span className="text-sm font-semibold text-gray-700">{label}</span></label>;
+}
+
+function PaginationRow({ page, totalPages, total, onPage }) {
+  return <div className="flex items-center justify-between py-4 mt-2"><span className="text-sm text-gray-500 font-medium">{total.toLocaleString()} pincodes</span><div className="flex items-center gap-2"><button disabled={page <= 0} onClick={() => onPage(page - 1)} className="p-2 border border-gray-200 rounded text-gray-600 disabled:text-gray-300 hover:bg-gray-50"><ChevronLeft className="w-4 h-4" /></button><span className="px-3 py-2 text-sm font-bold text-gray-700">{page + 1} / {Math.max(totalPages, 1)}</span><button disabled={page + 1 >= totalPages} onClick={() => onPage(page + 1)} className="p-2 border border-gray-200 rounded text-gray-600 disabled:text-gray-300 hover:bg-gray-50"><ChevronRight className="w-4 h-4" /></button></div></div>;
+}
+
+function statusText(row) {
+  if (row.type === 'pincode') return row.serviceable ? 'Serviceable' : 'Not Serviceable';
+  return row.active ? 'Active' : 'Inactive';
+}
+
+function renderStatusBadge(status) {
+  const active = status === 'Active' || status === 'Serviceable';
+  return <span className={`px-2.5 py-1 text-xs font-bold rounded ${active ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>{status}</span>;
+}
+
+function renderBooleanIcon(value) {
+  return value ? <Check className="w-4 h-4 text-green-500 mx-auto" /> : <X className="w-4 h-4 text-red-500 mx-auto" />;
 }
