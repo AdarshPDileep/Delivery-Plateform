@@ -368,3 +368,78 @@ export async function getGeoPincodeById(id) {
 export async function deleteGeoPincode(id) {
   return apiRequest(`/api/admin/geography/pincodes/${id}`, { method: 'DELETE' });
 }
+
+export async function getNetworkStats() {
+  return apiRequest('/api/admin/network/stats');
+}
+
+export async function getNetworkNodes({ page = 0, size = 10, search = '', type = '', status = '' } = {}) {
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('size', size);
+  if (search) params.set('search', search);
+  if (type) params.set('type', type);
+  if (status) params.set('status', status);
+  return apiRequest(`/api/admin/network/nodes?${params.toString()}`);
+}
+
+export async function getNetworkNode(id) {
+  return apiRequest(`/api/admin/network/nodes/${id}`);
+}
+
+export async function createNetworkNode(payload) {
+  return apiRequest('/api/admin/network/nodes', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateNetworkNode(id, payload) {
+  return apiRequest(`/api/admin/network/nodes/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateNetworkNodeStatus(id, active) {
+  return apiRequest(`/api/admin/network/nodes/${id}/status`, { method: 'PATCH', body: JSON.stringify({ active }) });
+}
+
+export async function deleteNetworkNode(id) {
+  return apiRequest(`/api/admin/network/nodes/${id}`, { method: 'DELETE' });
+}
+
+export async function getNodePincodes(nodeId) {
+  return apiRequest(`/api/admin/network/nodes/${nodeId}/pincodes`);
+}
+
+export async function addNodePincodes(nodeId, payload) {
+  return apiRequest(`/api/admin/network/nodes/${nodeId}/pincodes`, { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function removeNodePincode(nodeId, pincodeId) {
+  return apiRequest(`/api/admin/network/nodes/${nodeId}/pincodes/${pincodeId}`, { method: 'DELETE' });
+}
+
+export async function getNetworkRoutes({ page = 0, size = 10, search = '', status = '' } = {}) {
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('size', size);
+  if (search) params.set('search', search);
+  if (status) params.set('status', status);
+  return apiRequest(`/api/admin/network/routes?${params.toString()}`);
+}
+
+export async function getNetworkRoute(id) {
+  return apiRequest(`/api/admin/network/routes/${id}`);
+}
+
+export async function createNetworkRoute(payload) {
+  return apiRequest('/api/admin/network/routes', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateNetworkRoute(id, payload) {
+  return apiRequest(`/api/admin/network/routes/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateNetworkRouteStatus(id, active) {
+  return apiRequest(`/api/admin/network/routes/${id}/status`, { method: 'PATCH', body: JSON.stringify({ active }) });
+}
+
+export async function deleteNetworkRoute(id) {
+  return apiRequest(`/api/admin/network/routes/${id}`, { method: 'DELETE' });
+}

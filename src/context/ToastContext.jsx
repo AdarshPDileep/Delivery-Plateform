@@ -10,7 +10,7 @@ export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
   const addToast = (message, type = 'success', duration = 3000) => {
-    const id = Date.now().toString();
+    const id = crypto.randomUUID?.() || String(Date.now()) + '-' + String(Math.random());
     setToasts(prev => [...prev, { id, message, type }]);
     
     if (duration) {
@@ -44,3 +44,5 @@ export function ToastProvider({ children }) {
     </ToastContext.Provider>
   );
 }
+
+
