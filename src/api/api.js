@@ -313,3 +313,10 @@ export async function updateGeoPincodeServiceability(id, payload) {
 export async function searchGeography(query) {
   return apiRequest(`/api/admin/geography/search?q=${encodeURIComponent(query)}`);
 }
+
+export const getStates = getGeoStates;
+export const getZonesByState = getGeoZones;
+export const getDistrictsByZone = getGeoDistricts;
+export const getTaluksByDistrict = getGeoTaluks;
+export const getTownsByTaluk = getGeoTowns;
+export const getPincodesByTown = getGeoPincodes;
