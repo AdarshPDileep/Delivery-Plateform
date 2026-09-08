@@ -135,6 +135,7 @@ export default function GeoMaster() {
   const [editingItem, setEditingItem] = useState(null);
   const [viewItem, setViewItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [deleteBlock, setDeleteBlock] = useState(null);
   const [form, setForm] = useState({});
 
   const activePath = [selectedState, selectedZone, selectedDistrict, selectedTaluk, selectedTown].filter(Boolean);
@@ -450,13 +451,39 @@ export default function GeoMaster() {
     }
   }
 
+  function openDelete(item) {
+    setDeleteItem(item);
+    setDeleteBlock(null);
+  }
+
   async function confirmDelete() {
     if (!deleteItem) return;
     const deleteMap = { state: deleteGeoState, zone: deleteGeoZone, district: deleteGeoDistrict, taluk: deleteGeoTaluk, town: deleteGeoTown, pincode: deleteGeoPincode };
     try {
+      setDeleteBlock(null);
       await deleteMap[deleteItem.type](deleteItem.id);
-      addToast(`${deleteItem.name} deleted successfully`);
+      addToast(`${deleteItem.name} deleted permanently`);
       setDeleteItem(null);
+      await refreshAffectedSection(deleteItem.type);
+    } catch (err) {
+      const data = err?.response?.data;
+      if (data?.code === 'GEOGRAPHY_IN_USE') {
+        setDeleteBlock(data);
+        return;
+      }
+      addToast(errorMessage(err), 'error');
+    }
+  }
+
+  async function disableInstead() {
+    if (!deleteItem) return;
+    const disableMap = { state: updateGeoState, zone: updateGeoZone, district: updateGeoDistrict, taluk: updateGeoTaluk, town: updateGeoTown, pincode: updateGeoPincode };
+    const disablePayload = buildDisablePayload(deleteItem);
+    try {
+      await disableMap[deleteItem.type](deleteItem.id, disablePayload);
+      addToast(`${deleteItem.name} disabled`);
+      setDeleteItem(null);
+      setDeleteBlock(null);
       await refreshAffectedSection(deleteItem.type);
     } catch (err) {
       addToast(errorMessage(err), 'error');
@@ -531,13 +558,13 @@ export default function GeoMaster() {
 
       {error && <ErrorPanel message={error} />}
       {loading ? <LoadingPanel message="Loading geography..." /> : activeTab === 'tree' ? (
-        <TreeView activePath={activePath} children={treeChildren()} selectedNode={selectedNode} loading={sectionLoading} onPathClick={selectPathNode} onChildClick={selectChild} onView={openView} onEdit={openEdit} onDelete={setDeleteItem} onAdd={openCreate} />
+        <TreeView activePath={activePath} children={treeChildren()} selectedNode={selectedNode} loading={sectionLoading} onPathClick={selectPathNode} onChildClick={selectChild} onView={openView} onEdit={openEdit} onDelete={openDelete} onAdd={openCreate} />
       ) : (
-        <TableView activeTab={activeTab} rows={tableRows} loading={sectionLoading} parent={parentForTab(activeTab)} pincodePage={pincodePage} pincodeTotalPages={pincodeTotalPages} pincodeTotal={pincodeTotal} onView={openView} onEdit={openEdit} onDelete={setDeleteItem} onPage={(page) => selectedTown && loadPincodes(selectedTown.id, page)} />
+        <TableView activeTab={activeTab} rows={tableRows} loading={sectionLoading} parent={parentForTab(activeTab)} pincodePage={pincodePage} pincodeTotalPages={pincodeTotalPages} pincodeTotal={pincodeTotal} onView={openView} onEdit={openEdit} onDelete={openDelete} onPage={(page) => selectedTown && loadPincodes(selectedTown.id, page)} />
       )}
       {formOpen && <GeoForm formMode={formMode} formType={formType} form={form} setForm={setForm} parentOptions={parentOptions} onSubmit={onSubmit} onClose={() => setFormOpen(false)} />}
       {viewItem && <ViewModal item={viewItem} onClose={() => setViewItem(null)} />}
-      {deleteItem && <DeleteModal item={deleteItem} onConfirm={confirmDelete} onClose={() => setDeleteItem(null)} />}
+      {deleteItem && <DeleteModal item={deleteItem} block={deleteBlock} onConfirm={confirmDelete} onDisable={disableInstead} onClose={() => { setDeleteItem(null); setDeleteBlock(null); }} />}
     </div>
   );
 }
@@ -603,10 +630,27 @@ function ViewModal({ item, onClose }) {
   return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="w-[560px] bg-white rounded-xl shadow-2xl overflow-hidden"><div className="flex items-center justify-between p-5 border-b border-gray-100"><div className="flex items-center gap-3"><div className="p-2 bg-red-50 rounded-lg text-[#E31837]"><Eye className="w-5 h-5" /></div><h2 className="text-lg font-bold text-gray-900 capitalize">View {item.type}</h2></div><button type="button" onClick={onClose} className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5" /></button></div><div className="p-5 space-y-5"><div className="grid grid-cols-2 gap-4">{details.map(([label, value]) => <div key={label} className="border border-gray-100 rounded-lg p-3 bg-gray-50/50"><p className="text-xs font-bold text-gray-500 mb-1">{label}</p><p className="text-sm font-semibold text-gray-900 capitalize">{value}</p></div>)}</div>{item.type === 'pincode' && <div><h3 className="text-xs font-bold text-gray-500 uppercase mb-3">Serviceability Flags</h3><div className="grid grid-cols-2 gap-3">{flags.map(([label, value]) => <div key={label} className="flex items-center justify-between border border-gray-100 rounded-lg p-3"><span className="text-sm font-semibold text-gray-700">{label}</span>{renderBooleanIcon(value)}</div>)}</div></div>}</div><div className="p-5 border-t border-gray-100 flex justify-end"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">Close</button></div></div></div>;
 }
 
-function DeleteModal({ item, onConfirm, onClose }) {
-  return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="w-[460px] bg-white rounded-xl shadow-2xl overflow-hidden"><div className="p-5 border-b border-gray-100"><div className="flex items-center gap-3"><div className="p-2 bg-red-50 rounded-lg text-red-600"><Trash2 className="w-5 h-5" /></div><div><h2 className="text-lg font-bold text-gray-900 capitalize">Delete {item.type}</h2><p className="text-sm text-gray-500 mt-1">Please confirm before deleting this geography record.</p></div></div></div><div className="p-5"><p className="text-sm text-gray-700">Delete <span className="font-bold text-gray-900">{item.name}</span>? This will mark it inactive in the master data.</p></div><div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">Cancel</button><button type="button" onClick={onConfirm} className="px-5 py-2.5 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 text-sm">Delete</button></div></div></div>;
+function DeleteModal({ item, block, onConfirm, onDisable, onClose }) {
+  const blocked = block?.code === 'GEOGRAPHY_IN_USE';
+  const linked = dependencyEntries(block?.dependencies);
+  const typeLabel = item.type === 'pincode' ? 'Pincode' : item.type[0].toUpperCase() + item.type.slice(1);
+
+  return <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"><div className="w-[500px] bg-white rounded-xl shadow-2xl overflow-hidden"><div className="p-5 border-b border-gray-100"><div className="flex items-start gap-3"><div className={`p-2 rounded-lg ${blocked ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-600'}`}>{blocked ? <AlertCircle className="w-5 h-5" /> : <Trash2 className="w-5 h-5" />}</div><div><h2 className="text-lg font-bold text-gray-900">{blocked ? `Cannot Delete ${typeLabel}` : `Delete ${typeLabel}`}</h2><p className="text-sm text-gray-500 mt-1">{blocked ? `${item.name} is currently in use.` : 'Permanent delete is allowed only when no records are linked.'}</p></div></div></div><div className="p-5 space-y-4">{blocked ? <><div><p className="text-sm font-bold text-gray-900 mb-2">Mapped:</p><ul className="space-y-1.5">{linked.map(([key, value]) => <li key={key} className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2"><span>{formatDependencyLabel(key)}</span><span className="font-bold text-gray-900">{Number(value).toLocaleString()}</span></li>)}</ul></div><p className="text-sm text-gray-600">Remove these mappings first or disable this {item.type}.</p></> : <p className="text-sm text-gray-700">Delete <span className="font-bold text-gray-900">{item.name}</span>? This will permanently remove the geography record.</p>}</div><div className="p-5 border-t border-gray-100 flex items-center justify-end gap-3"><button type="button" onClick={onClose} className="px-5 py-2.5 border border-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-50 text-sm">{blocked ? 'Close' : 'Cancel'}</button>{blocked ? <button type="button" onClick={onDisable} className="px-5 py-2.5 bg-[#E31837] text-white font-bold rounded-lg hover:bg-red-700 text-sm">Disable {typeLabel}</button> : <button type="button" onClick={onConfirm} className="px-5 py-2.5 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 text-sm">Delete</button>}</div></div></div>;
 }
-function GeoFields({ formType, form, setForm, parentOptions }) {
+
+
+function buildDisablePayload(item) {
+  if (item.type === 'pincode') return { active: false };
+  if (['state', 'zone', 'district'].includes(item.type)) return { name: item.name, code: item.code || null, active: false };
+  return { name: item.name, active: false };
+}
+function dependencyEntries(dependencies = {}) {
+  return Object.entries(dependencies).filter(([, value]) => Number(value) > 0);
+}
+
+function formatDependencyLabel(key) {
+  return key.replace(/([A-Z])/g, ' $1').replace(/^./, (char) => char.toUpperCase());
+}function GeoFields({ formType, form, setForm, parentOptions }) {
   return <div className="grid grid-cols-2 gap-5">{formType === 'zone' && <SelectField label="State" value={form.stateId} onChange={(value) => setForm((prev) => ({ ...prev, stateId: value }))} options={parentOptions.states} />}{formType === 'district' && <SelectField label="Zone" value={form.zoneId} onChange={(value) => setForm((prev) => ({ ...prev, zoneId: value }))} options={parentOptions.zones} />}{formType === 'taluk' && <SelectField label="District" value={form.districtId} onChange={(value) => setForm((prev) => ({ ...prev, districtId: value }))} options={parentOptions.districts} />}{formType === 'town' && <SelectField label="Taluk" value={form.talukId} onChange={(value) => setForm((prev) => ({ ...prev, talukId: value }))} options={parentOptions.taluks} />}<TextField label={`${formType} Name`} value={form.name} onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} required />{['state', 'zone', 'district'].includes(formType) && <TextField label="Code" value={form.code} onChange={(value) => setForm((prev) => ({ ...prev, code: value }))} />}<CheckField label="Active" checked={form.active} onChange={(value) => setForm((prev) => ({ ...prev, active: value }))} /></div>;
 }
 
@@ -652,6 +696,10 @@ function renderStatusBadge(status) {
 function renderBooleanIcon(value) {
   return value ? <Check className="w-4 h-4 text-green-500 mx-auto" /> : <X className="w-4 h-4 text-red-500 mx-auto" />;
 }
+
+
+
+
 
 
 
