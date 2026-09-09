@@ -132,6 +132,40 @@ export async function logoutAdmin(token) {
 
   return { data };
 }
+export async function getSellerPickupServiceability(pincode) {
+  return apiRequest(`/api/seller/register/pickup-serviceability/${encodeURIComponent(pincode)}`);
+}
+export async function registerSellerAccount(payload) {
+  return apiRequest('/api/seller/register/account', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function verifySellerOtp(payload) {
+  return apiRequest('/api/seller/register/verify-otp', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function resendSellerOtp(payload) {
+  return apiRequest('/api/seller/register/resend-otp', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateSellerBusiness(sellerId, payload) {
+  return apiRequest(`/api/seller/register/${sellerId}/business`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateSellerKyc(sellerId, payload) {
+  return apiRequest(`/api/seller/register/${sellerId}/kyc`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateSellerBank(sellerId, payload) {
+  return apiRequest(`/api/seller/register/${sellerId}/bank`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export async function updateSellerPickupAddress(sellerId, payload) {
+  return apiRequest(`/api/seller/register/${sellerId}/pickup-address`, { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function submitSellerApplication(sellerId) {
+  return apiRequest(`/api/seller/register/${sellerId}/submit`, { method: 'POST' });
+}
 // ===== Shipments =====
 export async function createShipment(data) {
   await delay(400);
@@ -561,3 +595,5 @@ export async function getCommissionPayoutConfig() {
 export async function updateCommissionPayoutConfig(payload) {
   return apiRequest('/api/admin/commissions/payout-config', { method: 'PUT', body: JSON.stringify(payload) });
 }
+
+
