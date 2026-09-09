@@ -100,6 +100,10 @@ export default function SellerSignup() {
                     <input type="password" className="w-full h-12 px-4 rounded-lg border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400" placeholder="••••••••" />
                   </div>
                 </div>
+                <div className="flex items-center gap-2 mt-4">
+                  <input type="checkbox" id="terms" className="w-4 h-4 text-[#E31837] border-gray-300 rounded focus:ring-[#E31837]" />
+                  <label htmlFor="terms" className="text-sm text-gray-600">I agree to the Terms & Privacy Policy</label>
+                </div>
               </div>
             </div>
           )}
@@ -142,8 +146,27 @@ export default function SellerSignup() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">GST Number</label>
-                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400" placeholder="22AAAAA0000A1Z5" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1">GST Registered?</label>
+                    <select 
+                      className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400"
+                      value={formData.isGstRegistered || 'Yes'}
+                      onChange={(e) => setFormData({...formData, isGstRegistered: e.target.value})}
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {formData.isGstRegistered !== 'No' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">GSTIN</label>
+                      <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400" placeholder="22AAAAA0000A1Z5" />
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Business PAN</label>
+                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400" placeholder="ABCDE1234F" />
                   </div>
                 </div>
                 <div>
@@ -156,7 +179,7 @@ export default function SellerSignup() {
 
           {currentStep === 4 && (
             <div className="animate-fade-in">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">KYC & Bank Details</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">KYC & Settlement Details</h3>
               <p className="text-gray-500 mb-8">Required for COD remittances and account verification.</p>
               
               <div className="space-y-6">
@@ -164,12 +187,24 @@ export default function SellerSignup() {
                   <h4 className="font-bold text-gray-900">Identity Proof</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">PAN Number</label>
-                      <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" placeholder="ABCDE1234F" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">PAN / ID Proof Type</label>
+                      <select className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white">
+                        <option>PAN Card</option>
+                        <option>Aadhaar Card</option>
+                        <option>Voter ID</option>
+                        <option>Passport</option>
+                        <option>Driving License</option>
+                      </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Aadhaar / ID Number</label>
-                      <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" placeholder="xxxx-xxxx-xxxx" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">ID Proof Number</label>
+                      <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" placeholder="ABCDE1234F" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Upload ID Proof</label>
+                    <div className="w-full h-20 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-sm text-gray-500 bg-white hover:bg-gray-50 cursor-pointer transition-colors">
+                      <span className="font-medium text-blue-600 mr-1">Click to upload</span> or drag and drop
                     </div>
                   </div>
                 </div>
@@ -178,11 +213,19 @@ export default function SellerSignup() {
                   <h4 className="font-bold text-gray-900">Bank Information</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
+                      <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" placeholder="e.g. HDFC Bank" />
+                    </div>
+                    <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Account Holder Name</label>
                       <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                      <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Account Number</label>
                       <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-white" />
                     </div>
                     <div>
@@ -211,25 +254,42 @@ export default function SellerSignup() {
                     <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200" placeholder="Name of person at location" />
                   </div>
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
+                  <input type="tel" className="w-full h-12 px-4 rounded-lg border border-gray-200" placeholder="9876543210" />
+                </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Complete Address</label>
                   <textarea rows={3} className="w-full p-4 rounded-lg border border-gray-200 resize-none" placeholder="Building, Street, Area..."></textarea>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
-                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200" placeholder="110001" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-gray-50" readOnly placeholder="Auto-filled" />
+                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200" placeholder="695121" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
                     <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-gray-50" readOnly placeholder="Auto-filled" />
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
+                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-gray-50" readOnly placeholder="Auto-filled" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Town</label>
+                    <input type="text" className="w-full h-12 px-4 rounded-lg border border-gray-200 bg-gray-50" readOnly placeholder="Auto-filled" />
+                  </div>
+                </div>
+
+                <div className="mt-4 p-4 bg-green-50 rounded-lg flex items-center gap-3 border border-green-100">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">✓ Pickup service available</span>
                 </div>
               </div>
             </div>
